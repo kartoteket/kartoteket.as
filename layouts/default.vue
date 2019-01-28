@@ -1,8 +1,18 @@
 <template>
   <div>
     <nuxt />
+    <siteNav />
   </div>
 </template>
+
+<script>
+import siteNav from '@/components/nav';
+export default {
+  components: {
+    siteNav
+  }
+};
+</script>
 
 <style>
 html {
