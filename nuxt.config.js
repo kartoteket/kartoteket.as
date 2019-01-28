@@ -22,6 +22,14 @@ module.exports = {
   loading: { color: '#fff' },
 
   /*
+  ** Page Transitions
+  */
+  transition: {
+    name: 'layout',
+    mode: 'out-in'
+  },
+
+  /*
   ** Global CSS
   */
   css: ['~/assets/css/tailwind.css'],
