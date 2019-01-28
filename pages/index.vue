@@ -1,5 +1,5 @@
 <template>
-  <section class="site-container">
+  <section>
     <div>
       <h1 class="title">
         kartoteket.no

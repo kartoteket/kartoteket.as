@@ -11,3 +11,16 @@
     <siteNav />
   </section>
 </template>
+
+<script>
+import siteNav from '@/components/nav';
+export default {
+  components: {
+    siteNav
+  }
+};
+</script>
+
+
+<style>
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="container">
     <div>
       <h1 class="title">
         Work

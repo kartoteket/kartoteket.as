@@ -2,7 +2,7 @@
   <section>
     <div>
       <h1 class="title">
-        Work
+        Approach
       </h1>
       <h2 class="subtitle">
         kartoteket.no
