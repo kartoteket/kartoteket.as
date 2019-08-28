@@ -1,0 +1,1 @@
+## Temporaary static folder to keep old site live
