@@ -1,0 +1,112 @@
+
+/* segments */
+.segment {
+  fill-opacity: .8;
+  transition: fill-opacity 400ms ease;
+}
+
+  .segment.hover,
+  .segment:hover {
+    fill-opacity: 1;
+  }
+
+/* labels */
+.label {
+  font-size: 13px;
+}
+
+.gov line {
+  opacity: 1;
+  stroke: #F0882A;
+}
+
+.gov .label {
+  opacity: .75;
+  fill: #F0882A;
+  stroke: none;
+}
+
+
+/* axis */
+.domain {
+  display: none;
+}
+
+/* ticks */
+.axis--x .tick {
+  opacity: .5;
+  font-size: 12px;
+}
+
+  .axis--x .tick line {
+    opacity: 1;
+    stroke: #F6F1EB;
+  }
+
+  .axis--x .tick text {
+    fill: #fff;
+    stroke: none;
+    font-size: 1rem;
+  }
+
+  .axis--x .tick:hover {
+    opacity: 1 ;
+  }
+
+/* tooltip */
+.tooltip {
+  position: absolute;
+  top: 27px;
+  width: 200px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F0882A;
+  opacity: .75;
+  color: #F0882A;
+  background-color: #F6F1EB;
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1.7
+  pointer-events: none;
+  z-index: 20;
+}
+  .tooltip .segment {}
+  .tooltip .year {  }
+  .tooltip .value {
+    line-height: 1.5;
+    opacity: 1;
+    font-size: 1rem;
+  }
+
+@media (min-width: 720px) {
+  .caption {
+    width: 500px;
+  }
+}
+
+
+/* caption */
+.title, .subtitle {
+  display: none;
+}
+
+/* buttons */
+.buttons {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.desc,
+.source {
+  display: none;
+}
+
+
+
+/* generic */
+.hidden {
+  opacity: 0;
+  transition: opacity 400ms ease;
+  /*display: none;*/
+}

@@ -1,0 +1,38 @@
+<!doctype html> <html class=no-js> <head> <meta charset=utf-8> <meta name=description> <meta name=viewport content="width=device-width, initial-scale=1, minimal-ui"> <title>kartoteket / 3 by 5</title>  <link rel=stylesheet href=/styles/main.css>  <link rel=stylesheet href="http://fonts.googleapis.com/css?family=Inconsolata|Anonymous+Pro"> <script src=../scripts/vendor/modernizr.js></script> </head> <body>  <div class="page-wrapper layout"> <header class="site-header layout__item--main"> <h1><a href="../">Notebook</a> / Remittance Flows</h1> </header> <div class=layout__item--main> <div class=content> <iframe src=https://cdn.rawgit.com/svale/395e33b41fc76f1eb37ab5ef6d3ad237/raw/index.html sandbox="allow-popups allow-scripts allow-forms allow-same-origin" marginwidth=0 marginheight=0 style=border:none; scrolling=no></iframe> </div> <div class=comments> <p>Visualizing the bi-directional flow of remittances between the 20 top recipient and source countries in 2016.</p> <p>The chords reveal how remittance flows in a complex and diverse grid traversing established north/south or rich/poor dichotomies.</p> <p>2016 Data from the <a href=http://www.worldbank.org/en/topic/migrationremittancesdiasporaissues/brief/migration-remittances-data>World Bank</a>.</p> </div> </div> </div> <footer class="site-footer layout__item--main"> <article itemscope itemtype=http://schema.org/Organization class=address> <p> <a itemprop=url href=http://kartoteket.as><span itemprop=name>Kartoteket AS</span></a> </p> <p itemprop=address itemscope itemtype=http://schema.org/PostalAddress> <span itemprop=addressLocality>Oslo</span>, <span itemprop=addressCountry>Norway</span><br><br> </p> </article> </footer>  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-60185757-1', 'auto');
+    ga('send', 'pageview');
+  </script> <script>
+    (function() {
+        var throttle = function(type, name, obj) {
+            obj = obj || window;
+            var running = false;
+            var func = function() {
+                if (running) { return; }
+                running = true;
+                 requestAnimationFrame(function() {
+                    obj.dispatchEvent(new CustomEvent(name));
+                    running = false;
+                });
+            };
+            obj.addEventListener(type, func);
+        };
+
+        /* init - you can init any event */
+        throttle("resize", "optimizedResize");
+    })();
+
+    function sizeIframe() {
+      var content = document.querySelectorAll('.content')[0];
+      var iframe = document.querySelectorAll('iframe')[0];
+      width = content.offsetWidth;
+      iframe.style.height = width + 'px';
+      console.log('sized')
+    }
+    sizeIframe();
+    window.addEventListener('optimizedResize', sizeIframe);
+  </script> </body> </html> 

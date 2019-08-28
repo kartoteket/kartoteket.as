@@ -1,0 +1,232 @@
+
+body {
+  font-family: 'Vollkorn SC', serif;
+  background-color: #F6F1EB /*#F7EEDF*/;
+  color: #332E2C;
+}
+.wrapper {
+  position: relative;
+  max-width: 970px;
+  margin: 30px auto;
+}
+
+
+/* segments */
+.segment {
+  fill-opacity: .8;
+  transition: fill-opacity 400ms ease;
+}
+
+  .segment.hover,
+  .segment:hover {
+    fill-opacity: 1;
+  }
+
+/* labels */
+.label {
+  font-size: 13px;
+}
+
+.gov line {
+  opacity: .5;
+  stroke: #F0882A;
+}
+
+.gov .label {
+  opacity: .75;
+  fill: #F0882A;
+  stroke: none;
+}
+
+
+/* axis */
+.domain {
+  display: none;
+}
+
+/* ticks */
+.axis--x .tick {
+  opacity: .5;
+  font-size: 12px;
+}
+
+  .axis--x .tick line {
+    opacity: 1;
+    stroke: #F6F1EB;
+  }
+
+  .axis--x .tick text {
+    fill: #fff;
+    stroke: none;
+    font-size: 1rem;
+  }
+
+  .axis--x .tick:hover {
+    opacity: 1 ;
+  }
+
+/* tooltip */
+.tooltip {
+  position: absolute;
+  top: 100px;
+  width: 200px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F0882A;
+  opacity: .75;
+  color: #F0882A;
+  background-color: #F6F1EB;
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1.7
+  pointer-events: none;
+  z-index: 20;
+}
+  .tooltip .segment {}
+  .tooltip .year {  }
+  .tooltip .value {
+    line-height: 1.5;
+    opacity: 1;
+    font-size: 1rem;
+  }
+
+/* caption */
+.caption {
+  position: relative;
+  border-top: 1px solid #706561;
+  font-size: .8rem;
+  text-align: center;
+}
+@media (min-width: 720px) {
+  .caption {
+    width: 540px;
+    margin: 0 auto;
+  }
+}
+/*
+@media (min-width: 1440px) {
+  .caption {
+    position: absolute;
+    top: 30px;
+    background-color: #F6F1EB;
+    margin-left: 12px;
+  }
+}
+*/
+.title {
+  font-weight: 400;
+  font-size: 1.1rem;
+  margin-bottom: 1px;
+
+}
+.subtitle {
+  font-weight: 400;
+  font-size: .8rem;
+  margin-top: 0px;
+  margin-bottom: 6px;
+}
+
+
+/* buttons */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #706561;
+  list-style-type: none;
+/*  z-index: 1000;*/
+}
+  .button {
+    flex: 1;
+  }
+
+  .button + .button  {
+    border-left: 1px solid #706561;
+  }
+
+  button:hover,
+  .button:hover  {
+    background-color: rgba(51,46,44,0.1);
+    cursor: pointer;
+  }
+
+  .button button {
+    border: 0;
+    border-radius: 0;
+    padding: 12px 16px;
+    background-color: transparent;
+    font-family : inherit;
+    font-size: 12px;
+  }
+
+    button:focus {
+      outline: none;
+    }
+
+  @media (max-width: 720px) {
+  .button button span {
+      display: none;
+    }
+  }
+
+  .btn--geo button {
+    color: #155C2B;
+  }
+  .btn--sector button {
+    color: #B13451;
+  }
+  .btn--partner button {
+    color: #3D6E8D;
+  }
+  .btn--type {
+    flex: 0 1 59px;
+  }
+
+
+.desc {
+  font-family: Vollkorn, serif;
+  font-size: 14px;
+  line-height: 1.33;
+  text-align: justify;
+}
+
+  @media (min-width: 720px) {
+    .desc {
+      margin: 0 auto;
+      max-width: 700px;
+      text-align: center;
+    }
+  }
+
+  .desc p {
+    border-top: 1px solid #706561;
+    padding-top: 12px;
+  }
+
+  .desc a,
+  .desc i,
+  .desc span {
+    // font-style: italic;
+    font-family: 'Vollkorn SC', serif !important;
+  }
+
+
+// .source {
+//   float: right;
+//   font-size: 12px;
+//   text-align: center;
+// }
+
+
+
+/* generic */
+.hidden {
+  opacity: 0;
+  transition: opacity 400ms ease;
+  /*display: none;*/
+}
+
+a {
+  color: #F0882A;
+}
