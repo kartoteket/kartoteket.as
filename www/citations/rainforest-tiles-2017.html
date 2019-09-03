@@ -13,17 +13,10 @@
 
 <body>
   <div class="page-wrapper layout">
-    <header class="site-header layout__item--main">
-      <h1><a href="/">Kartoteket (3 by 5)</a></h1>
-      <p class="lead">Kartoteket specialises in building data driven maps and visualisations for online analysis and presentation.</p>
-    </header>
-
-    <div class="layout__item--main">
-      <!--
-                <h2>Online presence and examples</h2>
-                  <p>bl.ocks CodePen Github</p>
-      -->
-      <h2>Forest cover Loss 2000-2017</h2>
+    <article  class="layout__item--main">
+      <header class="site-header">
+        <h1>Forest Cover Loss 2000-2017</h1>
+      </header>
       <p>
         The forest cover data tiles are generated from the <a
           href="http://earthenginepartners.appspot.com/science-2013-global-forest">Global Forest Change</a>
@@ -34,19 +27,21 @@
         each pixel was mapped on to a set of png map tiles.<br>
         The png tiles have a size of 256x256 pixels. Each pixel contains three channels (RGB) where we mapped the forest
         data.
-        <ul>
-          <li>
-            <strong>R (Red)</strong>: The red channel contains the values for treeCover (in year 2000) in percent (0 -
-            100)
-          </li>
-          <li>
-            <strong>G (Green)</strong>: The green channel contains a flag for tree loss (0 - 1) (1 = loss, 0 = no loss)
-          </li>
-          <li>
-            <strong>B (Blue)</strong>: The blue channel contains the year (if applicable) when the forest loss occured
-            (two digit, ie. 2017 = 17)
-          </li>
-        </ul>
+      </p>
+      <ul>
+        <li>
+          <strong>R (Red)</strong>: The red channel contains the values for treeCover (in year 2000) in percent (0 -
+          100)
+        </li>
+        <li>
+          <strong>G (Green)</strong>: The green channel contains a flag for tree loss (0 - 1) (1 = loss, 0 = no loss)
+        </li>
+        <li>
+          <strong>B (Blue)</strong>: The blue channel contains the year (if applicable) when the forest loss occured
+          (two digit, ie. 2017 = 17)
+        </li>
+      </ul>
+      <p>
         This method allows us to produce a map that contains all forest data compressed into a single png tile, reducing
         load time.
       </p>
@@ -57,20 +52,21 @@
         the extent of forest growth in the areas that this map covers are small enough to ignore for
         this specific implementation of the data.<br />
       </p>
-
+      <h3>Citations:</h3>
       <p>
-        <h3>Citations:</h3>
-        <p>
-          (Hansen, M. C., P. V. Potapov, R. Moore, M. Hancher, S. A. Turubanova, A.
-          Tyukavina, D. Thau, S. V. Stehman, S. J. Goetz, T. R. Loveland, A.
-          Kommareddy, A. Egorov, L. Chini, C. O. Justice, and J. R. G. Townshend.
-          2013. “High-Resolution Global Maps of 21st-Century Forest Cover Change.”
-          Science 342 (15 November): 850–53.)
-        </p>
-    </div>
-
+        (Hansen, M. C., P. V. Potapov, R. Moore, M. Hancher, S. A. Turubanova, A.
+        Tyukavina, D. Thau, S. V. Stehman, S. J. Goetz, T. R. Loveland, A.
+        Kommareddy, A. Egorov, L. Chini, C. O. Justice, and J. R. G. Townshend.
+        2013. “High-Resolution Global Maps of 21st-Century Forest Cover Change.”
+        Science 342 (15 November): 850–53.)
+      </p>
+    </article>
     <footer class="site-footer layout__item--main">
-        <article itemscope itemtype="http://schema.org/Organization" class="address">
+        <h3><a href="/">Kartoteket (3 by 5)</a></h3>
+        <p>
+            Kartoteket specialises in building data driven maps and visualisations for online analysis and presentation.
+        </p>
+        <div itemscope itemtype="http://schema.org/Organization" class="address">
           <p>
             <a itemprop="url" href="http://kartoteket.as"><span itemprop="name">Kartoteket AS</span></a>
           </p>
@@ -80,9 +76,11 @@
           </p>
           <p>
             <a href="mailto:office@kartoteket.as" itemprop="email">office@kartoteket.as</a><br> 
-            <span itemprop="tel">40453445</span> / <span itemprop="tel">99162147</span> </p>
-        </article>
+            <span itemprop="tel">40453445</span> / <span itemprop="tel">99162147</span> 
+          </p>
+        </div>
       </footer>
+    </div>
     <script>
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;

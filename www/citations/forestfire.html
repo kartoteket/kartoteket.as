@@ -13,17 +13,10 @@
 
 <body>
   <div class="page-wrapper layout">
-    <header class="site-header layout__item--main">
-      <h1><a href="/">Kartoteket (3 by 5)</a></h1>
-      <p class="lead">Kartoteket specialises in building data driven maps and visualisations for online analysis and
-        presentation.</p>
-    </header>
-
-    <div class="layout__item--main">
-      <!--
-          <h2>Online presence and examples</h2>
-            <p>bl.ocks CodePen Github</p> -->
-      <h2>FIRMS fire data</h2>
+    <article  class="layout__item--main">
+      <header class="site-header ">
+        <h1>FIRMS fire data</h1>
+      </header>
       <p>
         FIRMS fire data is near real-time data of all detected fires from the <a
           href="https://en.wikipedia.org/wiki/Suomi_NPP">Suomi NPP satellite</a> with a spacial resolution of
@@ -31,28 +24,31 @@
         The data used in the rainforest maps are updated at at midnight (CET) every day, ensuring the latest data is
         available. <br />
         Currently the data is filtered to show the following regions:
-        <ul>
-          <li>
-            <strong>Amazon rainforest</strong>: data available <a
-              href="https://skogkartet.assets.3by5.no/static//assets/fires/weekly_digest_amazonas.csv">here</a>
-          </li>
-          <li>
-            <strong>Kongo Basin</strong> not yet available
-          </li>
-          <li>
-            <strong>South Aast Asia</strong>not yet available
-          </li>
-        </ul>
       </p>
+      <ul>
+        <li>
+          <strong>Amazon rainforest</strong>: data available <a
+            href="https://skogkartet.assets.3by5.no/static//assets/fires/weekly_digest_amazonas.csv">here</a>
+        </li>
+        <li>
+          <strong>Kongo Basin</strong> not yet available
+        </li>
+        <li>
+          <strong>South Aast Asia</strong>not yet available
+        </li>
+      </ul>
+      <h3>Citations:</h3>
       <p>
-        <h3>Citations:</h3>
-        <p>
-          Schroeder, W., Oliva, P., Giglio, L., & Csiszar, I. A. (2014). The New VIIRS 375 m active fire detection data
-          product: algorithm description and initial assessment. Remote Sensing of Environment, 143, 85-96.
-        </p>
-    </div>
+        Schroeder, W., Oliva, P., Giglio, L., & Csiszar, I. A. (2014). The New VIIRS 375 m active fire detection data
+        product: algorithm description and initial assessment. Remote Sensing of Environment, 143, 85-96.
+      </p>
+    </article>
     <footer class="site-footer layout__item--main">
-      <article itemscope itemtype="http://schema.org/Organization" class="address">
+      <h3><a href="/">Kartoteket (3 by 5)</a></h3>
+      <p>
+          Kartoteket specialises in building data driven maps and visualisations for online analysis and presentation.
+      </p>
+      <div itemscope itemtype="http://schema.org/Organization" class="address">
         <p>
           <a itemprop="url" href="http://kartoteket.as"><span itemprop="name">Kartoteket AS</span></a>
         </p>
@@ -62,10 +58,12 @@
         </p>
         <p>
           <a href="mailto:office@kartoteket.as" itemprop="email">office@kartoteket.as</a><br> 
-          <span itemprop="tel">40453445</span> / <span itemprop="tel">99162147</span> </p>
-      </article>
+          <span itemprop="tel">40453445</span> / <span itemprop="tel">99162147</span> 
+        </p>
+      </div>
     </footer>
-    <script>
+  </div>
+  <script>
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
