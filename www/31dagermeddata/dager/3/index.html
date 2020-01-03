@@ -1,0 +1,369 @@
+<!DOCTYPE html> <html> <head> <style>
+        svg text {
+            font-size: 16px;
+            font-family: helvetica, arial, sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #aaa;
+            shape-rendering: crispEdges;
+            opacity: .45;
+        }
+        .axis text {
+          fill: #aaa;
+          font-size: 1.3em;
+          opacity: .85;
+        }
+
+        .hidden {
+          display: none;
+        }
+
+        .axis--x path {
+          display: none;
+        }
+
+        .line {
+          fill: none;
+          stroke-width: 3;
+        }
+
+        .label {
+          font-size: .7em;
+          text-transform: uppercase;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        .domain {
+          display: none;
+        }
+
+        .hint text {
+          font-size: .7em;
+          fill: #aaa;
+        }
+
+    </style> <meta charset=UTF-8> <script src=https://d3js.org/d3.v4.min.js></script> <script src=https://unpkg.com/url-search-params-polyfill></script> </head> <body> <svg></svg> <script>
+/* jshint laxbreak: true */
+/* jshint expr: true */
+var Chart = (function(window,d3) {
+
+  // scales
+  var x, y;
+  var color = d3.scaleOrdinal().range(['#355C8C', '#E7C865', '#CF6B58', '#AAD8C8', '#B9B0A0', '#CC333F', '#00A0B0'] );
+
+  var formatNum= d3.format('s');
+  var timeParse = d3.timeParse('%Y');
+  var line = d3.line()/*.curve(d3.curveBasis)*/
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.value); });
+
+
+  // data (as of 10:40 AM Tuesday, October 24, 2017 (GMT+2)
+  var years = ['2013', '2014', '2015', '2016', '2017', '2018', '2019'];
+  var data =
+  [{
+      name: 'Kommuner',
+      color: '#004b66',
+      data: [7232035, 7720981, 7207512, 8052013, 9029038, 9443080, 12132352], index: 5
+  }, {
+      name: 'Næringsliv/Organisasjoner',
+      color: '#00AEEF',
+      data: [33118656, 35691313, 20844432, 30041767, 31805082,36694802,32373983], index: 4
+    }, {
+      name: 'Kirker/Trossamfunn',
+      color: '#6fcff2',
+      data: [1573982, 3633464, 1672835, 2072283, 2127862,3093560,1926645], index: 3
+  }, {
+      name: 'Skoler/Barnehager',
+      color: '#a0a0a0',
+      data: [3719359, 5461330, 4058672, 7983310, 12374705,12116200,11481445], index: 2
+  }, {
+      name: 'Bøsse',
+      color: '#808080',
+      data: [120316162, 130746518, 84947220, 105562861, 100253424,107208797,91131020], index: 1
+  }, {
+      name: 'Annet',
+      color: '#b6b6b6',
+      data: [63307737, 67964958, 70620649, 76897661, 85709773,89864736,91460660], index: 0
+  }]
+;
+
+  // calculate the sum total and sort from high to low
+  var totalValues = [];
+  data.forEach(function(d, i) {
+    d.data.forEach(function(v, j) {
+      totalValues[j] = totalValues[j] ? (totalValues[j] + v) : v;
+    });
+  });
+  data.push({name: 'Totalt', data: totalValues});
+  data.sort(function(a, b) {
+     return d3.ascending(a.data[a.data.length-1], b.data[b.data.length-1]);
+  });
+
+  // map to series we can use easily
+  var series = data.map(function(d, i) {
+    return {
+      id: i,
+      display: true,
+      name: d.name,
+      values: d.data.map(function(v, j) {
+        return {
+          date: timeParse(years[j]),
+          value: v
+        };
+      })
+    };
+  });
+
+  // experimental use of url paramteres
+  // ref: https://davidwalsh.name/query-string-javascript
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('view')) {
+    var view = urlParams.get('view');
+    var exclude = [];
+
+    switch(+view) {
+      case 1:
+        exclude = [0,1,2,3,6]; break;
+      case 2:
+          exclude = [0,1,4,5,6]; break;
+      case 3:
+          exclude = [2,3,4,5,6]; break;
+      default:
+        exclude = [];
+    }
+    if (exclude.length) {
+      series.forEach(function(s) {
+        if (exclude.indexOf(s.id) >= 0) {
+          s.display = false;
+        }
+      });
+    }
+  }
+
+  // elements
+  var svg = d3.select('svg'),
+    g = svg.append('g'),
+    hint = g.append('g').attr('class', 'hint'),
+    xAxis = g.append('g').attr('class', 'axis axis--x'),
+    yAxis = g.append('g').attr('class', 'axis axis--y'),
+    yTicks = yAxis.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -55)
+        .attr('x', -50)
+        .attr('dy', '0.71em')
+        .attr('text-anchor', 'middle')
+        .text('Innsamlet i kroner'),
+    segment = g.selectAll('.segment')
+      .data(series)
+      .enter().append('g')
+        .attr('class', function(d) {
+          return 'segment ' + 's' + d.id;
+        }),
+    labels = segment.append('text').attr('class', 'label'),
+    lines = segment.append('path').attr('class', 'line').classed('hidden', function(d) { return !d.display; }),
+    points = segment.append('g').attr('class', 'points').style('fill', function(d) { return color(d.name); }).classed('hidden', function(d) { return !d.display; })
+    ;
+
+    hint.append('text')
+      .attr('x', 12)
+      .attr('text-anchor', 'start')
+      .text('Click labels to toggle');
+
+    hint.append('path')
+      .attr('d', ['M0 0 L10 10 L21 0', 'M3 0 L10 7 L18 0', ] )
+      .attr('transform', 'translate(' + 13 + ',' + 5 + ')')
+      .attr('class', 'hint__arrow')
+      .style('stroke', '#aaa')
+      .style('opacity', 0.66)
+      .style('fill', 'none');
+
+  var isMobileIsh;
+
+  render();
+
+  /**
+   * render
+   */
+  function render() {
+
+    var margin = {
+          top: 100,
+          right: 200,
+          bottom: 40,
+          left: 60
+        },
+    width = Math.min(window.innerWidth, 960) - margin.left - margin.right,
+    height = width/1.2  - margin.top - margin.bottom;
+
+    // mq
+    isMobileIsh = width <= 320;
+    if (isMobileIsh) {
+      margin = {
+          top: 20,
+          right: 30,
+          bottom: 100,
+          left: 40
+        };
+      width = Math.min(window.innerWidth, 960) - margin.left - margin.right;
+      height = width/1  - margin.top - margin.bottom;
+    }
+
+    // cleaup for re-render
+    if(segment) {
+      svg.selectAll('.point, .pointLabel').remove();
+    }
+
+    // scales
+    x = d3.scaleTime()
+          .range([0, width])
+          .domain(d3.extent(series[0].values, function(d) { return d.date; }));
+
+    y = d3.scaleLinear()
+          .range([height, 0])
+          .domain([
+            0,
+              // d3.min(series, function(s) { return d3.min(s.values, function(d) { return d.value; }); }),
+              d3.max(series.filter(function(d) {return d.display; }), function(s) { return d3.max(s.values, function(d) { return d.value; }); })
+            ]);
+
+    // draw
+    svg.attr('width', (width + margin.left + margin.right ))
+       .attr('height', (height + margin.top + margin.bottom));
+    g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
+
+    hint.attr('transform', 'translate(' + width + ',' + -(margin.top -10) + ')');
+
+    xAxis.attr('transform', 'translate(0,' + height + ')')
+        .call(
+          d3.axisBottom(x)
+          .ticks(d3.timeYear)
+          // .tickSizeInner(-height + 3)
+          // .tickSizeInner(0)
+          .tickSize(0)
+          .tickPadding(10)
+        );
+
+    yAxis
+    .transition().duration(1000).call(
+      d3.axisLeft(y)
+        .ticks(5, 's')
+        .tickSizeInner(-width)
+        .tickSizeOuter(0)
+    );
+
+    lines
+      .transition()
+      .duration(1000)
+      .attr('d', function(d) { return line(d.values); })
+      .style('stroke', function(d) { return color(d.name); });
+
+
+    var point = points.selectAll('.point')
+        .data(function(d) {return d.values; })
+        .enter().append('g').attr('class', 'point');
+
+      point.append('circle').attr('class', 'point')
+            .attr('r', 7)
+            .attr('cx', function(d) { return x(d.date); })
+            .attr('cy', function(d) { return y(d.value); })
+            .on('mouseover', hoverPoint)
+            .on('mouseout', hoverPoint);
+
+       point.append('text').attr('class', 'pointLabel')
+            .attr('transform', function(d) { return 'translate(' + x(d.date) + ',' + y(d.value) + ')'; })
+            .attr('y', -30)
+            .attr('dy', '0.35em')
+            .attr('text-anchor', 'middle')
+            .style('opacity', 0)
+            .text(function(d) { return formatNum(d.value); });
+
+
+    labels.datum(function(d) {
+        return {
+          name: d.name,
+          value: d.value ? d.value : d.values[d.values.length - 1],
+          initial: d.values
+        };
+      })
+      .attr('x', 13)
+      .attr('dy', '0.35em')
+      .style('fill', function(d) { return color(d.name); })
+      .text(function(d) { return d.name; })
+      .on('click', toggleLine)
+      .transition()
+      .duration(function(d){
+        return d.initial ? 0 : 500;
+      }).call(positionLabels, height, width, margin);
+  }
+
+  // auxiliary functions. Seems clumsy...
+  function positionLabels(label, h, w, m) {
+    if (isMobileIsh) {
+      label.attr('transform', function(d, i) {
+        var xPos = i%2 ? w/2 : 0;
+        var yPos = h + 40 + (i * 8);
+        return 'translate(' + xPos + ',' + yPos + ')';
+      });
+    } else {
+      var key, pos, yPos = {}, prevPos = 0;
+      series.sort(function(a, b) {
+         return d3.ascending(y(a.values[a.values.length-1].value), y(b.values[b.values.length-1].value));
+      }).forEach(function(d, i) {
+        key = d.name;
+        pos = d.display ? y(d.values[d.values.length-1].value) : -4 - (d.id * 13);
+
+        if(d.display) {
+          if (pos - prevPos < 10) {
+            pos = pos + 12;
+          }
+        }
+
+        yPos[key] = pos;
+        prevPos = pos;
+      });
+      label.attr('transform', function(d) { return 'translate(' + x(d.value.date) + ',' + yPos[d.name] + ')'; });
+    }
+  }
+
+  function toggleLine (d) {
+    var line = d3.select(this.parentNode).selectAll('g, path');
+    var active = !line.classed('hidden');
+    var arr = g.select('.hint__arrow').classed('hidden', true);
+
+    line.classed('hidden', active);
+    series.forEach(function(s) {
+      if(s.name === d.name) {
+        s.display = !active;
+      }
+    });
+
+    Chart.render();
+  }
+
+  function hoverPoint(d) {
+    var hover = event.type === 'mouseover' ? true: false;
+    var label = d3.select(this.parentNode).select('.pointLabel');
+
+    d3.select(this)
+      .transition()
+      .style('opacity', hover ?  0.8 : 1)
+      .attr('r', hover ?  10 : 7);
+
+      label.transition()
+        .style('opacity', hover ? 1 : 0);
+  }
+
+  return {
+    render : render
+  };
+
+})(window,d3);
+
+window.addEventListener('resize', Chart.render);
+
+    </script> </body> </html> 
