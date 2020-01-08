@@ -1,0 +1,277 @@
+<!doctype html>
+<html class="no-js">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <title>#31dagermeddata - kartoteket / 3 by 5</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.rawgit.com/susielu/d3-annotation/75ff6169/d3-annotation.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+  <link rel="stylesheet" href="../../../styles/main.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Inconsolata|Anonymous+Pro">
+    <style>
+        .chart text {
+            font-size: 11px;
+            font-family: sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #aaa;
+            shape-rendering: crispEdges;
+        }
+
+        .hidden {
+          display: none;
+        }
+
+        .legendSize circle {
+            fill: #b2877a;
+            opacity: .8;
+        }
+
+        .legendTitle {
+          font-weight: 600;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="chart"></div>
+    <script>
+      var height = 400;
+      var width = 600;
+      var margin = {
+        global: 40,
+        top: 40,
+        right: 200,
+        bottom: 80,
+        left: 40
+      };
+
+      d3.csv("data.csv", function(d) {
+        // WorldRank,Institution,Location,NationalRank,QualityOfEducation,AlumniEmployment,QualityOfFaculty,ResearchPerformance,Score
+        if(['Sweden', 'Norway', 'Finland', 'Denmark'].includes(d.Location) 
+          && +d.QualityOfEducation
+          && +d.ResearchPerformance
+          && d.WorldRank < 300
+          ) {
+          return {
+            Institution: d.Institution,
+            rank : +d.WorldRank,
+            CountryCode : d.Location,
+            score: +d.Score,
+            qualityOfEducation: +d.QualityOfEducation,
+            researchPerformance: +d.ResearchPerformance,
+            y: +d.QualityOfEducation,
+            x: +d.ResearchPerformance,
+            color: d.Location,
+            size:+ d.Score,
+          };
+        }
+      }, function(data) {
+
+        var labelY = 'Rank Quality Of Education';
+        var labelX = 'Rank Research Performance';
+        var svg = d3.select('.chart')
+          .append('svg')
+          .attr('class', 'chart')
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + (margin.left) + "," + (margin.top) + ")");
+
+        // var xLogScale = d3.scaleLog()
+        //   .domain([d3.min(data, function (d) { return d.x; }), d3.max(data, function (d) { return d.x; })])
+        //   .range([width, 0])
+        //   .base(100);
+
+        // var yLogScale = d3.scaleLog()
+        //   .domain([d3.min(data, function (d) { return d.y; }), d3.max(data, function (d) { return d.y; })])
+        //   .range([0, height])
+        //   .base(100);
+
+          var xLinearScale = d3.scaleLinear()
+          .domain([d3.min(data, function (d) { return d.x; }), d3.max(data, function (d) { return d.x; })])
+          .range([width, 0]);
+
+        var yLinearScale = d3.scaleLinear()
+          .domain([d3.min(data, function (d) { return d.y; }), d3.max(data, function (d) { return d.y; })])
+          .range([0, height]);
+
+        var scale = d3.scaleSqrt()
+          .domain([d3.min(data, function (d) { return d.size; }), d3.max(data, function (d) { return d.size; })])
+          .range([8, 30])
+          .nice();
+
+        var opacity = d3.scaleSqrt()
+          .domain([d3.min(data, function (d) { return d.size; }), d3.max(data, function (d) { return d.size; })])
+          .range([.8, .6]);
+
+        var color = d3.scaleOrdinal()
+          .domain(['Norway', 'Sweden', 'Finland', 'Denmark'])
+          .range(['#00a0b0', '#eb6841', '#cc2a36', '#4f372d']);
+
+        // y axis and label
+        svg.append("g")
+            .attr("class", "axis axis-y")
+            .call(d3.axisLeft(yLinearScale))
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", 20)
+            .attr("y", 10)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(labelY);
+
+        // x axis and label
+        svg.append("g")
+            .attr("class", "axis axis-x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xLinearScale))
+
+        svg.append("text")
+            .attr("x", width + 20)
+            .attr("y", margin.bottom - 10)
+            .attr("dy", ".71em")
+            .attr("transform", "translate(0," + (height + 40 - margin.bottom) + ")")
+            .style("text-anchor", "end")
+            .text(labelX);
+
+        // bubbles
+        var bubbles = svg.append("g")
+          .attr("class", "bubbles");
+
+        bubbles.selectAll("circle")
+          .data(data)
+          .enter()
+            .insert("circle")
+            .attr("cx", width / 2)
+            .attr("cy", height / 2)
+            .attr("opacity", function (d) { return opacity(d.size); })
+            .attr("r", function (d) { return scale(d.size); })
+            .style("fill", function (d) { return color(d.color); })
+            .on('mouseover', function (d, i) {fade(d.rank, .25); })  //use rank as unique id
+            .on('mouseout', function (d, i) {fadeOut(d.rank); })
+            .transition('load')
+              .delay(function (d, i) { return xLinearScale(d.x) - yLinearScale(d.y); })
+              .duration(3000)
+              .attr("cx", function (d) { return xLinearScale(d.x); })
+              .attr("cy", function (d) {return yLinearScale(d.y); })
+              .ease(d3.easeBack);
+
+        // Annotations
+        var annotations = [];
+        data.forEach(function(d) {
+          // console.log(d);
+          annotations.push({
+            id: d.rank,
+            note: {
+             title:d.Institution,
+             label: "Rank: " + d.rank + " | Score " + d.score,
+             wrap: 180
+            },
+            x: xLinearScale(d.x),
+            y: yLinearScale(d.y),
+            // data: {
+            //   x: d.x,
+            //   y: d.y
+            // },
+            dy: -10,
+            dx: 25,
+            color: color(d.color),
+            className: 'r' + d.rank,
+          });
+        });
+
+        var makeAnnotations = d3.annotation()
+        .type(d3.annotationCallout)
+        //accessors & accessorsInverse not needed
+        //if using x, y in annotations JSON
+        // .accessors({
+        //   x: d => x(d.x),
+        //   y: d => y(d.y)
+        // })
+        .annotations(annotations)
+
+        svg.append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations)
+
+        // svg.selectAll(".annotation:not(.top10)")
+        //   .classed('hidden', true)
+
+        svg.selectAll(".annotation")
+          .style('opacity', 0)
+            .transition()
+              .delay(2000)
+              .duration(3000)
+              .style('opacity', 1);
+
+
+        // legends
+        var legendSize = d3.legendSize()
+          .cells(3)
+          .shape('circle')
+          .shapePadding(10)
+          .labelOffset(10)
+          .title("Poengsum")
+          .orient('vertical')
+          .ascending(true)
+          .labelFormat('.0f')
+          .scale(scale);
+
+        svg.append("g")
+          .attr("class", "legendSize")
+          .attr("transform", "translate(" + (width+75) + "," + 165 + ")")
+          .call(legendSize);
+
+        var legendColor = d3.legendColor()
+          .shape('circle')
+          .shapeRadius(5)
+          .labelOffset(10)
+          .title("Land")
+          // .cellFilter(function(d){ return d.data > 0})
+          .labels(['Norge', 'Sverige', 'Finland', 'Danmark'])
+          .scale(color);
+
+        svg.append("g")
+          .attr("class", "legendOrdinal")
+          .attr("transform", "translate(" + (width+75) + "," + 375 + ")")
+          .call(legendColor);
+
+        // helpers
+        function fade(rank, opacity) {
+          svg.selectAll(".bubbles circle")
+            .filter(function (d) {
+                return d.rank != rank;
+            })
+            .transition()
+              .style("opacity", opacity);
+
+          d3.selectAll(".annotation")
+            .classed('hidden', true)
+
+          d3.select(".r"+rank)
+            .classed('hidden', false)
+        }
+
+        function fadeOut() {
+          svg.selectAll("circle")
+          .transition()
+            .style("opacity", function (d) { opacity(d.size); });
+
+          // and, ...clumsy!
+          d3.selectAll(".annotation")
+            .classed('hidden', false)
+
+          // d3.selectAll(".annotation:not(.top10)")
+          //   .classed('hidden', true)
+        }
+      });
+    </script>
+  </body>
+</html>

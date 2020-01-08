@@ -23,22 +23,56 @@
       </header>
       <div class="layout__item--main">
         <p>
-          Det hele er ikke mer komplisert enn som så, men en uhøytidelig måte å sparke i gang visualiseringsåret 2020 på. Og i raus nyttårsforsettånd er det ingen rammer eller begrensninger: Vi velger fritt tema og form: Det kan være kart, graf eller diagram; plakat eller interaktivt; animert eller statisk. Alt er lov. Også innimellom å børste støv av visualisering vi har har produsert før.
+          Det hele er ikke mer komplisert enn som så. En uhøytidelig måte å sparke i gang visualiseringsåret 2020 på. Og i raus nyttårsforsettånd er det ingen rammer eller begrensninger: Vi velger fritt tema og form: Det kan være kart, graf eller diagram; plakat eller interaktivt; animert eller statisk. Alt er lov. Også innimellom å børste støv av visualisering vi har har produsert før.
         </p>
-        <h2 id="dag1">#1 - Trender i norsk bistand</h2>
-        <blockquote class="twitter-tweet" data-lang="en"><p lang="no" dir="ltr">Trender i norsk bistand på 2000-tallet: <a href="https://t.co/guLifrK5ap">https://t.co/guLifrK5ap</a> Avspark for <a href="https://twitter.com/hashtag/31dagermeddata?src=hash&amp;ref_src=twsrc%5Etfw">#31dagermeddata</a>. Mer kommer! <a href="https://twitter.com/hashtag/dataviz?src=hash&amp;ref_src=twsrc%5Etfw">#dataviz</a> <a href="https://twitter.com/hashtag/bistand?src=hash&amp;ref_src=twsrc%5Etfw">#bistand</a> <a href="https://t.co/t7RomIP7pF">pic.twitter.com/t7RomIP7pF</a></p>&mdash; Kartoteket 3x5 (@3x5Kartoteket) <a href="https://twitter.com/3x5Kartoteket/status/1212513613749129222?ref_src=twsrc%5Etfw">January 1, 2020</a></blockquote>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-        <h2 id="dag2">#2 - Budsjettkappløpet</h2>
-        <p>En animasjon (interpolert) av top 10 departementspostene (i mill kroner) på statsbudsjettene fra 2014 to 2020.</p>
-        <div id="observablehq-26d7aeae"></div>
-        <script type="module">
-          (new Runtime).module(define, name => (name === "viewof replay") && inspect());
-          const inspect = Inspector.into("#observablehq-26d7aeae");
-        </script>
+        <article>
+          <h2 id="dag7">#7 Rangering av nordiske universiteter</h2>
+          <p>UiO nr 56 i global rangering av universiteter</p>
+          <iframe id="day7" src="../31dagermeddata/dager/7/index.html" style="width: 100%; height: 500px; border:0"></iframe>
+          <p>Grafen viser tre dimensjoner - Quality of Education, Research Performance og Total Score (Rank).</p>
+          <p>Vi ser at av de tre på topp, skårer UiO bedre på undervisning, men dårligere på forskning, enn sine svenske og danske søsken.</p>
+          <p>
+            <cite>Datakilde: <a href="https://cwur.org/">Center for World University Rankings</a> (Her avgrenset til plasseringer innenfor topp 300)</cite><br/>
+            <a href="http://www.susielu.com/"></a>Susie Lu</a> biblioteker for <a href="http://d3-annotation.susielu.com/">annotation</a> and <a href="http://d3-legend.susielu.com">legends</a>.
+          </p>
+      
+        </article>
+
+        <article>
+          <h2 id="dag6">#6 Global oppvarming</h2>
+          <iframe id="day6" src="../31dagermeddata/dager/6/index.html" style="width: 100%; height: 600px; border:0"></iframe>
+          <p>Hva skjer egentlig med kystlinjen vår (og resten av verdens) dersom vi ikke får kontroll på den globale oppvarmingen? </p>
+          <p>Etter et raskt dykk i tilgjengelig data kan vi si en ting. Havene vil stige, men nøyaktig hvor mye er usikkert. Konseptet 31 dager med data gir oss desverre ikke tilstrekkelig tid til å vurdere alle scenarier, men vi kan vise de sannsynlige utfallene de neste 80 årene.<br/>
+            Inspirasjon: <a href="https://sciencenordic.com/climate-change-denmark-paris-agreement/time-is-running-out-to-adapt-to-dramatic-sea-level-rise/1439403">Sciencenordig</a><br>
+            Data: <a href="http://www.pnas.org/cgi/doi/10.1073/pnas.1605312113">http://www.pnas.org/cgi/doi/10.1073/pnas.1605312113</a><br/>
+          </p>
+          <p>
+            Kart i fullskjerm <a href="https://kartoteket.as/31dagermeddata/dager/6/" target="_blank">https://kartoteket.as/31dagermeddata/dager/6/</a>
+          </p>
+        </article>
+
+        <article>
+          <h2 id="dag3">#3 TV-aksjonen</h2>
+          <iframe src="../31dagermeddata/dager/3/index.html" style="width: 100%; height: 600px; border:0"></iframe>
+          <p>Etter en søndagstur med 2 unger og 1 bøsse, ble jeg nysgjerrig på framtida til bøsseinnsamling i det kontantløse samfunnet. 
+            Og fine TV-aksjonen har heldigvis en hel nettside full av statistikk som kan svare på slikt. Men trendene var dessverre skjult i et stablet stolpediagram (slike som nesten alltid er vanskelige å lese).</p>
+          <p>Derfor dette eksperimentet med et linjediagram. Y-aksen er ikke helt optimal, men det hjelper med å tillate litt interaksjon.</p>
+          <p>Tallene er naska fra <a href="https://giverstafett.no/landsstatistikk">https://giverstafett.no/landsstatistikk</a> i fullt dagslys (mer presist kl 17:19 3. januar 2020).</p>
+        </article>
+
+        <article>
+
+          <h2 id="dag2">#2 - Budsjettkappløpet</h2>
+          <p>En animasjon (interpolert) av top 10 departementspostene (i mill kroner) på statsbudsjettene fra 2014 to 2020.</p>
+          <div id="observablehq-26d7aeae"></div>
+          <script type="module">
+            (new Runtime).module(define, name => (name === "viewof replay") && inspect());
+            const inspect = Inspector.into("#observablehq-26d7aeae");
+            </script>
         <div id="observablehq-e414f861"></div>
         <script type="module">
-        import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+          import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
         import define from "https://api.observablehq.com/@svale/budsjettkapplopet.js?v=3";
         // const inspect = Inspector.into("#observablehq-e414f861");
         const runtime = new Runtime();
@@ -60,24 +94,15 @@
             Visualiseringen: <a href="https://observablehq.com/@svale/budsjettkapplopet">Koden</a> (95% en ren kopi av <a href="https://observablehq.com/@d3/bar-chart-race">denne</a>).
           </p>
         </small>
-        <h2 id="dag3">#3 TV-aksjonen</h2>
-        <iframe src="../31dagermeddata/dager/3/index.html" style="width: 100%; height: 600px; border:0"></iframe>
-        <p>Etter en søndagstur med 2 unger og 1 bøsse, ble jeg nysgjerrig på framtida til bøsseinnsamling i det kontantløse samfunnet. 
-          Og fine TV-aksjonen har heldigvis en hel nettside full av statistikk som kan svare på slikt. Men trendene var dessverre skjult i et stablet stolpediagram (slike som nesten alltid er vanskelige å lese).</p>
-        <p>Derfor dette eksperimentet med et linjediagram. Y-aksen er ikke helt optimal, men det hjelper med å tillate litt interaksjon.</p>
-        <p>Tallene er naska fra <a href="https://giverstafett.no/landsstatistikk">https://giverstafett.no/landsstatistikk</a> i fullt dagslys (mer presist kl 17:19 3. januar 2020).</p>
+      </article>
 
-      <h2 id="dag6">#6 Global oppvarming</h2>
-      <iframe src="../31dagermeddata/dager/6/index.html" style="width: 100%; height: 600px; border:0"></iframe>
-      <p>Hva skjer egentlig med kystlinjen vår (og resten av verdens) dersom vi ikke får kontroll på den globale oppvarmingen? </p>
-      <p>Etter et raskt dykk i tilgjengelig data kan vi si en ting. Havene vil stige, men nøyaktig hvor mye er usikkert. Konseptet 31 dager med data gir oss desverre ikke tilstrekkelig tid til å vurdere alle scenarier, men vi kan vise de sannsynlige utfallene de neste 80 årene.<br/>
-        Inspirasjon: <a href="https://sciencenordic.com/climate-change-denmark-paris-agreement/time-is-running-out-to-adapt-to-dramatic-sea-level-rise/1439403">Sciencenordig</a><br>
-        Data: <a href="http://www.pnas.org/cgi/doi/10.1073/pnas.1605312113">http://www.pnas.org/cgi/doi/10.1073/pnas.1605312113</a><br/>
-    </p>
-    <p>
-      Kart i fullskjerm <a href="https://kartoteket.as/31dagermeddata/dager/6/" target="_blank">https://kartoteket.as/31dagermeddata/dager/6/</a>
-    </p>
-    </div>
+      <article>
+        <h2 id="dag1">#1 - Trender i norsk bistand</h2>
+        <blockquote class="twitter-tweet" data-lang="en"><p lang="no" dir="ltr">Trender i norsk bistand på 2000-tallet: <a href="https://t.co/guLifrK5ap">https://t.co/guLifrK5ap</a> Avspark for <a href="https://twitter.com/hashtag/31dagermeddata?src=hash&amp;ref_src=twsrc%5Etfw">#31dagermeddata</a>. Mer kommer! <a href="https://twitter.com/hashtag/dataviz?src=hash&amp;ref_src=twsrc%5Etfw">#dataviz</a> <a href="https://twitter.com/hashtag/bistand?src=hash&amp;ref_src=twsrc%5Etfw">#bistand</a> <a href="https://t.co/t7RomIP7pF">pic.twitter.com/t7RomIP7pF</a></p>&mdash; Kartoteket 3x5 (@3x5Kartoteket) <a href="https://twitter.com/3x5Kartoteket/status/1212513613749129222?ref_src=twsrc%5Etfw">January 1, 2020</a></blockquote>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </article>
+        
+      </div>
 
     </div>
 
