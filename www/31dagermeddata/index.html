@@ -36,11 +36,11 @@
             const inspect = Inspector.into("#observablehq-53237ea0");
             (new Runtime).module(define, name => (name === "chart") && inspect());
             </script>
-          <p>
-            <cite>Datakilde: <a href="https://sedac.ciesin.columbia.edu/data/collection/gpw-v4">Gridded Population of the World (GPW), v4</a> Vi har hentet ned et datasett som ikke er for stort, ett punkt for hver lengde og breddegrad.</cite>
+            <p>
+              <cite>Datakilde: <a href="https://sedac.ciesin.columbia.edu/data/collection/gpw-v4">Gridded Population of the World (GPW), v4</a></cite> <br />
+              Vi har hentet ned et datasett som ikke er for stort, ett punkt for hver lengde og breddegrad.
+            </p>
         </article>
-
-
 
         <article>
           <h2 id="dag7">#7 Rangering av nordiske universiteter</h2>
@@ -52,7 +52,6 @@
             <cite>Datakilde: <a href="https://cwur.org/">Center for World University Rankings</a> (Her avgrenset til plasseringer innenfor topp 300)</cite><br/>
             <a href="http://www.susielu.com/"></a>Susie Lu</a> biblioteker for <a href="http://d3-annotation.susielu.com/">annotation</a> and <a href="http://d3-legend.susielu.com">legends</a>.
           </p>
-      
         </article>
 
         <article>
@@ -78,30 +77,23 @@
         </article>
 
         <article>
-
           <h2 id="dag2">#2 - Budsjettkappløpet</h2>
           <p>En animasjon (interpolert) av top 10 departementspostene (i mill kroner) på statsbudsjettene fra 2014 to 2020.</p>
           <div id="observablehq-26d7aeae"></div>
+          <div id="observablehq-e414f861"></div>
           <script type="module">
-            (new Runtime).module(define, name => (name === "viewof replay") && inspect());
-            const inspect = Inspector.into("#observablehq-26d7aeae");
+            import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+            import define from "https://api.observablehq.com/@svale/budsjettkapplopet.js?v=3";
+            const runtime = new Runtime();
+            runtime.module(define, name => {
+              if (name === "chart") {
+                return Inspector.into("#observablehq-e414f861")();
+              }
+              if (name === "viewof replay") {
+                return Inspector.into("#observablehq-26d7aeae")()
+              }
+            })
             </script>
-        <div id="observablehq-e414f861"></div>
-        <script type="module">
-          import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-        import define from "https://api.observablehq.com/@svale/budsjettkapplopet.js?v=3";
-        // const inspect = Inspector.into("#observablehq-e414f861");
-        const runtime = new Runtime();
-        runtime.module(define, name => {
-          if (name === "chart") {
-            return Inspector.into("#observablehq-e414f861")();
-          }
-          if (name === "viewof replay") {
-            return Inspector.into("#observablehq-26d7aeae")()
-          }
-        })
-        // (new Runtime).module(define, name => (name === "chart") && inspect());
-        </script>
         <small>
           <p>Noter og kilder:<br>
             2019 tall er saldert budsjett.<br>
