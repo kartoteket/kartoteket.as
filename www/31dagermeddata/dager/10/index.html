@@ -1,0 +1,23 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dag 10 - Australia brenner</title>
+  <meta name="description" content="Australia skogbrann">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="observablehq-1bede6a2"></div>
+  <script type="module">
+  import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+  import define from "https://api.observablehq.com/@bardrotzer/australia-wildfires.js?v=3";
+  const inspect = Inspector.into("#observablehq-1bede6a2");
+  (new Runtime).module(define, name => (name === "container") && inspect());
+  </script>
+</body>
+</html>
