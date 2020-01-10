@@ -13,14 +13,33 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
+  <style>
+    .mainContainer {
+      background-color: #FFF; 
+      padding: 4px; 
+      width: 120px;
+    }
+    .replay {
+      margin-top: 4px;
+      text-align: center;
+      padding: 2px;
+      border: 1px solid #A8AEBF;
+      cursor: hand;
+      background-color: #CFD6EA;
+      color: #595D66;
+    }
+    .replay:hover {
+      background-color: #E0E8FF;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="observablehq-1bede6a2"></div>
+  <div id="observablehq-c43de693"></div>
   <script type="module">
   import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
   import define from "https://api.observablehq.com/@bardrotzer/australia-wildfires.js?v=3";
-  const inspect = Inspector.into("#observablehq-1bede6a2");
+  const inspect = Inspector.into("#observablehq-c43de693");
   (new Runtime).module(define, name => (name === "container") && inspect());
   </script>
 </body>
