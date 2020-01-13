@@ -6,7 +6,7 @@
       </nuxt-link>
       <siteNav />
     </header>
-    <nuxt class="p-page flex-1" />
+    <nuxt class="p-page flex-1 font-light" />
     <footer class="site-footer p-page py-8 flex justify-end Xdebug">
       <div class="w-1/2 font-hairline text-right">
         <!--

@@ -25,6 +25,10 @@ body {
   @apply px-8
 }
 
+.rtf > * {
+  @apply mb-4
+}
+
 /**
 ** Transitions
 **/
