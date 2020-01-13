@@ -1,6 +1,9 @@
 <template>
   <nav>
-    <ul class="list-reset flex xdebug">
+    <button class="text-4xl sm:hidden font-hairline">
+      =
+    </button>
+    <ul class="list-reset xdebug hidden sm:flex">
       <li v-for="item in navItems" :key="item.path" class="seperate">
         <nuxt-link :to="item.path" class="text-white uppercase px-4">
           {{ item.label }}
