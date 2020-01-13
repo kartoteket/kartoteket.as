@@ -1,4 +1,4 @@
-const pkg = require('./package')
+const pkg = require('./package');
 
 module.exports = {
   mode: 'universal',
@@ -22,6 +22,14 @@ module.exports = {
   loading: { color: '#fff' },
 
   /*
+  ** Page Transitions
+  */
+  transition: {
+    name: 'layout',
+    mode: 'out-in'
+  },
+
+  /*
   ** Global CSS
   */
   css: ['~/assets/css/tailwind.css'],
@@ -34,7 +42,7 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: [, '@nuxtjs/pwa'],
+  modules: ['@nuxtjs/pwa'],
 
   /*
   ** Build configuration
@@ -51,8 +59,20 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
-        })
+        });
+      }
+    },
+    postcss: {
+      // Add plugin names as key and arguments as value
+      // Install them before as dependencies with npm or yarn
+      plugins: {
+        // Disable a plugin by passing false as value
+        'postcss-import': { from: 'assets/css/tailwind.css' }
+        // 'postcss-url': false,
+        // 'postcss-nested': {},
+        // 'postcss-responsive-type': {},
+        // 'postcss-hexrgba': {}
       }
     }
   }
-}
+};

@@ -43,9 +43,23 @@ View the full documentation at https://tailwindcss.com.
 */
 
 const colors = {
+  /* profile */
+  red: '#ef4224',
+  yellow: '#fed636',
+  blue: '#4b88b4',
+  orange: '#f8a225',
+  green: '#90c291',
+  purple: '#bd5284',
+  'deep-blue': '#173a61',
+  'rose-lake': '#ef3e58',
+  'lemon-yellow': '#f2db56',
+  vermillon: '#ef5725',
+  gray: '#ef5725',
+  black: '#ef5725',
+
   transparent: 'transparent',
 
-  black: '#22292f',
+  // black: '#22292f',
   'grey-darkest': '#3d4852',
   'grey-darker': '#606f7b',
   'grey-dark': '#8795a1',
@@ -58,7 +72,7 @@ const colors = {
   'red-darkest': '#3b0d0c',
   'red-darker': '#621b18',
   'red-dark': '#cc1f1a',
-  red: '#e3342f',
+  // red: '#e3342f',
   'red-light': '#ef5753',
   'red-lighter': '#f9acaa',
   'red-lightest': '#fcebea',
@@ -66,7 +80,7 @@ const colors = {
   'orange-darkest': '#462a16',
   'orange-darker': '#613b1f',
   'orange-dark': '#de751f',
-  orange: '#f6993f',
+  // orange: '#f6993f',
   'orange-light': '#faad63',
   'orange-lighter': '#fcd9b6',
   'orange-lightest': '#fff5eb',
@@ -74,7 +88,7 @@ const colors = {
   'yellow-darkest': '#453411',
   'yellow-darker': '#684f1d',
   'yellow-dark': '#f2d024',
-  yellow: '#ffed4a',
+  // yellow: '#ffed4a',
   'yellow-light': '#fff382',
   'yellow-lighter': '#fff9c2',
   'yellow-lightest': '#fcfbeb',
@@ -82,7 +96,7 @@ const colors = {
   'green-darkest': '#0f2f21',
   'green-darker': '#1a4731',
   'green-dark': '#1f9d55',
-  green: '#38c172',
+  // green: '#38c172',
   'green-light': '#51d88a',
   'green-lighter': '#a2f5bf',
   'green-lightest': '#e3fcec',
@@ -98,7 +112,7 @@ const colors = {
   'blue-darkest': '#12283a',
   'blue-darker': '#1c3d5a',
   'blue-dark': '#2779bd',
-  blue: '#3490dc',
+  // blue: '#3490dc',
   'blue-light': '#6cb2eb',
   'blue-lighter': '#bcdefa',
   'blue-lightest': '#eff8ff',
@@ -114,7 +128,7 @@ const colors = {
   'purple-darkest': '#21183c',
   'purple-darker': '#382b5f',
   'purple-dark': '#794acf',
-  purple: '#9561e2',
+  // purple: '#9561e2',
   'purple-light': '#a779e9',
   'purple-lighter': '#d6bbfc',
   'purple-lightest': '#f3ebff',
@@ -126,7 +140,7 @@ const colors = {
   'pink-light': '#fa7ea8',
   'pink-lighter': '#ffbbca',
   'pink-lightest': '#ffebef'
-}
+};
 
 module.exports = {
   /*
@@ -916,4 +930,4 @@ module.exports = {
     important: false,
     separator: ':'
   }
-}
+};
