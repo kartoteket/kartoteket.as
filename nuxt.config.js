@@ -24,20 +24,17 @@ module.exports = {
   /*
   ** Page Transitions
   */
-  transition: {
+  pageTransition: {
     name: 'layout',
     mode: 'out-in'
   },
 
   /*
-  ** Global CSS
-  */
-  css: ['~/assets/css/tailwind.css'],
-
-  /*
   ** Plugins to load before mounting the App
   */
   plugins: [],
+
+  buildModules: ['@nuxtjs/tailwindcss'],
 
   /*
   ** Nuxt.js modules
