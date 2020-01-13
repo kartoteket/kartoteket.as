@@ -1,13 +1,13 @@
 <template>
   <nav>
-    <ul class="list-reset flex">
-      <li v-for="item in navItems" :key="item.path" :class="`p-1 m-4 border-2 rounded-full border-${item.color}`">
-        <nuxt-link :to="item.path" :class="`bg-${item.color} rounded-full w-24 h-24 block flex items-center justify-center text-white no-underline`">
+    <ul class="list-reset flex xdebug">
+      <li v-for="item in navItems" :key="item.path" class="seperate">
+        <nuxt-link :to="item.path" class="text-white uppercase px-4">
           {{ item.label }}
         </nuxt-link>
       </li>
     </ul>
-  </nav>  
+  </nav>
 </template>
 
 <script>
@@ -16,32 +16,24 @@ export default {
     return {
       navItems: [
         {
-          path: '/',
-          label: 'Home',
-          color: 'vermillon'
+          path: 'work',
+          label: 'Work'
         },
         {
           path: 'about',
-          label: 'About',
-          color: 'deep-blue'
+          label: 'About'
         },
         {
-          path: 'work',
-          label: 'Work',
-          color: 'green'
-        },
-        {
-          path: 'approach',
-          label: 'Approach',
-          color: 'yellow'
-        },
-        {
-          path: 'articles',
-          label: 'Articles',
-          color: 'purple'
+          path: 'contact',
+          label: 'Contact'
         }
       ]
     };
   }
 };
 </script>
+<style scoped>
+.seperate + .seperate {
+  border-left: 1px solid white;
+}
+</style>

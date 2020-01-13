@@ -1,12 +1,7 @@
 <template>
-  <section>
-    <div>
-      <h1 class="title">
-        kartoteket.no
-      </h1>
-      <h2 class="subtitle">
-        The kartoteket.no website2.0
-      </h2>
-    </div>
-  </section>
+  <main class="p-page flex">
+    <p class="text-4xl font-light opacity-90 xl:w-1/2 Xdebug pt-16 lg:pt-32 xl:pt-64">
+      Kartoteket is a studio building websites, visualisations and data driven maps.
+    </p>
+  </main>
 </template>
