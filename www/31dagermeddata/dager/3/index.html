@@ -197,8 +197,8 @@ var Chart = (function(window,d3) {
           bottom: 40,
           left: 60
         },
-    width = Math.min(window.innerWidth, 960) - margin.left - margin.right,
-    height = width/1.2  - margin.top - margin.bottom;
+    width = Math.min(window.innerWidth, 960) - margin.left - margin.right - 30,
+    height = width/1.2  - margin.top - margin.bottom - 70;
 
     // mq
     isMobileIsh = width <= 320;
