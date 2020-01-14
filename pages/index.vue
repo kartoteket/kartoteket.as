@@ -1,37 +1,7 @@
 <template>
-  <section>
-    <div>
-      <h1 class="title">
-        kartoteket.no
-      </h1>
-      <h2 class="subtitle">
-        The kartoteket.no website2.0
-      </h2>
-    </div>
-  </section>
+  <main class="p-page flex">
+    <p class=" text-xl sm:text-2xl lg:text-4xl font-light opacity-90 sm:w-3/4 lg:w-1/2 Xdebug pt-16 lg:pt-32 xl:pt-64">
+      Kartoteket is a studio building websites, visualisations and data driven maps.
+    </p>
+  </main>
 </template>
-
-
-<style>
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>

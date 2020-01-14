@@ -24,25 +24,29 @@ module.exports = {
   /*
   ** Page Transitions
   */
-  transition: {
+  pageTransition: {
     name: 'layout',
     mode: 'out-in'
   },
-
-  /*
-  ** Global CSS
-  */
-  css: ['~/assets/css/tailwind.css'],
 
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [],
 
+  buildModules: ['@nuxtjs/tailwindcss'],
+
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/pwa'],
+  modules: ['@nuxtjs/pwa', 'nuxt-sanity'],
+
+  sanity: {
+    projectId: 'kqscd500', // string, required
+    dataset: 'production', // string, required
+    token: '', // string, optional
+    useCdn: false // boolean, optional, default is false
+  },
 
   /*
   ** Build configuration

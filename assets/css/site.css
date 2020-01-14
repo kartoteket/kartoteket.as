@@ -1,0 +1,60 @@
+/**
+**  Typography
+**/
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
+/**
+**  General
+**/
+body {
+  background-image: linear-gradient(theme(colors.blue.900), theme(colors.cyan.100))
+}
+
+
+/**
+**  Abstractions
+**/
+.site-container {
+  @apply min-h-screen flex flex-col justify-between text-white mx-auto;
+}
+
+.p-page {
+  @apply px-4
+}
+@screen sm {
+  .p-page {
+    @apply px-4
+  }
+}
+
+.rtf > * {
+  @apply mb-4
+}
+
+/**
+** Transitions
+**/
+.fade-in-out {
+  transition: opacity 0.5s, visibility 0s 0.5s;
+}
+
+.layout-enter-active, .layout-leave-active {
+  transition: opacity .5s
+}
+.layout-enter, .layout-leave-active {
+  opacity: 0
+}
+
+/**
+ * Debugging
+ */
+ .debug {
+   outline: 1px dotted rgba(255, 0, 255, 0.5)
+ }
+ .debug.flex > *,
+ .debug.grid > * {
+  outline: 1px dotted rgba(0, 255, 255, 0.5)
+ }
