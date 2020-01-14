@@ -1,14 +1,14 @@
 <template>
   <div class="site-container">
     <header class="flex justify-between items-center h-24 Xdebug w-full p-page">
-      <nuxt-link to="/" class="text-white no-underline font-light uppercase text-xl tracking-wide opacity-90">
+      <nuxt-link to="/" class="text-white no-underline font-light uppercase text-xl tracking-wide opacity-90 z-20">
         Kartoteket
       </nuxt-link>
       <siteNav />
     </header>
     <nuxt class="p-page flex-1 font-light" />
     <footer class="site-footer p-page py-8 flex justify-end Xdebug">
-      <div class="w-1/2 font-hairline text-right">
+      <div class="md:w-1/2 font-hairline text-right text-sm sm:text-base">
         <!--
         <p>We write code that creates relations.</p>
         <p>Relationships enables analysis of patterns, transforming data into knowledge. </p>

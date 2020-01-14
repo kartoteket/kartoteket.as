@@ -10,7 +10,7 @@ html { font-family: 'Inter', sans-serif; }
 **  General
 **/
 body {
-  background-image: linear-gradient(theme(colors.dark-blue), theme(colors.cyan))
+  background-image: linear-gradient(theme(colors.blue.900), theme(colors.cyan.100))
 }
 
 
@@ -22,7 +22,12 @@ body {
 }
 
 .p-page {
-  @apply px-8
+  @apply px-4
+}
+@screen sm {
+  .p-page {
+    @apply px-4
+  }
 }
 
 .rtf > * {
@@ -32,6 +37,9 @@ body {
 /**
 ** Transitions
 **/
+.fade-in-out {
+  transition: opacity 0.5s, visibility 0s 0.5s;
+}
 
 .layout-enter-active, .layout-leave-active {
   transition: opacity .5s
