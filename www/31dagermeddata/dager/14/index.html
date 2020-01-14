@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <div style="padding: 20px">
   <div id="observablehq-d803224f"></div>
   <script type="module">
   import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
@@ -21,5 +22,6 @@
   (new Runtime).module(define, name => (name === "chart") && inspect());
   </script>
 </script>
+</div>
 </body>
 </html>
