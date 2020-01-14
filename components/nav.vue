@@ -3,7 +3,7 @@
     <button
       :aria-expanded="open.toString()"
       :aria-controls="id"
-      class="sm:hidden flex fixed right-0 top-0 mt-8 mr-4 sm:mr-8 z-20 icon-wrapper"
+      class="sm:hidden flex fixed right-0 top-0 mt-8 mr-4 sm:mr-8 z-20 w-8 h-8 justify-center items-center"
       @click="toggle"
     >
       <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" /></div>
@@ -85,13 +85,6 @@ export default {
   .seperate + .seperate {
     border-left: 1px solid white;
   }
-}
-
-.icon-wrapper {
-  width: 30px;
-  height: 30px;
-  align-items: center;
-  justify-content: center;
 }
 
 .icon {
