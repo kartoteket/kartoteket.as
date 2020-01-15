@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dag 14 - Hvor stort er Norge</title>
+  <meta name="description" content="Avskoging">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div style="padding: 20px">
+    <div id="observablehq-3d179397"></div>
+    <script type="module">
+    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+    import define from "https://api.observablehq.com/@bardrotzer/how-big-are-countries-like-really.js?v=3";
+    const inspect = Inspector.into("#observablehq-3d179397");
+    (new Runtime).module(define, name => (name === "chart") && inspect());
+    </script>
+</div>
+</body>
+</html>
