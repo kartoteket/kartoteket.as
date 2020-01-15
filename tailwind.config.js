@@ -43,6 +43,9 @@ module.exports = {
     extend: {
       opacity: {
         90: '0.9'
+      },
+      screens: {
+        xxl: '1600px'
       }
     }
   },

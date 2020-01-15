@@ -26,7 +26,12 @@ body {
 }
 @screen sm {
   .p-page {
-    @apply px-4
+    @apply px-8
+  }
+}
+@screen xl {
+  .p-page {
+    @apply px-10
   }
 }
 
