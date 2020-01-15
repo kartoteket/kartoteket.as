@@ -13,15 +13,14 @@
 </head>
 
 <body>
-  <div style="padding: 20px">
-  <div id="observablehq-d803224f"></div>
-  <script type="module">
-  import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-  import define from "https://api.observablehq.com/@bardrotzer/how-big-are-countries-like-really.js?v=3";
-  const inspect = Inspector.into("#observablehq-d803224f");
-  (new Runtime).module(define, name => (name === "chart") && inspect());
-  </script>
-</script>
+  <div style="padding: 10%">
+    <div id="observablehq-b4396a71"></div>
+    <script type="module">
+    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+    import define from "https://api.observablehq.com/@bardrotzer/how-big-are-countries-like-really.js?v=3";
+    const inspect = Inspector.into("#observablehq-b4396a71");
+    (new Runtime).module(define, name => (name === "chart") && inspect());
+    </script>
 </div>
 </body>
 </html>
