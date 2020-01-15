@@ -53,6 +53,13 @@ module.exports = {
     purgeCSSInDev: process.env.NODE_ENV === 'production'
   },
 
+  purgeCSS: {
+    whitelistPatterns: [
+      /-(leave|enter|appear)(|-(to|from|active))$/,
+      /^nuxt-link(|-exact)-active$/
+    ]
+  },
+
   /*
   ** Build configuration
   */
