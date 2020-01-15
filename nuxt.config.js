@@ -48,6 +48,11 @@ module.exports = {
     useCdn: false // boolean, optional, default is false
   },
 
+  // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
+  tailwindcss: {
+    purgeCSSInDev: process.env.NODE_ENV === 'production'
+  },
+
   /*
   ** Build configuration
   */
