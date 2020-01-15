@@ -34,12 +34,12 @@ module.exports = {
   */
   plugins: [],
 
-  buildModules: ['@nuxtjs/tailwindcss'],
+  buildModules: [],
 
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/pwa', 'nuxt-sanity'],
+  modules: ['@nuxtjs/pwa', 'nuxt-sanity', '@nuxtjs/tailwindcss'],
 
   sanity: {
     projectId: 'kqscd500', // string, required
