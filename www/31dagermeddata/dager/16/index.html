@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dag 16 - Status Klimamål</title>
+  <meta name="description" content="Klima">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1D2933;
+    }
+    </style>
+</head>
+
+<body>
+  <div style="padding: 20px">
+    <div id="chart"></div>
+    <div id="css"></div>
+  </div>
+
+  <script type="module">
+    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+    import define from "https://api.observablehq.com/@svale/gauge-chart.js?v=3";
+    new Runtime().module(define, name => {
+    if (name === "chart") {
+      return new Inspector(document.querySelector("#chart"));
+    }
+    if (name === "css") {
+      return new Inspector(document.querySelector("#css"));
+    }
+  });
+    </script>
+</body>
+</html>
