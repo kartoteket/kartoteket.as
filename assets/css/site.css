@@ -18,7 +18,8 @@ body {
 **  Abstractions
 **/
 .site-container {
-  @apply min-h-screen flex flex-col justify-between text-white mx-auto;
+  @apply min-h-screen flex flex-col justify-between text-white-full mx-auto;
+  max-width: 2000px;
 }
 
 .p-page {
