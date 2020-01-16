@@ -36,6 +36,8 @@ body {
 }
 
 .rtf > * {
+  @apply mb-8
+}
 
 .main-header {
   @apply text-2xl uppercase mb-4 pt-2
