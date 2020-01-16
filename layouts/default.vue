@@ -1,7 +1,7 @@
 <template>
   <div class="site-container">
     <header class="flex justify-between items-center h-24 Xdebug w-full p-page">
-      <nuxt-link to="/" class="text-white no-underline font-light uppercase text-xl tracking-wide opacity-90 z-20">
+      <nuxt-link to="/" class="text-white-full no-underline font-light uppercase text-xl tracking-wide opacity-90 z-20">
         Kartoteket
       </nuxt-link>
       <siteNav />

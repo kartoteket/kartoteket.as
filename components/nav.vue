@@ -28,7 +28,7 @@
       @click="toggle"
     >
       <li v-for="item in navItems" :key="item.path" class="seperate">
-        <nuxt-link :to="item.path" class="text-white uppercase px-4 text-2xl sm:text-base leading-loose">
+        <nuxt-link :to="item.path" class="text-white-full uppercase px-4 text-2xl sm:text-base leading-loose">
           {{ item.label }}
         </nuxt-link>
       </li>

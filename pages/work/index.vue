@@ -1,6 +1,6 @@
 <template>
   <main class="lg:pt-16">
-    <article v-for="(entry, index) in tempwork" :key="index" class="border-t border-white font-light lg:w-2/3 mb-16 pt-4 opacity-90 flex">
+    <article v-for="(entry, index) in tempwork" :key="index" class="border-t border-white-500 font-light lg:w-2/3 mb-16 pt-4 opacity-90 flex">
       <h1 class="text-xl w-1/2 pr-8">
         {{ entry.title }}
       </h1>
