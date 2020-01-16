@@ -36,8 +36,14 @@ body {
 }
 
 .rtf > * {
-  @apply mb-4
+
+.main-header {
+  @apply text-2xl uppercase mb-4 pt-2
 }
+.aside-header {
+  @apply text-lg uppercase border-t border-white-400 mb-4 pt-1
+}
+
 
 /**
 ** Transitions
