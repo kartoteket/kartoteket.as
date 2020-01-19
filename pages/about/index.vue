@@ -1,10 +1,10 @@
 <template>
-  <article class="pt-16 md:flex">
-    <main class="md:w-2/3 xl:w-1/2 pr-8 mr-8">
+  <article class="md:flex">
+    <main class="md:w-2/3 xl:w-1/2 md:pr-8 md:mr-8">
       <h1 class="main-header">
         About Kartoteket
       </h1>
-      <div id="lead" class="rtf text-lg leading-relaxed">
+      <div id="lead" class="rtf md:text-lg leading-relaxed">
         <p>
           Kartoteket is a studio building websites, visualisations and data driven maps.
           We write code that creates relations.
@@ -31,7 +31,7 @@
       </h2>
       <div class="rtf">
         <p>
-          Norwegian Ministry of Foreign Affairs, lundhagem architects, IOM Mixed Migration Hub, Rainforest Foundation Norway, The Tax Justice Network Norwar
+          Norwegian Ministry of Foreign Affairs, lundhagem architects, IOM Mixed Migration Hub, Rainforest Foundation Norway, The Tax Justice Network Norway
         </p>
       </div>
     </aside>

@@ -39,12 +39,17 @@ body {
 .rtf > * {
   @apply mb-8
 }
-
 .main-header {
-  @apply text-2xl uppercase mb-4 pt-2
+  @apply text-3xl uppercase mb-4
 }
+@screen md {
+  .main-header {
+    @apply text-4xl mb-10;
+  }
+}
+
 .aside-header {
-  @apply text-lg uppercase border-t border-white-400 mb-4 pt-1
+  @apply text-lg text-white-700 uppercase tracking-wide border-t border-white-500 mb-4 pt-1
 }
 
 

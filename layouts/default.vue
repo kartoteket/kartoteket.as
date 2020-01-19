@@ -1,12 +1,12 @@
 <template>
-  <div class="site-container">
-    <header class="flex justify-between items-center h-24 Xdebug w-full p-page">
-      <nuxt-link to="/" class="text-white-full no-underline font-light uppercase text-xl tracking-wide opacity-90 z-20">
+  <div class="site-container font-light">
+    <header class="flex justify-between items-center h-24 lg:mb-8 w-full p-page">
+      <nuxt-link to="/" class="text-white-full no-underline uppercase text-xl tracking-wide opacity-90 z-20">
         Kartoteket
       </nuxt-link>
       <siteNav />
     </header>
-    <nuxt class="p-page flex-1 font-light" />
+    <nuxt class="p-page flex-1" />
     <footer class="site-footer p-page py-8 flex justify-end Xdebug">
       <div class="md:w-1/2 font-hairline text-right text-sm sm:text-base">
         <!--

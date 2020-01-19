@@ -1,9 +1,8 @@
 <template>
-  <main class="pt-16 lg:w-2/3">
-    <h1 class="text-xl uppercase mb-8">
+  <main class="md:w-2/3">
+    <h1 class="main-header">
       Contact us
     </h1>
-
     <div class="md:flex justify-between">
       <article itemscope="" itemtype="http://schema.org/Organization" class="mb-8">
         <p>
