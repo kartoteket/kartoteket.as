@@ -4,17 +4,17 @@
 <html lang="no">
 <head>
   <meta charset="utf-8">
-  <title>Tabell 07459 - Dag 17</title>
-  <meta name="description" content="Kode en tabell om til en dynamisk visualisering">
+  <title>Befolkning - Dag 20</title>
+  <meta name="description" content="Befolkning: Hvor og når blir barn født i dag">
   <meta name="author" content="Kartoteket">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta property="og:title" content="Tabell 07459">
-  <meta property="og:description" content="Kode en tabell om til en dynamisk visualisering.">
+  <meta property="og:title" content="Befolkning">
+  <meta property="og:description" content="Befolkning: Hvor og når blir barn født i dag.">
   <meta property="og:image" content="https://kartoteket.as/31dagermeddata/dager/15/thumb.png">
   <meta property="og:url" content="https://kartoteket.as/31dagermeddata/dager/15/index.html">
-  <meta name="twitter:card" content="Kode en tabell om til en dynamisk visualisering">
+  <meta name="twitter:card" content="Befolkning: Hvor og når blir barn født i dag">
   <meta property="og:site_name" content="Kartoteket">
-  <meta name="twitter:image:alt" content="Kode en tabell om til en dynamisk visualisering">
+  <meta name="twitter:image:alt" content="Befolkning: Hvor og når blir barn født i dag">
   <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <style>
@@ -134,27 +134,55 @@
 
 <body>
   <div class="page">
-    <h1 class="page-heading">Tabell 07549 - Befolkning, kjønn og bosted</h1>
-    <p class="subhead">Du kan trygt snu litt på telefonen hvis du har en liten skjerm</p>
+    <h1 class="page-heading">Befolkning! Hvor ofte og hvor blir et barn født</h1>
+    <p class="subhead">Vår fantastiske verden står aldri stille. I dag feirer vi fødselsdager, en hel haug av dem. Hver gang det blinker blir et barn født.</p>
     <div id="chart"></div>
     <p class="footer">
       <a href="https://kartoteket.as/">Kartoteket</a>
       <a href="https://kartoteket.as/31dagermeddata/">#31dagermeddata</a>
     </p>
   </div>
-  <div id="observablehq-eeffe0aa"></div>
-<script type="module">
-import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-import define from "https://api.observablehq.com/@bardrotzer/07459-population.js?v=3";
-const inspect = Inspector.into("#observablehq-eeffe0aa");
-new Runtime().module(define, name => {
-    if (name === "chart") {
-      return new Inspector(document.querySelector("#chart"));
-    }
-    if (name === "css") {
-      return new Inspector(document.querySelector("#css"));
-    }
-  });
+
+
+
+  
+
+
+  <div id="observablehq-a3df3b4b"></div>
+  <script type="module">
+  import {Runtime, Inspector, Library} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+  import define from "https://api.observablehq.com/@bardrotzer/heartbeat.js?v=3";
+  const inspect = Inspector.into("#observablehq-a3df3b4b");
+
+  const chart = document.querySelector("#chart");
+
+  const stdlib = new Library;
+
+  const library = Object.assign({}, stdlib, {width});
+
+  function width() {
+    return stdlib.Generators.observe(notify => {
+      let width = notify(chart.clientWidth);
+      console.log('width set', width)
+      function resized() {
+        let width1 = chart.clientWidth;
+        if (width1 !== width) notify(width = width1);
+      }
+
+      window.addEventListener("resize", resized);
+      return () => window.removeEventListener("resize", resized);
+    });
+  }
+  const runtime = new Runtime(library);
+  runtime.module(define, name => {
+  if (name === "chart") {
+    return new Inspector(chart);
+  }
+});
+
 </script>
+  
+
+
 </body>
 </html>
