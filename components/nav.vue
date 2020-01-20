@@ -1,9 +1,21 @@
 <template>
-  <nav>
+  <nav class="debug">
     <button
       :aria-expanded="open.toString()"
       :aria-controls="id"
-      class="sm:hidden flex fixed right-0 top-0 mt-8 mr-4 sm:mr-8 z-20 w-8 h-8 justify-center items-center"
+      class="
+        sm:hidden flex
+        fixed
+        right-0 bottom-0
+        mb-4 mr-4
+        z-20
+        w-12 h-12
+        justify-center
+        items-center
+        rounded-full
+        bg-blue-900
+        shadow-lg
+        "
       @click="toggle"
     >
       <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" /></div>
