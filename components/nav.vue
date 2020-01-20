@@ -6,21 +6,23 @@
       class="sm:hidden flex fixed right-0 top-0 mt-8 mr-4 sm:mr-8 z-20 w-8 h-8 justify-center items-center"
       @click="toggle"
     >
-      <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" /></div>
+      <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" />
     </button>
 
     <ul
       :id="id"
       class="
-        Xdebug
         list-reset
-        fixed sm:relative sm:flex
+        fixed sm:relative
+        flex
+        flex-col sm:flex-row
+        justify-center
+        items-center
         inset-0
         w-screen sm:w-auto
         h-screen sm:h-auto
         z-10
         bg-blue-900 sm:bg-transparent
-        p-16 pt-32 sm:p-0
         text-center
         fade-in-out"
       :hidden="!open"
@@ -28,7 +30,7 @@
       @click="toggle"
     >
       <li v-for="item in navItems" :key="item.path" class="seperate">
-        <nuxt-link :to="item.path" class="text-white-full uppercase px-4 text-2xl sm:text-base leading-loose">
+        <nuxt-link :to="item.path" class="text-white-full sm:uppercase px-4 text-4xl sm:text-base leading-loose">
           {{ item.label }}
         </nuxt-link>
       </li>
