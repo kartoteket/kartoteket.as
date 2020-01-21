@@ -1,5 +1,5 @@
 <template>
-  <nav class="debug">
+  <nav>
     <button
       :aria-expanded="open.toString()"
       :aria-controls="id"
@@ -15,6 +15,7 @@
         rounded-full
         bg-blue-900
         shadow-lg
+        scale-in
         "
       @click="toggle"
     >
@@ -36,7 +37,8 @@
         z-10
         bg-blue-900 sm:bg-transparent
         text-center
-        fade-in-out"
+        fade-in-out
+        "
       :hidden="!open"
       :class="open ? 'opacity-100' : 'opacity-0 sm:opacity-100'"
       @click="toggle"
@@ -98,6 +100,18 @@ export default {
 @sceen sm {
   .seperate + .seperate {
     border-left: 1px solid white;
+  }
+}
+.scale-in {
+  animation: 1s ease-out 0s 1 scaleUp;
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
