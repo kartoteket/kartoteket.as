@@ -56,7 +56,8 @@ module.exports = {
         90: '0.9'
       },
       screens: {
-        xxl: '1600px'
+        xxl: '1600px',
+        'max-sm': { max: '639px' }
       }
     }
   },

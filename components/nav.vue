@@ -17,7 +17,7 @@
         shadow-lg
         scale-in
         "
-      @click="toggle"
+      @click="$emit('click')"
     >
       <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" />
     </button>
@@ -32,16 +32,14 @@
         justify-center
         items-center
         inset-0
-        w-screen sm:w-auto
         h-screen sm:h-auto
         z-10
         bg-blue-900 sm:bg-transparent
         text-center
-        fade-in-out
         "
       :hidden="!open"
-      :class="open ? 'opacity-100' : 'opacity-0 sm:opacity-100'"
-      @click="toggle"
+      :class="open ? 'menu-fade-out' : 'menu-fade-in'"
+      @click="$emit('click')"
     >
       <li v-for="item in navItems" :key="item.path" class="seperate">
         <nuxt-link :to="item.path" class="text-white-full sm:uppercase px-4 text-4xl sm:text-base leading-loose">
@@ -54,9 +52,14 @@
 
 <script>
 export default {
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      open: false,
       id: null,
       navItems: [
         {
@@ -84,24 +87,24 @@ export default {
     this.id = Math.random()
       .toString(36)
       .substring(2, 15);
-
-    window.addEventListener('keyup', e => {
-      if (e.key === 'Escape') {
-        this.closeHandler();
-      }
-    });
-  },
-  destroyed: function() {
-    document.removeEventListener('keyup', this.closeHandler);
-  },
-  methods: {
-    toggle() {
-      this.open = !this.open;
-    }
   }
 };
 </script>
 <style>
+@screen max-sm {
+  .menu-fade-out {
+    opacity: 1;
+    width: 100vw;
+    transition: opacity 0.5s, width 0s;
+  }
+  .menu-fade-in {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: opacity 0.5s, width 0s 0.5s;
+  }
+}
+
 @sceen sm {
   .seperate + .seperate {
     border-left: 1px solid white;

@@ -56,9 +56,6 @@ body {
 /**
 ** Transitions
 **/
-.fade-in-out {
-  transition: opacity 0.5s, visibility 0s 0.5s;
-}
 
 .layout-enter-active, .layout-leave-active {
   transition: opacity .5s
