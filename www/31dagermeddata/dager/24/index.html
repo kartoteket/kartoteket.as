@@ -1,0 +1,88 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dag 24 - Kommunebobla</title>
+  <meta name="description" content="Kommuner">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+  <style>
+  @import url('https://rsms.me/inter/inter.css');
+    html { font-family: 'Inter', sans-serif; }
+    @supports (font-variation-settings: normal) {
+      html { font-family: 'Inter var', sans-serif; }
+    }
+
+    body {
+      text-align: center;
+      padding-top: 1rem;
+      background-color: #fff;
+      font-family: Inter, Helvetica, sans-serif;
+    }
+    .header {
+      font-weight: 300;
+      text-align: center;
+      margin: 1rem auto;
+    }
+    #year {
+      text-align: center;
+      font-family: Inter, Helvetica, sans-serif;
+      font-size: 1.2rem;
+    }
+
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .footer {
+      display: inline-block;
+      margin: 3rem auto 0;
+      color: white;
+      font-size: 0.8rem;
+    }
+    .footer > a {
+      text-align: center;
+      display: block;
+      padding: 6px 1rem;
+    }
+    .footer > a+a {
+      border-top: 1px solid rgba(0, 0, 0, 0.5);
+    }
+    @media screen and (min-width: 640px) {
+      .footer {
+        margin-top: 1rem;
+        font-size: 1rem;
+      }
+    </style>
+</head>
+
+<body>
+  <div style="padding: 20px">
+    <h1 class="header">Kommunebobla</h1>
+    <p class="header">Universet av norske kommuner før og etter den store sammenslåinga 1. januar 2020</p>
+    <div id="year" class="year"></div>
+    <div id="chart" ></div>
+    <p class="footer">
+      <a href="https://kartoteket.as/">Kartoteket</a>
+      <a href="https://kartoteket.as/31dagermeddata/">#31dagermeddata</a>
+    </p>
+  </div>
+
+  <script type="module">
+    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+    import define from "https://api.observablehq.com/@svale/kommunebobla.js?v=3";
+    new Runtime().module(define, name => {
+      if (name === "chart") {
+        return new Inspector(document.querySelector("#chart"));
+      }
+      if (name === "viewof year") {
+        return new Inspector(document.querySelector("#year"));
+      }
+    });
+  </script>
+</body>
+</html>
