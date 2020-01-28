@@ -37,8 +37,17 @@ body {
 }
 
 .rtf > * {
+  /* color: theme(colors.white.800); */
   @apply mb-8
 }
+.rtf a {
+  color: theme(colors.white.full);
+  border-bottom: 2px solid theme(colors.white.700);
+}
+.rtf--tight > * {
+  @apply mb-4
+}
+
 .main-header {
   @apply text-3xl uppercase mb-4
 }
