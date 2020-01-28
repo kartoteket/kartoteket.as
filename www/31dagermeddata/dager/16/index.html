@@ -10,17 +10,70 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
   <style>
+    @import url('https://rsms.me/inter/inter.css');
+    html { font-family: 'Inter', sans-serif; }
+    @supports (font-variation-settings: normal) {
+      html { font-family: 'Inter var', sans-serif; }
+    }
     body {
+      font-family: Inter;
       background-color: #1D2933;
     }
+
+    header {
+      margin-top: 2rem;
+    }
+
+    .intro,
+    .page-header,
+    .panel-header {
+      text-align: center;
+      color: #fff;
+      font-weight: 300;
+    }
+    .panel-header {
+      display: inline-block;
+      margin-bottom: 0;
+      padding: 0 1rem;
+      border-bottom: 1px solid #fff;
+    }
+    .panel {
+        text-align: center;
+        flex: 1;
+        margin: 1rem;
+        border: 1px solid #fff;
+      }
+
+    @media screen and (min-width: 600px) {
+      .page-content {
+        display: flex;
+      }
+      .panel {
+        flex: 1;
+        margin: 2rem;
+      }
+    }
+
     </style>
 </head>
 
 <body>
-  <div style="padding: 20px">
-    <div id="chart"></div>
-    <div id="css"></div>
+  <header>
+    <h1 class="page-header">Klimastatus</h1>
+    <p class="intro">Begynnelsen på en prototype av et klimastatus dashboard</p>
+  </header>
+  <div class="page-content">
+    <article class="panel panel-1">
+      <h2 class="panel-header">Er vi i rute?</h2>
+      <div id="chart" ></div>
+    </article>
+    <article class="panel panel-2">
+      <h2 class="panel-header">Hvem kutter og hvem øker</h2>
+      <div id="chart2" ></div>
+    </article>
   </div>
+
+  <div id="css"></div>
 
   <script type="module">
     import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
@@ -28,6 +81,9 @@
     new Runtime().module(define, name => {
     if (name === "chart") {
       return new Inspector(document.querySelector("#chart"));
+    }
+    if (name === "chart2") {
+      return new Inspector(document.querySelector("#chart2"));
     }
     if (name === "css") {
       return new Inspector(document.querySelector("#css"));
