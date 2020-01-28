@@ -1,0 +1,157 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <title>Elektrifisering av bilparken - Dag 28</title>
+  <meta name="description" content="Forhold mellom typer biler som er solgt og energibruk">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:title" content="Energi bilpark elekrisitet elekrifisering bilpark>
+  <meta property="og:description" content="Forhold mellom typer biler som er solgt og energibruk.">
+  <meta property="og:image" content="https://kartoteket.as/31dagermeddata/dager/15/thumb.png">
+  <meta property="og:url" content="https://kartoteket.as/31dagermeddata/dager/15/index.html">
+  <meta name="twitter:card" content="Forhold mellom typer biler som er solgt og energibruk">
+  <meta property="og:site_name" content="Kartoteket">
+  <meta name="twitter:image:alt" content="Forhold mellom typer biler som er solgt og energibruk">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+  <style>
+    @import url('https://rsms.me/inter/inter.css');
+    html { font-family: 'Inter', sans-serif; }
+    @supports (font-variation-settings: normal) {
+      html { font-family: 'Inter var', sans-serif; }
+    }
+    body {
+      background-color: #3e6373;
+    }
+    .page {
+      padding: 5vw 10vw;
+      margin: 0 auto;
+      text-align: center;
+      font-weight: 200;
+    }
+    .page-heading {
+      font-size: 1.2rem;
+      font-weight: 200;
+      color: white;
+    }
+
+    .descriptions {
+      color: white;
+      padding: 1rem 0;
+    }
+    .descriptions > div {
+      padding: 1rem;
+    }
+    .descriptions dt {
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+    .descriptions dd {
+      font-size: 0.8rem;
+      line-height: 1.3;
+      margin: 0;
+      padding: 0;
+    }
+    .subhead {
+      margin-top: 0;
+      color: #FFF;
+    }
+    .footer {
+      display: inline-block;
+      color: white;
+      font-size: 0.8rem;
+    }
+    .footer > a {
+      display: block;
+      padding: 6px 1rem;
+    }
+    .footer > a+a {
+      border-top: 1px solid rgba(255,255,255,.5);
+    }
+
+    .temp {
+      color: #F39D41;
+    }
+    .sea {
+      color: #caf1ff;
+    }
+    .carbon {
+      color: #00B2A6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+
+    @media screen and (min-width: 640px) {
+      .page-heading {
+        font-size: 2.4rem;
+        margin-bottom: 5vw;
+      }
+      .descriptions {
+        display: flex;
+      }
+      .footer {
+        margin-top: 1rem;
+        font-size: 1rem;
+      }
+    }
+    </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1 class="page-heading">Har endringen i bilparken påvirket energiforbruket?</h1>
+    <p class="subhead">Norge er i verdenstoppen når det gjelder Elektrifiseringen av bilparken. Har sammensetningen noen innvirkning på energiforbruket?
+    </p>
+    <div id="chart"></div>
+    <p class="footer">
+      <a href="https://kartoteket.as/">Kartoteket</a>
+      <a href="https://kartoteket.as/31dagermeddata/">#31dagermeddata</a>
+    </p>
+  </div>
+  <div id="css"></div>
+
+
+  <div id="observablehq-6ed7d340"></div>
+  <script type="module">
+  import {Runtime, Inspector, Library} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+  import define from "https://api.observablehq.com/@bardrotzer/car-sales-and-energy-composition-in-norway.js?v=3";
+  const inspect = Inspector.into("#observablehq-6ed7d340");
+
+  const chart = document.querySelector("#chart");
+
+  const stdlib = new Library;
+
+  const library = Object.assign({}, stdlib, {width});
+
+  function width() {
+    return stdlib.Generators.observe(notify => {
+      let width = notify(chart.clientWidth);
+      console.log('width set', width)
+      function resized() {
+        let width1 = chart.clientWidth;
+        if (width1 !== width) notify(width = width1);
+      }
+
+      window.addEventListener("resize", resized);
+      return () => window.removeEventListener("resize", resized);
+    });
+  }
+  const runtime = new Runtime(library);
+  runtime.module(define, name => {
+  if (name === "chart") {
+    return new Inspector(chart);
+  }
+  if (name === "css") {
+      return new Inspector(document.querySelector("#css"));
+    }
+});
+
+</script>
+</body>
+</html>
