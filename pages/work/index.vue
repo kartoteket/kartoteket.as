@@ -24,8 +24,9 @@
 
     <article v-for="(entry, index) in work" :key="index" class="md:flex relative border-b border-white-200 xxl:w-2/3 mt-6 pb-8 pr-8 md:pr-0 opacity-90">
       <h1 class="text-2xl md:text-xl md:w-3/12 mr-6 mb-4 flex items-start">
-        <a :href="entry.url" class="flex-1">{{ entry.title }}</a>
-        <a :href="entry.url" class="text-4xl -mt-2 absolute right-0 md:relative">&nearr;</a>
+        <a v-if="entry.url" :href="entry.url" class="flex-1">{{ entry.title }}</a>
+        <span v-else> {{ entry.title }}</span>
+        <a v-if="entry.url" :href="entry.url" class="text-4xl -mt-2 absolute right-0 md:relative">&nearr;</a>
       </h1>
       <p class="md:w-4/12 md:mr-6 mb-4 md:mb-0">
         {{ entry.description }}
