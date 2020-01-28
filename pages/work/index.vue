@@ -28,9 +28,7 @@
         <span v-else> {{ entry.title }}</span>
         <a v-if="entry.url" :href="entry.url" class="text-4xl -mt-2 absolute right-0 md:relative">&nearr;</a>
       </h1>
-      <p class="md:w-4/12 md:mr-6 mb-4 md:mb-0">
-        {{ entry.description }}
-      </p>
+      <block-content class-name="rtf rtf--tight md:w-4/12 md:mr-6" :render-container-on-single-child="true" :blocks="entry.description" />
       <p class="md:w-2/12 md:mr-6 text-sm md:text-base">
         <span class="uppercase text-xs tracking-wide text-white-700 md:hidden">Client: </span> {{ entry.client }}
       </p>
@@ -50,7 +48,12 @@
 </template>
 
 <script>
+import BlockContent from 'sanity-blocks-vue-component';
+
 export default {
+  components: {
+    BlockContent
+  },
   filters: {
     yearFormat: function(string) {
       if (!string) return '';
