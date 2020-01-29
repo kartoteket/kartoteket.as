@@ -39,18 +39,14 @@
     }
     .panel {
         text-align: center;
-        flex: 1;
+        flex: 0;
         margin: 1rem;
-        border: 1px solid #fff;
       }
 
     @media screen and (min-width: 600px) {
-      .page-content {
-        display: flex;
-      }
       .panel {
-        flex: 1;
-        margin: 2rem;
+        width: 75%;
+        margin: 0 auto;
       }
     }
 
@@ -60,19 +56,16 @@
 <body>
   <header>
     <h1 class="page-header">Klimastatus</h1>
-    <p class="intro">Begynnelsen på en prototype av et klimastatus dashboard</p>
   </header>
   <div class="page-content">
     <article class="panel panel-1">
       <h2 class="panel-header">Er vi i rute?</h2>
       <div id="chart" ></div>
     </article>
-    <article class="panel panel-2">
-      <h2 class="panel-header">Hvem kutter og hvem øker</h2>
-      <div id="chart2" ></div>
-    </article>
   </div>
-
+  <footer>
+    <p class="intro">Kilde: <a href="https://www.ssb.no/klimagassn">SSB</a></p>
+  </footer>
   <div id="css"></div>
 
   <script type="module">
@@ -81,9 +74,6 @@
     new Runtime().module(define, name => {
     if (name === "chart") {
       return new Inspector(document.querySelector("#chart"));
-    }
-    if (name === "chart2") {
-      return new Inspector(document.querySelector("#chart2"));
     }
     if (name === "css") {
       return new Inspector(document.querySelector("#css"));
