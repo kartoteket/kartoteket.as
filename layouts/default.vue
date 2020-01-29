@@ -9,11 +9,6 @@
     <nuxt class="p-page flex-1" />
     <footer class="site-footer p-page py-8 flex sm:justify-end">
       <div class="md:w-1/2 font-hairline sm:text-right text-sm sm:text-base">
-        <!--
-        <p>We write code that creates relations.</p>
-        <p>Relationships enables analysis of patterns, transforming data into knowledge. </p>
-        <p>By connecting the dots, we paint you the picture.</p>
-        <p>That picture might be a map or a data visualization. It might be a website. Always, it's storytelling.</p> -->
         <p>Always, it's storytelling.</p>
       </div>
     </footer>

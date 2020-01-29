@@ -34,9 +34,6 @@ export default {
       }`;
     const result = await $sanity.fetch(query);
     return result;
-  },
-  mounted() {
-    console.log(this.clients);
   }
 };
 </script>
