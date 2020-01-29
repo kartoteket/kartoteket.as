@@ -19,12 +19,24 @@ export default {
   components: {
     asideItem
   },
+  computed: {
+    clients() {
+      return {
+        title: 'Select Clients',
+        list: this.selectedClients
+      };
+    }
+  },
   async asyncData({ $sanity }) {
-    const query =
-      '{ "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url}}';
-    const { entry } = await $sanity.fetch(query);
-    console.log(entry);
-    return { entry };
+    const query = `{
+        "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url},
+        "selectedClients": *[_type == "client" && selected == true] | {name, url}
+      }`;
+    const result = await $sanity.fetch(query);
+    return result;
+  },
+  mounted() {
+    console.log(this.clients);
   }
 };
 </script>
