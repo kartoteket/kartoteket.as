@@ -1,6 +1,6 @@
 <template>
   <section class="flex flex-col">
-    <header>
+    <header class="mb-8">
       <h1 class="main-header">
         Notes
       </h1>
