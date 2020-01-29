@@ -46,9 +46,11 @@ body {
   }
 }
 @screen xl {
-  .main-col,
-  .side-col {
+  .main-col {
     @apply w-1/2
+  }
+  .side-col {
+    @apply w-1/3
   }
 }
 
