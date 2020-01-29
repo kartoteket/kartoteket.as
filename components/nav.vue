@@ -63,20 +63,20 @@ export default {
       id: null,
       navItems: [
         {
-          path: 'about',
+          path: '/about',
           label: 'About'
         },
         {
-          path: 'work',
+          path: '/work',
           label: 'Work'
         },
         {
-          path: 'notes',
+          path: '/notes',
           label: 'Notes'
         },
 
         {
-          path: 'contact',
+          path: '/contact',
           label: 'Contact'
         }
       ]
