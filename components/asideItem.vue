@@ -11,7 +11,7 @@
       </li>
     </ul>
     <a v-if="entry.slug && entry.body" class="link" :href="`notes/${entry.slug.current}`">Read more</a>
-    <a v-if="entry.url" class="link" :href="entry.url">Besøk</a>
+    <a v-if="entry.url" class="link" :href="entry.url">Read more</a>
   </article>
 </template>
 <script>
