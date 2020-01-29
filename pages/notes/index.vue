@@ -20,43 +20,16 @@
         </article>
       </main>
       <aside class="md:w-1/3 xl:w-1/2 self-end mb-16">
-        <article v-for="(entry, index) in notes.side" :key="index">
-          <h2 class="aside-header">
-            {{ entry.title }}
-          </h2>
-          <block-content v-if="entry.lead" class-name="rtf" :render-container-on-single-child="true" :blocks="entry.lead" />
-          <a v-if="entry.slug && entry.body" :href="`notes/${entry.slug.current}`">Read more...</a>
-          <a v-if="entry.url" :href="entry.url">Besøk</a>
-        </article>
+        <aside-item v-for="note in notes.side" :key="note.id" :entry="note" />
       </aside>
     </div>
   </section>
 </template>
 <script>
+import asideItem from '@/components/asideItem';
 export default {
-  data() {
-    return {
-      tempdata: [
-        {
-          title: '#31dagermeddata / #31daysofdata',
-          slug: '/notes/31dagermeddata',
-          lead:
-            '#31dagermeddata is a simple inhouse experiment. Could we publish one dataviz every day through january 2020? The following is in NORWEAGIN'
-        },
-        {
-          title: '#31dagermeddata / #31daysofdata',
-          slug: '/notes/31dagermeddata',
-          lead:
-            '#31dagermeddata is a simple inhouse experiment. Could we publish one dataviz every day through january 2020? The following is in NORWEAGIN'
-        },
-        {
-          title: '#31dagermeddata / #31daysofdata',
-          slug: '/notes/31dagermeddata',
-          lead:
-            '#31dagermeddata is a simple inhouse experiment. Could we publish one dataviz every day through january 2020? The following is in NORWEAGIN'
-        }
-      ]
-    };
+  components: {
+    asideItem
   },
   async asyncData({ $sanity }) {
     const mainFilters = [
