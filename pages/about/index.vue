@@ -27,13 +27,7 @@
   </article>
 </template>
 <script>
-import BlockContent from 'sanity-blocks-vue-component';
-
 export default {
-  components: {
-    // eslint-disable-next-line vue/no-unused-components
-    BlockContent
-  },
   async asyncData({ $sanity }) {
     const query =
       '{ "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url}}';

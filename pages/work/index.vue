@@ -48,12 +48,7 @@
 </template>
 
 <script>
-import BlockContent from 'sanity-blocks-vue-component';
-
 export default {
-  components: {
-    BlockContent
-  },
   filters: {
     yearFormat: function(string) {
       if (!string) return '';
