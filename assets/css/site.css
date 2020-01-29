@@ -72,6 +72,26 @@ body {
   border-bottom: 2px solid theme(colors.white.700);
 }
 
+/** Rich text markup formatting **/
+.rtf > h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid theme(colors.white.700);
+}
+.rtf > ul {
+  @apply list-disc list-outside ml-4;
+}
+.rtf > ul > li {
+  @apply .mb-2
+}
+
+@screen sm {
+  .rtf > ul {
+    @apply ml-8 pr-12;
+  }
+  .rtf > ul > li {
+    @apply .mb-4
+  }
+}
 
 .main-header {
   @apply text-3xl uppercase mb-4
