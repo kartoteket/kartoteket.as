@@ -5,3 +5,68 @@
     </p>
   </main>
 </template>
+<script>
+import { webSite, organisation } from '@/utils/structureddata.js';
+
+export default {
+  data() {
+    return {
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          {
+            '@type': 'WebPage',
+            '@id': 'https://kartoteket.as/#webpage',
+            url: 'https://kartoteket.as/',
+            inLanguage: 'en-US',
+            description:
+              'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO',
+            name: 'Kartoteket',
+            mainEntityOfPage: 'https://kartoteket.as/',
+            isPartOf: {
+              '@id': 'https://kartoteket.as/#website'
+            },
+            author: {
+              '@id': 'https://kartoteket.as/#identity'
+            },
+            creator: {
+              '@id': 'https://kartoteket.as/#identity'
+            },
+            copyrightHolder: {
+              '@id': 'https://kartoteket.as/#identity'
+            },
+            datePublished: '2020-01-30T11:33:41.350Z',
+            dateModified: '2020-01-30T11:33:41.350Z'
+          },
+          {
+            '@type': 'BreadcrumbList',
+            description: 'Breadcrumbs list',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                item: 'https://kartoteket.as/',
+                name: 'Homepage',
+                position: 1
+              }
+            ],
+            name: 'Breadcrumbs'
+          }
+        ]
+      }
+    };
+  },
+  head() {
+    return {
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        {
+          innerHTML: JSON.stringify(this.structuredData),
+          type: 'application/ld+json'
+        }
+      ]
+    };
+  }
+};
+</script>
