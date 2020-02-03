@@ -1,16 +1,18 @@
+const rootUrl = 'https://kartoteket.as/';
+
 const webSite = {
   '@type': 'WebSite',
-  '@id': 'https://kartoteket.as/#website',
-  url: 'https://kartoteket.as/',
+  '@id': `${rootUrl}#website`,
+  url: rootUrl,
   name: 'Kartoteket'
 };
 
 const organisation = {
   '@type': 'Organization',
-  '@id': 'https://kartoteket.as/#identity',
+  '@id': `${rootUrl}#identity`,
   name: 'Kartoteket',
   alternateName: '3by5',
-  url: 'https://kartoteket.as',
+  url: rootUrl,
   sameAs: [
     'https://github.com/kartoteket',
     'https://observablehq.com/@kartoteket/',
@@ -33,15 +35,65 @@ const organisation = {
   image: {
     '@type': 'ImageObject',
     height: '2048',
-    url: 'https://kartoteket.as/logo-2048.png',
+    url: `${rootUrl}logo-2048.png`,
     width: '2048'
   },
   logo: {
     '@type': 'ImageObject',
     height: '60',
-    url: 'https://kartoteket.as/logo-60.png',
+    url: `${rootUrl}logo-60.png`,
     width: '60'
   }
 };
 
-export { webSite, organisation };
+const webPage = ({
+  url = rootUrl,
+  name = 'Kartoteket',
+  description = '',
+  main = ''
+}) => {
+  return {
+    '@type': 'WebPage',
+    '@id': `${rootUrl}#webpage`,
+    inLanguage: 'en-US',
+    url,
+    description,
+    name,
+    mainEntityOfPage: main,
+    isPartOf: {
+      '@id': `${rootUrl}#website`
+    },
+    author: {
+      '@id': `${rootUrl}#identity`
+    },
+    creator: {
+      '@id': `${rootUrl}#identity`
+    },
+    copyrightHolder: {
+      '@id': `${rootUrl}#identity`
+    },
+    datePublished: new Date(),
+    dateModified: new Date()
+  };
+};
+
+const breadCrumbs = crumbs => {
+  const itemListElement = crumbs.map((item, index) => {
+    return {
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        name: item[0],
+        '@id': rootUrl + item[1]
+      }
+    };
+  });
+  return {
+    '@type': 'BreadcrumbList',
+    name: 'Breadcrumbs',
+    description: 'Breadcrumbs list',
+    itemListElement
+  };
+};
+
+export { webSite, organisation, webPage, breadCrumbs };

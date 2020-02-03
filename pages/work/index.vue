@@ -48,6 +48,13 @@
 </template>
 
 <script>
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
+
 export default {
   filters: {
     yearFormat: function(string) {
@@ -55,11 +62,58 @@ export default {
       return string.substr(0, 4);
     }
   },
+  data() {
+    return {
+      page: {
+        title: 'Selected Work',
+        slug: 'work',
+        description:
+          'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps'
+      }
+    };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: `https://kartoteket.as/${this.page.slug}`,
+            name: this.page.title,
+            description: this.page.description,
+            main: `https://kartoteket.as/${this.page.slug}`
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
+  },
   async asyncData({ $sanity }) {
     const query =
       '{ "work": *[_type == "work"] | order(year desc) {"categories": category[]->title, title, description, "client": client->name, year, url}}';
     const { work } = await $sanity.fetch(query);
     return { work };
+  },
+  head() {
+    return {
+      title: this.page.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.page.description
+        }
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        {
+          innerHTML: JSON.stringify(this.structuredData),
+          type: 'application/ld+json'
+        }
+      ]
+    };
   }
 };
 </script>

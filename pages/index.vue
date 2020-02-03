@@ -6,56 +6,39 @@
   </main>
 </template>
 <script>
-import { webSite, organisation } from '@/utils/structureddata.js';
-
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
 export default {
   data() {
     return {
-      structuredData: {
+      page: {
+        title: '',
+        description:
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      }
+    };
+  },
+  computed: {
+    structuredData() {
+      return {
         '@context': 'https://schema.org',
         '@graph': [
           webSite,
           organisation,
-          {
-            '@type': 'WebPage',
-            '@id': 'https://kartoteket.as/#webpage',
+          webPage({
             url: 'https://kartoteket.as/',
-            inLanguage: 'en-US',
-            description:
-              'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO',
             name: 'Kartoteket',
-            mainEntityOfPage: 'https://kartoteket.as/',
-            isPartOf: {
-              '@id': 'https://kartoteket.as/#website'
-            },
-            author: {
-              '@id': 'https://kartoteket.as/#identity'
-            },
-            creator: {
-              '@id': 'https://kartoteket.as/#identity'
-            },
-            copyrightHolder: {
-              '@id': 'https://kartoteket.as/#identity'
-            },
-            datePublished: '2020-01-30T11:33:41.350Z',
-            dateModified: '2020-01-30T11:33:41.350Z'
-          },
-          {
-            '@type': 'BreadcrumbList',
-            description: 'Breadcrumbs list',
-            itemListElement: [
-              {
-                '@type': 'ListItem',
-                item: 'https://kartoteket.as/',
-                name: 'Homepage',
-                position: 1
-              }
-            ],
-            name: 'Breadcrumbs'
-          }
+            description: this.page.description,
+            main: 'https://kartoteket.as/'
+          }),
+          breadCrumbs([['Homepage', '']])
         ]
-      }
-    };
+      };
+    }
   },
   head() {
     return {

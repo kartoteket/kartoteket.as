@@ -23,9 +23,43 @@
 </template>
 <script>
 import asideItem from '@/components/asideItem';
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
 export default {
   components: {
     asideItem
+  },
+  data() {
+    return {
+      page: {
+        title: 'Notes',
+        slug: 'notes',
+        description:
+          'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.'
+      }
+    };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: `https://kartoteket.as/${this.page.slug}`,
+            name: this.page.title,
+            description: this.page.description,
+            main: `https://kartoteket.as/${this.page.slug}`
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
   },
   async asyncData({ $sanity }) {
     const mainFilters = [
@@ -54,6 +88,25 @@ export default {
     }`;
     const result = await $sanity.fetch(query);
     return { notes: result };
+  },
+  head() {
+    return {
+      title: this.page.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.page.description
+        }
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        {
+          innerHTML: JSON.stringify(this.structuredData),
+          type: 'application/ld+json'
+        }
+      ]
+    };
   }
 };
 </script>

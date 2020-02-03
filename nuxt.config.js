@@ -7,11 +7,24 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    htmlAttrs: {
+      lang: 'en'
+    },
+    title: '', // craches ie11 if not set
+    titleTemplate: titleChunk => {
+      // If undefined or blank then we don't need the hyphen
+      return titleChunk ? `${titleChunk} - Kartoteket` : 'Kartoteket';
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      },
+      { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },

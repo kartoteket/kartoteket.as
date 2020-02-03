@@ -82,3 +82,61 @@
     </div>
   </main>
 </template>
+<script>
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
+
+export default {
+  data() {
+    return {
+      page: {
+        title: 'Contact Us',
+        slug: 'contact',
+        description:
+          'Please contact us for any projects on websites, data visualisations and data driven maps. Or a chat.'
+      }
+    };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: `https://kartoteket.as/${this.page.slug}`,
+            name: this.page.title,
+            description: this.page.description,
+            main: `https://kartoteket.as/${this.page.slug}`
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
+  },
+  head() {
+    return {
+      title: this.page.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.page.description
+        }
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        {
+          innerHTML: JSON.stringify(this.structuredData),
+          type: 'application/ld+json'
+        }
+      ]
+    };
+  }
+};
+</script>
