@@ -1,0 +1,10 @@
+# Redirects
+# from                                        to
+/citations/rainforest-tiles-2017.html         /citations/forest-cover-loss-2000-2017
+/citations/rainforest-tiles-2018.html         /citations/forest-cover-loss-2000-2018
+/citations/forestfire.html                    /citations/firms-fire-data
+/citations/palm-oil-concessions.html          /citations/oil-palm-concession
+/team/bard.html                               /contact
+/team/svale.html                               /contact
+
+/31dagermeddata                               https://old.kartoteket.as/31dagermeddata/
