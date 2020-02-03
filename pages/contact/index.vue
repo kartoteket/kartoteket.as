@@ -114,6 +114,39 @@ export default {
             description: this.page.description,
             main: `https://kartoteket.as/${this.page.slug}`
           }),
+          {
+            '@context': 'https://schema.org/',
+            '@type': 'Person',
+            name: 'Svale A. Fossåskaret',
+            url: 'https://kartoteket.as',
+            image: '',
+            sameAs: [
+              'https://twitter.com/fossesvale',
+              'https://www.linkedin.com/in/svalef/',
+              'https://github.com/svale',
+              'https://observablehq.com/@svale/'
+            ],
+            jobTitle: 'Developer',
+            worksFor: {
+              '@id': 'https://kartoteket.as/#identity'
+            }
+          },
+          {
+            '@context': 'https://schema.org/',
+            '@type': 'Person',
+            name: 'Bård I. Røtzer',
+            url: 'https://kartoteket.as',
+            image: '',
+            sameAs: [
+              'https://github.com/bardrotzer',
+              'https://observablehq.com/@bardrotzer/',
+              'https://www.linkedin.com/in/bardrotzer/'
+            ],
+            jobTitle: 'Developer',
+            worksFor: {
+              '@id': 'https://kartoteket.as/#identity'
+            }
+          },
           breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
         ]
       };
