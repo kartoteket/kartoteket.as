@@ -1,4 +1,4 @@
-const pkg = require('./package');
+// const pkg = require('./package');
 
 module.exports = {
   mode: 'universal',
@@ -11,10 +11,7 @@ module.exports = {
       lang: 'en'
     },
     title: '', // craches ie11 if not set
-    titleTemplate: titleChunk => {
-      // If undefined or blank then we don't need the hyphen
-      return titleChunk ? `${titleChunk} - Kartoteket` : 'Kartoteket';
-    },
+    titleTemplate: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket'), // If undefined or blank then we don't need the hyphen
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -24,7 +21,19 @@ module.exports = {
         content:
           'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
       },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: '',
+        template: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket')
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
