@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
@@ -62,6 +63,7 @@ export default {
       return string.substr(0, 4);
     }
   },
+  mixins: [head],
   data() {
     return {
       page: {
@@ -95,25 +97,6 @@ export default {
       '{ "work": *[_type == "work"] | order(year desc) {"categories": category[]->title, title, description, "client": client->name, year, url}}';
     const { work } = await $sanity.fetch(query);
     return { work };
-  },
-  head() {
-    return {
-      title: this.page.title,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page.description
-        }
-      ],
-      __dangerouslyDisableSanitizers: ['script'],
-      script: [
-        {
-          innerHTML: JSON.stringify(this.structuredData),
-          type: 'application/ld+json'
-        }
-      ]
-    };
   }
 };
 </script>

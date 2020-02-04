@@ -83,6 +83,7 @@
   </main>
 </template>
 <script>
+import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
@@ -91,6 +92,7 @@ import {
 } from '@/utils/structureddata.js';
 
 export default {
+  mixins: [head],
   data() {
     return {
       page: {
@@ -151,25 +153,6 @@ export default {
         ]
       };
     }
-  },
-  head() {
-    return {
-      title: this.page.title,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page.description
-        }
-      ],
-      __dangerouslyDisableSanitizers: ['script'],
-      script: [
-        {
-          innerHTML: JSON.stringify(this.structuredData),
-          type: 'application/ld+json'
-        }
-      ]
-    };
   }
 };
 </script>

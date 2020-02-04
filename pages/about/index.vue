@@ -14,18 +14,20 @@
   </article>
 </template>
 <script>
+import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
-
 import asideItem from '@/components/asideItem';
+
 export default {
   components: {
     asideItem
   },
+  mixins: [head],
   data() {
     return {
       page: {
@@ -67,25 +69,6 @@ export default {
       }`;
     const result = await $sanity.fetch(query);
     return result;
-  },
-  head() {
-    return {
-      title: this.page.title,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.page.description
-        }
-      ],
-      __dangerouslyDisableSanitizers: ['script'],
-      script: [
-        {
-          innerHTML: JSON.stringify(this.structuredData),
-          type: 'application/ld+json'
-        }
-      ]
-    };
   }
 };
 </script>
