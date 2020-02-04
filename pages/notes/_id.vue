@@ -7,7 +7,7 @@
       <block-content v-if="entry.lead" class-name="rtf md:text-lg leading-relaxed " :render-container-on-single-child="true" :blocks="entry.lead" />
     </header>
     <block-content v-if="entry.body" class-name="main-col rtf mb-16" :render-container-on-single-child="true" :blocks="entry.body" />
-    <aside v-if="entry.notes.length" class="side-col">
+    <aside v-if="entry.notes" class="side-col">
       <aside-item v-for="note in entry.notes" :key="note.id" :entry="note" />
     </aside>
   </article>
@@ -24,7 +24,7 @@ export default {
       `[slug.current == "${params.id}"]`,
       '[0]'
     ];
-    const projection = ['{title, slug, lead, body, url,"notes": note[]->}'];
+    const projection = ['{title, slug, lead, body, url, "notes": note[]->}'];
     const query = `{
       "entry": ${['*']
         .concat(filters)
