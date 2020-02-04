@@ -42,11 +42,10 @@ export default {
   },
   head() {
     return {
-      __dangerouslyDisableSanitizers: ['script'],
       script: [
         {
-          innerHTML: JSON.stringify(this.structuredData),
-          type: 'application/ld+json'
+          type: 'application/ld+json',
+          json: this.structuredData
         }
       ]
     };
