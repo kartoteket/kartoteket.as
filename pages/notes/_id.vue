@@ -13,10 +13,49 @@
   </article>
 </template>
 <script>
+import head from '~/mixins/head.js';
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
+import blockToText from '@/utils/text.js';
 import asideItem from '@/components/asideItem';
 export default {
   components: {
     asideItem
+  },
+  mixins: [head],
+  computed: {
+    page() {
+      const text =
+        blockToText(this.entry.lead) + ' ' + blockToText(this.entry.body);
+      return {
+        title: this.entry.title,
+        description: text.substr(0, 158)
+      };
+    },
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: `https://kartoteket.as/notes/${this.entry.slug}`,
+            name: this.entry.title,
+            description: this.metaDescription,
+            main: `https://kartoteket.as/notes/${this.entry.slug}`
+          }),
+          breadCrumbs([
+            ['Homepage', ''],
+            ['Notes', 'notes'],
+            [(this.entry.title, `notes/${this.entry.slug}`)]
+          ])
+        ]
+      };
+    }
   },
   async asyncData({ $sanity, params }) {
     const filters = [
