@@ -10,7 +10,7 @@ html { font-family: 'Inter', sans-serif; }
 **  General
 **/
 body {
-  background-image: linear-gradient(theme(colors.blue.900), theme(colors.cyan.100))
+  background-image: linear-gradient(theme(colors.blue.900), theme(colors.cyan.300))
 }
 
 
