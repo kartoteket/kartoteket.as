@@ -1,4 +1,4 @@
-// const pkg = require('./package');
+import routes from './utils/routes';
 
 module.exports = {
   mode: 'universal',
@@ -67,7 +67,7 @@ module.exports = {
     projectId: 'kqscd500', // string, required
     dataset: 'production', // string, required
     token: '', // string, optional
-    useCdn: false // boolean, optional, default is false
+    useCdn: true // boolean, optional, default is false
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
@@ -113,5 +113,9 @@ module.exports = {
         // 'postcss-hexrgba': {}
       }
     }
+  },
+  generate: {
+    // interval: 100,
+    routes: routes
   }
 };
