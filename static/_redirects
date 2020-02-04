@@ -5,6 +5,7 @@
 /citations/forestfire.html                    /citations/firms-fire-data
 /citations/palm-oil-concessions.html          /citations/oil-palm-concession
 /team/bard.html                               /contact
-/team/svale.html                               /contact
+/team/svale.html                              /contact
 
+/31dagermeddata/*                             https://old.kartoteket.as/31dagermeddata/:splat
 /31dagermeddata                               https://old.kartoteket.as/31dagermeddata/
