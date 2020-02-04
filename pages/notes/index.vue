@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     link(e) {
-      if (e.slug && e.body) return `notes/${e.slug.current}`;
+      if (e.slug && e.body) return `/notes/${e.slug.current}`;
       if (e.url) return e.url;
       return null;
     }
