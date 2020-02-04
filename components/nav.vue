@@ -20,7 +20,7 @@
         "
       @click="$emit('click')"
     >
-      <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" />
+      <span aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" />
     </button>
 
     <ul
