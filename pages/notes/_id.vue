@@ -7,9 +7,8 @@
       <block-content v-if="entry.lead" class-name="rtf md:text-lg leading-relaxed " :render-container-on-single-child="true" :blocks="entry.lead" />
     </header>
     <block-content v-if="entry.body" class-name="main-col rtf mb-16" :render-container-on-single-child="true" :blocks="entry.body" />
-    <aside class="side-col">
+    <aside v-if="entry.notes" class="side-col">
       <aside-item v-for="note in entry.notes" :key="note.id" :entry="note" />
-      <aside-item :entry="clients" />
     </aside>
   </article>
 </template>
@@ -21,24 +20,22 @@ import {
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
+import blockToText from '@/utils/text.js';
 import asideItem from '@/components/asideItem';
-
 export default {
   components: {
     asideItem
   },
   mixins: [head],
-  data() {
-    return {
-      page: {
-        title: 'About Kartoteket',
-        slug: 'about',
-        description:
-          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
-      }
-    };
-  },
   computed: {
+    page() {
+      const text =
+        blockToText(this.entry.lead) + ' ' + blockToText(this.entry.body);
+      return {
+        title: this.entry.title,
+        description: text.substr(0, 158)
+      };
+    },
     structuredData() {
       return {
         '@context': 'https://schema.org',
@@ -46,26 +43,32 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
-            name: this.page.title,
-            description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            url: `https://kartoteket.as/notes/${this.entry.slug}`,
+            name: this.entry.title,
+            description: this.metaDescription,
+            main: `https://kartoteket.as/notes/${this.entry.slug}`
           }),
-          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+          breadCrumbs([
+            ['Homepage', ''],
+            ['Notes', 'notes'],
+            [(this.entry.title, `notes/${this.entry.slug}`)]
+          ])
         ]
-      };
-    },
-    clients() {
-      return {
-        title: 'Select Clients',
-        list: this.selectedClients
       };
     }
   },
-  async asyncData({ $sanity }) {
+  async asyncData({ $sanity, params }) {
+    const filters = [
+      '[_type == "note"]',
+      `[slug.current == "${params.id}"]`,
+      '[0]'
+    ];
+    const projection = ['{title, slug, lead, body, url, "notes": note[]->}'];
     const query = `{
-        "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url},
-        "selectedClients": *[_type == "client" && selected == true] | {name, url}
+      "entry": ${['*']
+        .concat(filters)
+        .concat([projection])
+        .join('|')}
       }`;
     const result = await $sanity.fetch(query);
     return result;

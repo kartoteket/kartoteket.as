@@ -3,32 +3,47 @@
     <button
       :aria-expanded="open.toString()"
       :aria-controls="id"
-      class="sm:hidden flex fixed right-0 top-0 mt-8 mr-4 sm:mr-8 z-20 w-8 h-8 justify-center items-center"
-      @click="toggle"
+      aria-label="Open menu"
+      class="
+        sm:hidden flex
+        fixed
+        right-0 bottom-0
+        mb-4 mr-4
+        z-20
+        w-12 h-12
+        justify-center
+        items-center
+        rounded-full
+        bg-blue-900
+        shadow-lg
+        scale-in
+        "
+      @click="$emit('click')"
     >
-      <div aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" /></div>
+      <span aria-hidden="true" class="icon" :class="open ? 'close' : 'menu'" />
     </button>
 
     <ul
       :id="id"
       class="
-        Xdebug
         list-reset
-        fixed sm:relative sm:flex
+        fixed sm:relative
+        flex
+        flex-col sm:flex-row
+        justify-center
+        items-center
         inset-0
-        w-screen sm:w-auto
         h-screen sm:h-auto
         z-10
         bg-blue-900 sm:bg-transparent
-        p-16 pt-32 sm:p-0
         text-center
-        fade-in-out"
+        "
       :hidden="!open"
-      :class="open ? 'opacity-100' : 'opacity-0 sm:opacity-100'"
-      @click="toggle"
+      :class="open ? 'menu-fade-out' : 'menu-fade-in'"
+      @click="$emit('click')"
     >
       <li v-for="item in navItems" :key="item.path" class="seperate">
-        <nuxt-link :to="item.path" class="text-white uppercase px-4 text-2xl sm:text-base leading-loose">
+        <nuxt-link :to="item.path" class="text-white-full sm:uppercase px-4 text-4xl sm:text-base leading-loose">
           {{ item.label }}
         </nuxt-link>
       </li>
@@ -38,21 +53,31 @@
 
 <script>
 export default {
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      open: false,
       id: null,
       navItems: [
         {
-          path: 'work',
-          label: 'Work'
-        },
-        {
-          path: 'about',
+          path: '/about',
           label: 'About'
         },
         {
-          path: 'contact',
+          path: '/work',
+          label: 'Work'
+        },
+        {
+          path: '/notes',
+          label: 'Notes'
+        },
+
+        {
+          path: '/contact',
           label: 'Contact'
         }
       ]
@@ -63,27 +88,39 @@ export default {
     this.id = Math.random()
       .toString(36)
       .substring(2, 15);
-
-    window.addEventListener('keyup', e => {
-      if (e.key === 'Escape') {
-        this.closeHandler();
-      }
-    });
-  },
-  destroyed: function() {
-    document.removeEventListener('keyup', this.closeHandler);
-  },
-  methods: {
-    toggle() {
-      this.open = !this.open;
-    }
   }
 };
 </script>
 <style>
+@screen max-sm {
+  .menu-fade-out {
+    opacity: 1;
+    width: 100vw;
+    transition: opacity 0.5s, width 0s;
+  }
+  .menu-fade-in {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: opacity 0.5s, width 0s 0.5s;
+  }
+}
+
 @sceen sm {
   .seperate + .seperate {
     border-left: 1px solid white;
+  }
+}
+.scale-in {
+  animation: 1s ease-out 0s 1 scaleUp;
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 

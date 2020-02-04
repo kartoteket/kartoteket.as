@@ -1,4 +1,4 @@
-const pkg = require('./package');
+import routes from './utils/routes';
 
 module.exports = {
   mode: 'universal',
@@ -7,11 +7,33 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    htmlAttrs: {
+      lang: 'en'
+    },
+    title: '', // craches ie11 if not set
+    titleTemplate: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket'), // If undefined or blank then we don't need the hyphen
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      },
+      { name: 'format-detection', content: 'telephone=no' },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: '',
+        template: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket')
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
@@ -32,9 +54,16 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [],
+  plugins: ['~/plugins/global.js'],
 
-  buildModules: [],
+  buildModules: [
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-60185757-1'
+      }
+    ]
+  ],
 
   /*
   ** Nuxt.js modules
@@ -45,12 +74,19 @@ module.exports = {
     projectId: 'kqscd500', // string, required
     dataset: 'production', // string, required
     token: '', // string, optional
-    useCdn: false // boolean, optional, default is false
+    useCdn: true // boolean, optional, default is false
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
   tailwindcss: {
     purgeCSSInDev: process.env.NODE_ENV === 'production'
+  },
+
+  purgeCSS: {
+    whitelistPatterns: [
+      /-(leave|enter|appear)(|-(to|from|active))$/,
+      /^nuxt-link(|-exact)-active$/
+    ]
   },
 
   /*
@@ -71,6 +107,7 @@ module.exports = {
         });
       }
     },
+    extractCSS: true,
     postcss: {
       // Add plugin names as key and arguments as value
       // Install them before as dependencies with npm or yarn
@@ -83,5 +120,9 @@ module.exports = {
         // 'postcss-hexrgba': {}
       }
     }
+  },
+  generate: {
+    // interval: 100,
+    routes: routes
   }
 };
