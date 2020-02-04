@@ -3,6 +3,7 @@
     <button
       :aria-expanded="open.toString()"
       :aria-controls="id"
+      aria-label="Open menu"
       class="
         sm:hidden flex
         fixed

@@ -1,9 +1,11 @@
 <template>
   <div class="site-container font-light">
     <header class="flex justify-between items-center h-24 lg:mb-8 w-full p-page">
-      <nuxt-link to="/" class="text-white-full no-underline uppercase text-xl tracking-wide opacity-90 z-20" @click="toggleMenu">
-        Kartoteket
-      </nuxt-link>
+      <h1 class="uppercase text-xl tracking-wide opacity-90 z-20">
+        <nuxt-link to="/" class="text-white-full no-underline" @click="toggleMenu">
+          Kartoteket
+        </nuxt-link>
+      </h1>
       <siteNav :open="isMenuOpen" @click="toggleMenu" />
     </header>
     <nuxt class="p-page flex-1" />
