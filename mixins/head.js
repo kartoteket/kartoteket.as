@@ -17,6 +17,11 @@ export default {
           hid: 'og:description',
           property: 'og:description',
           content: this.page.description
+        },
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: this.structuredData.webPage.url
         }
       ],
       script: [
