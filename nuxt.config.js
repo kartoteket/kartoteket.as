@@ -23,6 +23,19 @@ module.exports = {
       },
       { name: 'format-detection', content: 'telephone=no' },
       {
+        property: 'og:site_name',
+        content: 'Kartoteket'
+      },
+      {
+        property: 'og:type',
+        content: 'Kartoteket'
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://kartoteket.as/preview.png'
+      },
+      {
         hid: 'og:title',
         property: 'og:title',
         content: '',
@@ -33,6 +46,14 @@ module.exports = {
         property: 'og:description',
         content:
           'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+      },
+      {
+        property: 'twitter:card',
+        content: 'summary_large_image'
+      },
+      {
+        property: 'twitter:site',
+        content: '@3x5Kartoteket'
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
