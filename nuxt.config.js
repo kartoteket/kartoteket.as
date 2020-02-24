@@ -33,7 +33,7 @@ module.exports = {
       {
         hid: 'og:image',
         property: 'og:image',
-        content: 'https://kartoteket.as/preview.png'
+        content: 'https://kartoteket.as/preview1.png'
       },
       {
         hid: 'og:title',
