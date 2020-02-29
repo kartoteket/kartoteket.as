@@ -18,7 +18,8 @@ export default {
       page: {
         title: '',
         description:
-          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
+          'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO',
+        url: 'https://kartoteket.as/'
       }
     };
   },
@@ -30,10 +31,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: 'https://kartoteket.as/',
+            url: this.page.url,
             name: 'Kartoteket',
             description: this.page.description,
-            main: 'https://kartoteket.as/'
+            main: this.page.url
           }),
           breadCrumbs([['Homepage', '']])
         ]

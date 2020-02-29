@@ -37,7 +37,8 @@ export default {
         blockToText(this.entry.lead) + ' ' + blockToText(this.entry.body);
       return {
         title: this.entry.title,
-        description: text.substr(0, 158)
+        description: text.substr(0, 158),
+        url: `https://kartoteket.as/citations/${this.entry.slug}`
       };
     },
     structuredData() {
@@ -47,10 +48,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/citations/${this.entry.slug}`,
+            url: this.page.url,
             name: this.entry.title,
             description: this.metaDescription,
-            main: `https://kartoteket.as/citations/${this.entry.slug}`
+            main: this.page.url
           }),
           breadCrumbs([
             ['Homepage', ''],

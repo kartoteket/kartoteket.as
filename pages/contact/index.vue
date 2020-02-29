@@ -99,7 +99,8 @@ export default {
         title: 'Contact Us',
         slug: 'contact',
         description:
-          'Please contact us for any projects on websites, data visualisations and data driven maps. Or a chat.'
+          'Please contact us for any projects on websites, data visualisations and data driven maps. Or a chat.',
+        url: `https://kartoteket.as/${this.page.slug}`
       }
     };
   },
@@ -111,10 +112,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
+            url: this.page.url,
             name: this.page.title,
             description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            main: this.page.url
           }),
           {
             '@context': 'https://schema.org/',

@@ -70,7 +70,8 @@ export default {
         title: 'Selected Work',
         slug: 'work',
         description:
-          'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps'
+          'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps',
+        url: `https://kartoteket.as/${this.page.slug}`
       }
     };
   },
@@ -82,10 +83,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
+            url: this.page.url,
             name: this.page.title,
             description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            main: this.page.url
           }),
           breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
         ]
