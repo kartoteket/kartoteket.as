@@ -21,7 +21,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.structuredData.webPage.url
+          content: this.page.url
         }
       ],
       script: [

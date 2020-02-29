@@ -33,13 +33,18 @@ module.exports = {
       {
         hid: 'og:image',
         property: 'og:image',
-        content: 'https://kartoteket.as/preview.png'
+        content: 'https://kartoteket.as/preview1.png'
       },
       {
         hid: 'og:title',
         property: 'og:title',
         content: '',
         template: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket')
+      },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://kartoteket.as'
       },
       {
         hid: 'og:description',

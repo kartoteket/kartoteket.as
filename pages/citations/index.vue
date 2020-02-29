@@ -30,7 +30,8 @@ export default {
       page: {
         title: 'Citations',
         slug: 'citations',
-        description: 'Data Sources and Citations.'
+        description: 'Data Sources and Citations.',
+        url: `https://kartoteket.as/citations`
       }
     };
   },
@@ -42,10 +43,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
+            url: this.page.url,
             name: this.page.title,
             description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            main: this.page.url
           }),
           breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
         ]

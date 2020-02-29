@@ -47,7 +47,8 @@ export default {
         title: 'Notes',
         slug: 'notes',
         description:
-          'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.'
+          'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.',
+        url: `https://kartoteket.as/notes`
       }
     };
   },
@@ -59,10 +60,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
+            url: this.page.url,
             name: this.page.title,
             description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            main: this.page.url
           }),
           breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
         ]

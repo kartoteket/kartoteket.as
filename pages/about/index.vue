@@ -33,6 +33,7 @@ export default {
       page: {
         title: 'About Kartoteket',
         slug: 'about',
+        url: 'https://kartoteket.as/about',
         description:
           'Kartoteket is a studio that creates websites, data visualisations and data driven maps. We specialize in performance, accessibility and SEO'
       }
@@ -46,10 +47,10 @@ export default {
           webSite,
           organisation,
           webPage({
-            url: `https://kartoteket.as/${this.page.slug}`,
+            url: this.page.url,
             name: this.page.title,
             description: this.page.description,
-            main: `https://kartoteket.as/${this.page.slug}`
+            main: this.page.url
           }),
           breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
         ]
