@@ -69,9 +69,9 @@ export default {
       page: {
         title: 'Selected Work',
         slug: 'work',
+        url: `https://kartoteket.as/work`,
         description:
-          'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps',
-        url: `https://kartoteket.as/${this.page.slug}`
+          'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps'
       }
     };
   },

@@ -48,7 +48,7 @@ export default {
         slug: 'notes',
         description:
           'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.',
-        url: `https://kartoteket.as/${this.page.slug}`
+        url: `https://kartoteket.as/notes`
       }
     };
   },

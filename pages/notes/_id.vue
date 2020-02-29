@@ -34,7 +34,7 @@ export default {
       return {
         title: this.entry.title,
         description: text.substr(0, 158),
-        url: `https://kartoteket.as/notes/${this.entry.slug}`
+        url: `https://kartoteket.as/notes/${this.entry.slug.current}`
       };
     },
     structuredData() {
@@ -52,7 +52,7 @@ export default {
           breadCrumbs([
             ['Homepage', ''],
             ['Notes', 'notes'],
-            [(this.entry.title, `notes/${this.entry.slug}`)]
+            [(this.entry.title, `notes/${this.entry.slug.current}`)]
           ])
         ]
       };

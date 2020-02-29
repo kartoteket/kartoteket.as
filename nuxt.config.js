@@ -42,6 +42,11 @@ module.exports = {
         template: chunk => (chunk ? `${chunk} - Kartoteket` : 'Kartoteket')
       },
       {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://kartoteket.as'
+      },
+      {
         hid: 'og:description',
         property: 'og:description',
         content:

@@ -31,7 +31,7 @@ export default {
         title: 'Citations',
         slug: 'citations',
         description: 'Data Sources and Citations.',
-        url: `https://kartoteket.as/${this.page.slug}`
+        url: `https://kartoteket.as/citations`
       }
     };
   },
