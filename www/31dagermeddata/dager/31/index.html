@@ -1,0 +1,118 @@
+<!doctype html>
+
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <title>Coronaviruset- Dag 31</title>
+  <meta name="description" content="Coronavirus">
+  <meta name="author" content="Kartoteket">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:title" content="Coronaviruset">
+  <meta property="og:description" content="Coronaviruset.">
+  <meta property="og:image" content="https://kartoteket.as/31dagermeddata/dager/31/thumb.png">
+  <meta property="og:url" content="https://kartoteket.as/31dagermeddata/dager/31/index.html">
+  <meta name="twitter:card" content="Coronaviruset">
+  <meta property="og:site_name" content="Kartoteket">
+  <meta name="twitter:image:alt" content="Diagram over coronaviruser">
+  <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" rel="stylesheet">
+  <style>
+    @import url('https://rsms.me/inter/inter.css');
+    html { font-family: 'Inter', sans-serif; }
+    @supports (font-variation-settings: normal) {
+      html { font-family: 'Inter var', sans-serif; }
+    }
+    body {
+      background-color: #ffffff;
+    }
+    .page {
+      padding: 5vw 10vw;
+      margin: 0 auto;
+      text-align: center;
+      font-weight: 200;
+    }
+    .page-heading {
+      font-size: 1.2rem;
+      font-weight: 200;
+    }
+
+    .descriptions {
+      padding: 1rem 0;
+    }
+    .descriptions > div {
+      padding: 1rem;
+    }
+    .descriptions dt {
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+    .descriptions dd {
+      font-size: 0.8rem;
+      line-height: 1.3;
+      margin: 0;
+      padding: 0;
+    }
+    .subhead {
+      margin-top: 0;
+    }
+    .footer {
+      display: inline-block;
+      font-size: 0.8rem;
+    }
+    .footer > a {
+      display: block;
+      padding: 6px 1rem;
+    }
+    .footer > a+a {
+      border-top: 1px solid rgba(0,0,0,.5);
+    }
+
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+
+    @media screen and (min-width: 640px) {
+      .page-heading {
+        font-size: 2.4rem;
+        margin-bottom: 5vw;
+      }
+      .descriptions {
+        display: flex;
+      }
+      .footer {
+        margin-top: 1rem;
+        font-size: 1rem;
+      }
+    }
+    </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1 class="page-heading">Coronaviruset</h1>
+    <p class="subhead">Et linjediagram som viser spredningen av Coronaviruset i land utenfor kina</p>
+    <p class="description">Data fra <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a></p>
+    <div id="chart"></div>
+    <p class="footer">
+      <a href="https://kartoteket.as/">Kartoteket</a>
+      <a href="https://kartoteket.as/31dagermeddata/">#31dagermeddata</a>
+    </p>
+  </div>
+
+
+
+<script type="module">
+  import {Runtime, Inspector, Library} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+  import define from "https://api.observablehq.com/@kartoteket/coronavirus-outbreak-wip.js?v=3";
+  new Runtime().module(define, name => {
+    if (name === "world") {
+      return new Inspector(document.querySelector("#chart"));
+    }
+  });
+
+</script>
+</body>
+</html>
