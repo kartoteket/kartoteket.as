@@ -84,6 +84,7 @@ module.exports = {
 
   buildModules: [
     [
+      '@nuxtjs/axios',
       '@nuxtjs/google-analytics',
       {
         id: 'UA-60185757-1'
@@ -109,9 +110,11 @@ module.exports = {
   },
 
   purgeCSS: {
+    whitelist: ['v-select'],
     whitelistPatterns: [
       /-(leave|enter|appear)(|-(to|from|active))$/,
-      /^nuxt-link(|-exact)-active$/
+      /^nuxt-link(|-exact)-active$/,
+      /^vs__/
     ]
   },
 
@@ -149,6 +152,7 @@ module.exports = {
   },
   generate: {
     // interval: 100,
+    fallback: true,
     routes: routes
   }
 };
