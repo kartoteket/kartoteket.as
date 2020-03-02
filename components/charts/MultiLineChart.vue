@@ -49,10 +49,18 @@ export default {
         .range([this.height - this.margin.bottom, this.margin.top]);
     },
     xScale() {
-      return d3
-        .scaleTime()
-        .domain(d3.extent(this.series[0].values, d => moment(d.date))) // @todo should get min/max of all sets of values
-        .range([this.margin.left, this.width - this.margin.right]);
+      return (
+        d3
+          .scaleTime()
+          .domain(
+            d3.extent(this.series[0].values, d => {
+              // console.log(d.date, moment(d.date, 'M/D/YY'));
+              return moment(d.date, 'M/D/YY');
+            })
+          )
+          // @todo should get min/max of all sets of values
+          .range([this.margin.left, this.width - this.margin.right])
+      );
     },
     seriesColor() {
       return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
@@ -61,7 +69,7 @@ export default {
       return d3
         .line()
         .defined(d => !isNaN(d.value))
-        .x(d => this.xScale(moment(d.date)))
+        .x(d => this.xScale(moment(d.date, 'M/D/YY')))
         .y(d => this.yScale(d.value))
         .curve(d3.curveCatmullRom);
     }
@@ -175,7 +183,7 @@ export default {
         el.tooltip
           .attr(
             'transform',
-            `translate(${that.xScale(moment(values[0].date))},25)`
+            `translate(${that.xScale(moment(values[0].date), 'M/D/YY')},25)`
           ) // ${yTemp(values[2]) - 125
           .call(that.callout, values);
       });
@@ -236,17 +244,21 @@ export default {
             .attr(
               'text-anchor',
               d =>
-                moment(d.date).isAfter('2020-01-25T00:00:00Z') ? 'end' : 'start'
+                moment(d.date, 'M/D/YY').isAfter('2020-01-25T00:00:00Z')
+                  ? 'end'
+                  : 'start'
             )
             .attr(
               'x',
               d =>
-                moment(d.date).isAfter('2020-01-25T00:00:00Z') ? '45' : '70'
+                moment(d.date, 'M/D/YY').isAfter('2020-01-25T00:00:00Z')
+                  ? '45'
+                  : '70'
             )
             .attr('y', (d, i) => `${i * 1.2}em`)
             .style('font-weight', (_, i) => (i ? null : 'bold'))
             .text(function(d, i) {
-              if (i < 1) return `${moment(d.date).format('ll')}`; // print date on first line
+              if (i < 1) return `${moment(d.date, 'M/D/YY').format('ll')}`; // print date on first line
               return `${names[i]} ${d.value}`;
             })
         );
@@ -269,10 +281,10 @@ export default {
       //  path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
     },
     bisect(mx) {
-      const bisect = d3.bisector(d => moment(d.date)).left;
+      const bisect = d3.bisector(d => moment(d.date, 'M/D/YY')).left;
       const date = this.xScale.invert(mx);
       return this.series.map(function(line) {
-        const index = bisect(line.values, moment(date), 1);
+        const index = bisect(line.values, moment(date, 'M/D/YY'), 1);
         const a = line.values[index - 1];
         const b = line.values[index];
         if (b) return date - a.date < b.date - date ? b : a;
