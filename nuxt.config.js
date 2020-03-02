@@ -110,6 +110,7 @@ module.exports = {
   },
 
   purgeCSS: {
+    whitelist: ['v-select'],
     whitelistPatterns: [
       /-(leave|enter|appear)(|-(to|from|active))$/,
       /^nuxt-link(|-exact)-active$/,

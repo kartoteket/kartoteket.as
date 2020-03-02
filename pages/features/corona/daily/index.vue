@@ -13,12 +13,12 @@
       </div>
     </header>
     <article>
-      <plot-map-chart v-if="false" :chart-data="chartData" />
+      <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div class="flex flex-wrap">
       <article class="lg:w-1/2 mb-12">
         <v-select v-model="selection" class="dropdown mx-8" :options="countriesList" value="{default:'Norway'}" />
-        <multi-line-chart id="custom" :series="series" />
+        <multi-line-chart id="custom" :series="selectSeries" />
       </article>
       <article v-for="(set, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
         <h1>{{ set.title }}</h1>
@@ -39,7 +39,7 @@ import 'vue-select/dist/vue-select.css';
 
 import head from '~/mixins/head.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
-import PlotMapChart from '@/components/charts/PlotMapChart';
+// import PlotMapChart from '@/components/charts/PlotMapChart';
 
 import {
   webSite,
@@ -53,7 +53,7 @@ const d3 = Object.assign({}, d3Lib, d3Array);
 export default {
   components: {
     MultiLineChart,
-    PlotMapChart,
+    // PlotMapChart,
     vSelect
   },
   mixins: [head],
@@ -80,6 +80,9 @@ export default {
     };
   },
   computed: {
+    selectSeries() {
+      return this.getSeries(this.getCountries(this.selection));
+    },
     chartSeries() {
       const scandinavia = {
         title: 'Nordic Countries',
@@ -112,43 +115,37 @@ export default {
     height() {
       return d3.min([this.width * 0.5, 800]);
     },
-    parsedData() {
-      // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
-      const data = this.input.slice();
+    // parsedData() {
+    //   // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
+    //   const data = this.input.slice();
 
-      // filter the data
-      // 'World', 'World Excluding China', 'Europe'
-      let filtered;
-      if (this.selection === 'World Excluding China') {
-        filtered = this.filterByCountry(['Mainland China'], data, true);
-      } else if (this.selection === 'World') {
-        filtered = data;
-      } else {
-        filtered = this.filterByCountry([this.selection], data);
-      }
+    //   // filter the data
+    //   // 'World', 'World Excluding China', 'Europe'
+    //   let filtered;
+    //   if (this.selection === 'World Excluding China') {
+    //     filtered = this.filterByCountry(['Mainland China'], data, true);
+    //   } else if (this.selection === 'World') {
+    //     filtered = data;
+    //   } else {
+    //     filtered = this.filterByCountry([this.selection], data);
+    //   }
 
-      return this.groupByCountry(filtered);
-    },
-    dataset() {
-      return this.addDailyValues(this.parsedData.data);
-    },
-    chartData() {
-      return [];
-      // return this.view === 'map'
-      //   ? this.getLatest(this.getCountries())
-      //   : this.getCountries();
-    },
+    //   return this.groupByCountry(filtered);
+    // },
+    // chartData() {
+    //   return this.view === 'map'
+    //     ? this.getLatest(this.getCountries())
+    //     : this.getCountries();
+    // },
     dates() {
       return Array.from(new Set(this.getCountries().map(d => d.date)))
         .map(d => moment(d, 'M/D/YY'))
         .sort(d3.ascending);
     },
-    series() {
-      return this.getSeries(this.dataset, 5);
-    },
-    daysCount() {
-      return this.parsedData.count;
-    },
+    // daysCount() {
+    //   // @todo: re-facotr so that we can delete this.parsedData !
+    //   return this.parsedData.count;
+    // },
     countriesList() {
       return Array.from(new Set(this.input.map(d => d.country))).sort(
         d3.ascending
@@ -211,19 +208,6 @@ export default {
       })
       .flat(2);
     return { input };
-  },
-  mounted() {
-    //   // load and parse data.
-    //   // @todo: move to asyncData()
-    //   loadData().then(input => {
-    //     this.input = input;
-    // const all = this.getCountries();
-    // this.drawChart('#map1', this.series);
-    // this.drawChart(
-    //   '#map2',
-    //   this.getSeries(this.getCountries(['Italy', 'Mainland China', 'Iran']))
-    // );
-    //   });
   },
   methods: {
     getSeries(input, limit) {
