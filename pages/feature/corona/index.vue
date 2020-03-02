@@ -223,7 +223,7 @@ export default {
       };
     }
   },
-  async asyncData() {
+  async asyncData({ $axios }) {
     const files = [
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
@@ -231,9 +231,8 @@ export default {
     ];
 
     // load all data (3 different raw csv files)
-    const result = await Promise.all(
-      files.map(url => d3.csv(url, d3.autoType))
-    );
+    const response = await Promise.all(files.map(url => $axios.get(url)));
+    const result = response.map(resp => d3.csvParse(resp.data, d3.autoType));
     // load data segments matching the 3 files
     const segments = ['confirmed', 'deaths', 'recovered'];
 

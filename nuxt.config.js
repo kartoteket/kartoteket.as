@@ -84,6 +84,7 @@ module.exports = {
 
   buildModules: [
     [
+      '@nuxtjs/axios',
       '@nuxtjs/google-analytics',
       {
         id: 'UA-60185757-1'
