@@ -169,6 +169,9 @@ export default {
     }
   },
   async asyncData({ $axios }) {
+    let input = [];
+    const result = [];
+    const segments = ['confirmed', 'deaths', 'recovered'];
     const files = [
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
@@ -177,36 +180,39 @@ export default {
 
     // load all data (3 different raw csv files)
     const response = await Promise.all(files.map(url => $axios.get(url)));
-    const result = response.map(resp => d3.csvParse(resp.data, d3.autoType));
+    if (response) {
+      const result = response.map(resp => d3.csvParse(resp.data, d3.autoType));
+    }
     // load data segments matching the 3 files
-    const segments = ['confirmed', 'deaths', 'recovered'];
 
     // her we loop through all the raw input data and map the `segments`from the 3 input fields
     // we save lat/lng as pos array
     // output is nested array
-    const input = result
-      .map((array, i) => {
-        return array.map((obj, j) => {
-          const names = {
-            country: obj['Country/Region'],
-            state: obj['Province/State']
-          };
-          delete obj['Province/State'];
-          delete obj['Country/Region'];
-          const { Lat, Long, ...rest } = obj;
-
-          return Object.entries(rest).map(([key, value]) => {
-            obj = {
-              ...names,
-              pos: [Long, Lat],
-              date: key
+    if (result) {
+      input = result
+        .map((array, i) => {
+          return array.map((obj, j) => {
+            const names = {
+              country: obj['Country/Region'],
+              state: obj['Province/State']
             };
-            obj[segments[i]] = value;
-            return obj;
+            delete obj['Province/State'];
+            delete obj['Country/Region'];
+            const { Lat, Long, ...rest } = obj;
+
+            return Object.entries(rest).map(([key, value]) => {
+              obj = {
+                ...names,
+                pos: [Long, Lat],
+                date: key
+              };
+              obj[segments[i]] = value;
+              return obj;
+            });
           });
-        });
-      })
-      .flat(2);
+        })
+        .flat(2);
+    }
     return { input };
   },
   methods: {
