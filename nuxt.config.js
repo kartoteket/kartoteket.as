@@ -152,6 +152,7 @@ module.exports = {
   },
   generate: {
     // interval: 100,
+    fallback: true,
     routes: routes
   }
 };
