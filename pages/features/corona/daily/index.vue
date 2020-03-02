@@ -176,12 +176,23 @@ export default {
     ];
 
     // load all data (3 different raw csv files)
-    const response = await Promise.all(files.map(url => $axios.get(url)));
-    const result = await response.map(resp => {
-      if (resp.status === 200 && resp.data) {
-        return d3.csvParse(resp.data, d3.autoType);
-      }
-    });
+    let input = [];
+    let response = [];
+    let result = [];
+
+    try {
+      response = await Promise.all(files.map(url => $axios.get(url)));
+    } catch (err) {
+      console.error(err); // TypeError: failed to fetch
+    }
+
+    if (response.length > 0) {
+      result = response.map(resp => {
+        if (resp.status === 200 && resp.data) {
+          return d3.csvParse(resp.data, d3.autoType);
+        }
+      });
+    }
     // console.log(result.length);
     // load data segments matching the 3 files
     const segments = ['confirmed', 'deaths', 'recovered'];
@@ -189,7 +200,6 @@ export default {
     // her we loop through all the raw input data and map the `segments`from the 3 input fields
     // we save lat/lng as pos array
     // output is nested array
-    let input = [];
     if (result.length > 0) {
       input = result
         .map((array, i) => {
