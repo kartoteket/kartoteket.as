@@ -112,7 +112,8 @@ module.exports = {
   purgeCSS: {
     whitelistPatterns: [
       /-(leave|enter|appear)(|-(to|from|active))$/,
-      /^nuxt-link(|-exact)-active$/
+      /^nuxt-link(|-exact)-active$/,
+      /^vs__/
     ]
   },
 
