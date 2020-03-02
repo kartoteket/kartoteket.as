@@ -1,6 +1,6 @@
 export default {
   head() {
-    return {
+    const val = {
       title: this.page.title,
       meta: [
         {
@@ -31,5 +31,14 @@ export default {
         }
       ]
     };
+    if (this.page.image) {
+      const image = {
+        hid: 'og:image',
+        property: 'og:image',
+        content: this.page.image
+      };
+      val.meta.push(image);
+    }
+    return val;
   }
 };
