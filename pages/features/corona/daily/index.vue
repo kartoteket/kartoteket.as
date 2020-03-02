@@ -15,13 +15,15 @@
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
-    <div v-if="!isLoading" class="flex flex-wrap">
+    <div v-if="!isLoading" class="lg:flex flex-wrap">
       <article class="lg:w-1/2 mb-12">
-        <v-select v-model="selection" class="dropdown mx-8" :options="countriesList" value="{default:'Norway'}" />
+        <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
         <multi-line-chart v-if="selectSeries.length" id="custom" :series="selectSeries" />
       </article>
       <article v-for="(set, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
-        <h1>{{ set.title }}</h1>
+        <h1 class="text-lg uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8">
+          {{ set.title }}
+        </h1>
         <multi-line-chart v-if="set.data.length" :id="i+1" :series="set.data" />
       </article>
     </div>
@@ -76,7 +78,8 @@ export default {
         slug: 'features/corona/daily',
         description:
           'Charts showing the timeline trend of new daily registered confirmed cases of COVID-19 in different countries.',
-        url: `https://kartoteket.as/features/corona/daily`
+        url: 'https://kartoteket.as/features/corona/daily',
+        image: 'https://kartoteket.as/preview-corona-charts.png'
       }
     };
   },
@@ -92,14 +95,14 @@ export default {
         )
       };
       const keyCountries = {
-        title: 'Key Contries',
+        title: 'Most effected (Excluding China)',
         data: this.getSeries(
           this.getCountries([
-            'Mainland China',
+            // 'Mainland China',
             'Iran',
             'South Korea',
-            'Italy',
-            'Japan'
+            'Italy'
+            // 'Japan'
           ])
         )
       };
@@ -107,8 +110,12 @@ export default {
         title: 'US',
         data: this.getSeries(this.getCountries('US'))
       };
+      const China = {
+        title: 'China',
+        data: this.getSeries(this.getCountries('Mainland China'))
+      };
 
-      return [scandinavia, keyCountries, US];
+      return [China, scandinavia, keyCountries];
     },
     width() {
       return d3.min([300, 1600]); // @todo: get clientWidth
@@ -251,7 +258,7 @@ export default {
           values: d[1].map(d => {
             return {
               date: d.date,
-              value: d.change.confirmed > 10000 ? 1000 : d.change.confirmed
+              value: d.change.confirmed // d.change.confirmed > 10000 ? 1000 : d.change.confirmed
             };
           })
         };
