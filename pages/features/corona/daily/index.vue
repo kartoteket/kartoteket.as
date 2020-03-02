@@ -15,7 +15,7 @@
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
-    <div v-if="!isLoading" class="flex flex-wrap">
+    <div v-if="!isLoading" class="lg:flex flex-wrap">
       <article class="lg:w-1/2 mb-12">
         <v-select v-model="selection" class="dropdown mx-8" :options="countriesList" value="{default:'Norway'}" />
         <multi-line-chart v-if="selectSeries.length" id="custom" :series="selectSeries" />

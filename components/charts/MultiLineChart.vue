@@ -28,7 +28,7 @@ export default {
         right: 30,
         left: 60,
         top: 20,
-        bottom: 10
+        bottom: 20
       }
     };
   },
@@ -97,7 +97,7 @@ export default {
           .attr('style', 'width:100%');
         el.g = svg.append('g');
         el.lines = el.g.append('g').classed('lines', true);
-        el.xAxis = el.g.append('g').classed('axis axis-x', true);
+        el.xAxis = el.g.append('g').classed('axis  axis-x', true);
         el.yAxis = el.g.append('g').classed('axis axis-y', true);
         el.legend = el.g.append('g').classed('legend', true);
         el.tooltip = el.g.append('g').classed('tooltip', true);
@@ -194,7 +194,10 @@ export default {
     // AXIS
     xAxis(svg, x) {
       return svg
-        .attr('transform', `translate(0,${this.height - this.margin.bottom})`)
+        .attr(
+          'transform',
+          `translate(0,${this.height - this.margin.bottom + 5})`
+        )
         .call(
           d3
             .axisBottom(x)
@@ -212,6 +215,8 @@ export default {
         .call(
           d3
             .axisLeft(y)
+            // .tickFormat(d3.format('d'))
+            .ticks(5)
             .tickSizeOuter(0)
             .tickSizeInner(
               (this.width - this.margin.right - this.margin.left) * -1
@@ -294,3 +299,17 @@ export default {
   }
 };
 </script>
+<style>
+.tooltip text,
+.legend text,
+.axis {
+  font-size: 1rem !important;
+}
+@screen sm {
+  .tooltip text,
+  .legend text,
+  .axis {
+    font-size: 0.75rem !important;
+  }
+}
+</style>
