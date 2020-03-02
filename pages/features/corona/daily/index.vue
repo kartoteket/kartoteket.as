@@ -169,9 +169,6 @@ export default {
     }
   },
   async asyncData({ $axios }) {
-    let input = [];
-    const result = [];
-    const segments = ['confirmed', 'deaths', 'recovered'];
     const files = [
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
       'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
@@ -180,15 +177,20 @@ export default {
 
     // load all data (3 different raw csv files)
     const response = await Promise.all(files.map(url => $axios.get(url)));
-    if (response) {
-      const result = response.map(resp => d3.csvParse(resp.data, d3.autoType));
-    }
+    const result = await response.map(resp => {
+      if (resp.status === 200 && resp.data) {
+        return d3.csvParse(resp.data, d3.autoType);
+      }
+    });
+    // console.log(result.length);
     // load data segments matching the 3 files
+    const segments = ['confirmed', 'deaths', 'recovered'];
 
     // her we loop through all the raw input data and map the `segments`from the 3 input fields
     // we save lat/lng as pos array
     // output is nested array
-    if (result) {
+    let input = [];
+    if (result.length > 0) {
       input = result
         .map((array, i) => {
           return array.map((obj, j) => {
