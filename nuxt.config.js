@@ -84,6 +84,7 @@ module.exports = {
 
   buildModules: [
     [
+      '@nuxtjs/axios',
       '@nuxtjs/google-analytics',
       {
         id: 'UA-60185757-1'
@@ -111,7 +112,8 @@ module.exports = {
   purgeCSS: {
     whitelistPatterns: [
       /-(leave|enter|appear)(|-(to|from|active))$/,
-      /^nuxt-link(|-exact)-active$/
+      /^nuxt-link(|-exact)-active$/,
+      /^vs__/
     ]
   },
 
