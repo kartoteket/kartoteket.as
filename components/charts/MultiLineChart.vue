@@ -26,7 +26,7 @@ export default {
       chart: null,
       margin: {
         right: 30,
-        left: 60,
+        left: 80,
         top: 20,
         bottom: 20
       }
