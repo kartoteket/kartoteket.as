@@ -93,6 +93,7 @@ export default {
   },
 
   mounted() {
+    // console.log(this.series);
     this.drawChart(`#chart-${this.id}`, this.series);
   },
   methods: {
