@@ -81,7 +81,7 @@ export default {
       '[isListed == true]',
       '[isSticky == true]'
     ];
-    const sorts = ['order(_createdAt asc)'];
+    const sorts = ['order(_createdAt desc)'];
     const projection = ['{title, slug, lead, body, url}'];
     const query = `{
       "main": ${['*']
