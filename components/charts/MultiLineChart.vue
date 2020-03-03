@@ -19,6 +19,10 @@ export default {
     id: {
       type: [String, Number],
       default: '1'
+    },
+    config: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -29,15 +33,22 @@ export default {
         left: 80,
         top: 20,
         bottom: 20
+      },
+      defaultConfig: {
+        aspectRatio: 0.5,
+        colorScale: d3.scaleOrdinal(d3.schemeSet2)
       }
     };
   },
   computed: {
+    options() {
+      return { ...this.defaultConfig, ...this.config };
+    },
     width() {
       return d3.min([500, 1600]); // @todo: get clientWidth
     },
     height() {
-      return d3.min([this.width * 0.5, 800]);
+      return d3.min([this.width * this.options.aspectRatio, 800]);
     },
     yScale() {
       return d3
@@ -62,8 +73,9 @@ export default {
           .range([this.margin.left, this.width - this.margin.right])
       );
     },
-    seriesColor() {
-      return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
+    color() {
+      return this.options.colorScale;
+      // return d3.scaleOrdinal(d3.schemeSet2);
     },
     changeLine() {
       return d3
@@ -112,15 +124,15 @@ export default {
       const legends = el.legend
         .attr(
           'transform',
-          `translate(${this.margin.left + 10}, ${this.margin.top + 120})`
+          `translate(${this.margin.left + 10}, ${this.margin.top + 20})`
         )
         .selectAll('g')
-        .data(series)
+        .data(series.sort((a, b) => d3.ascending(a.name, b.name)))
         .join('g');
 
       legends
         .append('rect')
-        .attr('fill', (_, i) => this.seriesColor(i))
+        .attr('fill', (d, i) => this.color(d.name))
         .attr('width', 20)
         .attr('height', 2)
         .attr('rx', 2)
@@ -146,13 +158,9 @@ export default {
         .selectAll('path')
         .data(series)
         .join('path')
-        .attr('stroke', (_, i) => {
-          return this.seriesColor(i);
-        })
+        .attr('stroke', d => this.color(d.name))
         .transition(t)
-        .attr('d', d => {
-          return this.changeLine(d.values);
-        });
+        .attr('d', d => this.changeLine(d.values));
 
       // style axis and tick lines
       el.yAxis

@@ -18,13 +18,29 @@
     <div v-if="!isLoading" class="lg:flex flex-wrap">
       <article class="lg:w-1/2 mb-12">
         <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
-        <multi-line-chart v-if="selectSeries.length" id="custom" :series="selectSeries" />
+        <div class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Country Totals
+          </h2>
+          <multi-line-chart v-if="selectTotals.length" id="custom-new" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
+        </div>
+        <div class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Daily new confirmed cases
+          </h2>
+          <multi-line-chart v-if="selectSeries.length" id="custom-totals" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
+        </div>
       </article>
-      <article v-for="(set, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8">
-          {{ set.title }}
+      <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+          {{ block.title }}
         </h1>
-        <multi-line-chart v-if="set.data.length" :id="i+1" :series="set.data" />
+        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+        </div>
       </article>
     </div>
   </article>
@@ -84,35 +100,54 @@ export default {
     };
   },
   computed: {
+    colorScale() {
+      return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
+    },
     selectSeries() {
-      return this.getSeries(this.getCountries(this.selection));
+      return this.getNewCases(this.selection);
+    },
+    selectTotals() {
+      return this.getTotals(this.selection);
     },
     chartSeries() {
       const scandinavia = {
         title: 'Nordic Countries',
-        data: this.getSeries(
-          this.getCountries(['Norway', 'Sweden', 'Denmark', 'Finland'])
-        )
+        charts: [
+          {
+            title: 'Country Totals',
+            data: this.getTotals(['Norway', 'Sweden', 'Denmark', 'Finland'])
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: this.getNewCases(['Norway', 'Sweden', 'Denmark', 'Finland'])
+          }
+        ]
       };
       const keyCountries = {
         title: 'Most effected (Excluding China)',
-        data: this.getSeries(
-          this.getCountries([
-            // 'Mainland China',
-            'Iran',
-            'South Korea',
-            'Italy'
-            // 'Japan'
-          ])
-        )
-      };
-      const US = {
-        title: 'US',
-        data: this.getSeries(this.getCountries('US'))
+        charts: [
+          {
+            title: 'Country Totals',
+            data: this.getTotals(['Iran', 'South Korea', 'Italy'])
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: this.getNewCases(['Iran', 'South Korea', 'Italy'])
+          }
+        ]
       };
       const China = {
         title: 'China',
-        data: this.getSeries(this.getCountries('Mainland China'))
+        charts: [
+          {
+            title: 'Country Totals',
+            data: this.getTotals('Mainland China')
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: this.getNewCases('Mainland China')
+          }
+        ]
       };
 
       return [China, scandinavia, keyCountries];
@@ -247,8 +282,19 @@ export default {
   //   return { input };
   // },
   methods: {
-    getSeries(input, limit) {
-      let data = d3.groups(input, d => d.name);
+    getTotals(input) {
+      const countries = Array.isArray(input) ? input : [input];
+      return countries.map(country => {
+        return {
+          name: country,
+          values: this.getCountries(country).map(d => {
+            return { date: d.date, value: d.confirmed };
+          })
+        };
+      });
+    },
+    getNewCases(input, limit) {
+      let data = d3.groups(this.getCountries(input), d => d.name);
       if (limit > 0) {
         data = data.slice(0, limit);
       }
@@ -310,7 +356,7 @@ export default {
             name: country.key,
             date: date.key,
             pos: date.value.pos,
-            confirmed: date.value.confirmed ? date.value.confirmed : null,
+            confirmed: date.value.confirmed ? date.value.confirmed : 0,
             deaths: date.value.deaths,
             recovered: date.value.recovered
           };
