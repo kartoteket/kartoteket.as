@@ -4,12 +4,12 @@
       <h1 class="main-header">
         {{ page.title }}
       </h1>
-      <div class="rtf md:text-lg leading-relaxed">
+      <div class="rtf md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
       </div>
-      <div class="rtf">
+      <div v-if="!isLoading" class="rtf rtf--tight">
         <p>You can see the details of a specific country by selecting it in the first chart country selector.</p>
-        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>)</p>
+        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.</p>
       </div>
     </header>
     <article>
@@ -20,17 +20,30 @@
         <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            Country Totals
+            Total confirmed cases
           </h2>
-          <multi-line-chart v-if="selectTotals.length" id="custom-new" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
-          <multi-line-chart v-if="selectSeries.length" id="custom-totals" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
+          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
         </div>
       </article>
+
+      <article class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+          {{ worldSeries.title }}
+        </h1>
+        <div v-for="(chart, j) in worldSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+        </div>
+      </article>
+
       <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
@@ -81,7 +94,6 @@ export default {
       maps: {},
       selection: 'Norway',
       view: 'map',
-      world: {},
       input: [],
       margin: {
         right: 130,
@@ -90,10 +102,10 @@ export default {
         bottom: 10
       },
       page: {
-        title: 'Corona - Daily COVID-19 registrations',
+        title: 'Corona - Confirmed cases of COVID-19 ',
         slug: 'features/corona/daily',
         description:
-          'Charts showing the timeline trend of new daily registered confirmed cases of COVID-19 in different countries.',
+          'Charts showing the timeline trend of total confirmed cases and new daily registered confirmed cases of COVID-19 in affected countries.',
         url: 'https://kartoteket.as/features/corona/daily',
         image: 'https://kartoteket.as/preview-corona-charts.png'
       }
@@ -109,54 +121,40 @@ export default {
     selectTotals() {
       return this.getTotals(this.selection);
     },
+    worldSeries() {
+      return {
+        title: 'World',
+        charts: [
+          {
+            title: 'World Total',
+            data: [this.getWorldTotals()]
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: [this.getWorldNew()]
+          }
+        ]
+      };
+    },
     chartSeries() {
-      const scandinavia = {
-        title: 'Nordic Countries',
-        charts: [
-          {
-            title: 'Country Totals',
-            data: this.getTotals(['Norway', 'Sweden', 'Denmark', 'Finland'])
-          },
-          {
-            title: 'Daily new confirmed cases',
-            data: this.getNewCases(['Norway', 'Sweden', 'Denmark', 'Finland'])
-          }
-        ]
-      };
-      const keyCountries = {
-        title: 'Most effected (Excluding China)',
-        charts: [
-          {
-            title: 'Country Totals',
-            data: this.getTotals(['Iran', 'South Korea', 'Italy'])
-          },
-          {
-            title: 'Daily new confirmed cases',
-            data: this.getNewCases(['Iran', 'South Korea', 'Italy'])
-          }
-        ]
-      };
-      const China = {
-        title: 'China',
-        charts: [
-          {
-            title: 'Country Totals',
-            data: this.getTotals('Mainland China')
-          },
-          {
-            title: 'Daily new confirmed cases',
-            data: this.getNewCases('Mainland China')
-          }
-        ]
-      };
-
-      return [China, scandinavia, keyCountries];
-    },
-    width() {
-      return d3.min([300, 1600]); // @todo: get clientWidth
-    },
-    height() {
-      return d3.min([this.width * 0.5, 800]);
+      return [
+        this.createChartSeries({
+          title: 'Nordic Countries',
+          countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
+        }),
+        this.createChartSeries({
+          title: 'Most effected (Excluding China)',
+          countries: ['Iran', 'South Korea', 'Italy']
+        }),
+        this.createChartSeries({
+          title: 'China',
+          countries: ['Mainland China']
+        }),
+        this.createChartSeries({
+          title: 'US',
+          countries: ['US']
+        })
+      ];
     },
     // parsedData() {
     //   // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
@@ -184,6 +182,9 @@ export default {
       return Array.from(new Set(this.getCountries().map(d => d.date)))
         .map(d => moment(d, 'M/D/YY'))
         .sort(d3.ascending);
+    },
+    lastUpdate() {
+      return moment(this.dates[this.dates.length - 1]).format('ll');
     },
     // daysCount() {
     //   // @todo: re-facotr so that we can delete this.parsedData !
@@ -333,6 +334,53 @@ export default {
       }
       return data.filter(d => countries.includes(d.country));
     },
+    // @todo: might want to have this as computed ?
+    world() {
+      // Note, than when rolling up to country level, we loose data on state and lat/lng position
+      const totals = d3
+        .nest()
+        .key(d => d.date)
+        .rollup(v => {
+          return {
+            confirmed: d3.sum(v, d => d.confirmed),
+            deaths: d3.sum(v, d => d.deaths),
+            recovered: d3.sum(v, d => d.recovered)
+          };
+        })
+        .entries(this.input);
+
+      totals.forEach(({ value }, i) => {
+        const change = {
+          confirmed: value.confirmed,
+          deaths: value.deaths,
+          recovered: value.recovered
+        };
+        if (i > 0) {
+          change.confirmed = value.confirmed - totals[i - 1].value.confirmed;
+          change.deaths = value.deaths - totals[i - 1].value.deaths;
+          change.recovered = value.recovered - totals[i - 1].value.recovered;
+        }
+        totals[i].change = change;
+      });
+
+      return totals;
+    },
+    getWorldTotals() {
+      return {
+        name: 'World',
+        values: this.world().map(d => {
+          return { date: d.key, value: d.value.confirmed };
+        })
+      };
+    },
+    getWorldNew() {
+      return {
+        name: 'World',
+        values: this.world().map(d => {
+          return { date: d.key, value: d.change.confirmed };
+        })
+      };
+    },
     groupByCountry(input) {
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
       const nested = d3
@@ -398,6 +446,21 @@ export default {
         });
       }
       return Array.from(grouped, ([key, value]) => value).flat();
+    },
+    createChartSeries({ title, countries }) {
+      return {
+        title,
+        charts: [
+          {
+            title: 'Total confirmed cases',
+            data: this.getTotals(countries)
+          },
+          {
+            title: 'Daily New cases',
+            data: this.getNewCases(countries)
+          }
+        ]
+      };
     },
     async fetchData() {
       const files = [
