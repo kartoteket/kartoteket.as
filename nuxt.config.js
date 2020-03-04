@@ -109,7 +109,7 @@ module.exports = {
     //   screenview: true
     // },
     debug: {
-      enabled: true,
+      enabled: false,
       sendHitTask: process.env.NODE_ENV === 'production'
     }
   },
