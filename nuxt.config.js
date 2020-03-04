@@ -104,12 +104,13 @@ module.exports = {
 
   googleAnalytics: {
     id: 'UA-60185757-1',
-    autoTracking: {
-      screenview: true
-    },
+    linkers: ['kartoteket.as', 'kartoteket.netlify.com'],
+    // autoTracking: {
+    //   screenview: true
+    // },
     debug: {
-      // enabled: true,
-      sendHitTask: process.env.NODE_ENV !== 'development'
+      enabled: true,
+      sendHitTask: process.env.NODE_ENV === 'production'
     }
   },
 
