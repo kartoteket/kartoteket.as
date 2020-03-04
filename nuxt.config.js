@@ -106,11 +106,11 @@ module.exports = {
     id: 'UA-60185757-1',
     autoTracking: {
       screenview: true
+    },
+    debug: {
+      // enabled: true,
+      sendHitTask: process.env.NODE_ENV !== 'development'
     }
-    // debug: {
-    //   enabled: true,
-    //   sendHitTask: true
-    // }
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
