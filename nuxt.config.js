@@ -81,7 +81,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: ['~/plugins/global.js'],
-rently in use
+
+  // not currently in use
   // buildModules: [['@nuxtjs/axios']],
 
   /*
@@ -99,6 +100,17 @@ rently in use
     dataset: 'production', // string, required
     token: '', // string, optional
     useCdn: true // boolean, optional, default is false
+  },
+
+  googleAnalytics: {
+    id: 'UA-60185757-1',
+    autoTracking: {
+      screenview: true
+    }
+    // debug: {
+    //   enabled: true,
+    //   sendHitTask: true
+    // }
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
