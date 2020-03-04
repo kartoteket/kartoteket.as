@@ -104,13 +104,14 @@ module.exports = {
 
   googleAnalytics: {
     id: 'UA-60185757-1',
-    autoTracking: {
-      screenview: true
+    linkers: ['kartoteket.as', 'kartoteket.netlify.com'],
+    // autoTracking: {
+    //   screenview: true
+    // },
+    debug: {
+      enabled: false,
+      sendHitTask: process.env.NODE_ENV === 'production'
     }
-    // debug: {
-    //   enabled: true,
-    //   sendHitTask: true
-    // }
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
