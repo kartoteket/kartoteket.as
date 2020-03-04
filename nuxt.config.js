@@ -82,20 +82,27 @@ module.exports = {
   */
   plugins: ['~/plugins/global.js'],
 
-  buildModules: [
-    [
-      '@nuxtjs/axios',
-      '@nuxtjs/google-analytics',
-      {
-        id: 'UA-60185757-1'
-      }
-    ]
-  ],
+  buildModules: [['@nuxtjs/axios']],
+  googleAnalytics: {
+    id: 'UA-60185757-1',
+    autoTracking: {
+      screenview: true
+    }
+    // debug: {
+    //   enabled: true,
+    //   sendHitTask: true
+    // }
+  },
 
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/pwa', 'nuxt-sanity', '@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/pwa',
+    'nuxt-sanity',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-analytics'
+  ],
 
   sanity: {
     projectId: 'kqscd500', // string, required
