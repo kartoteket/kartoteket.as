@@ -82,26 +82,35 @@ module.exports = {
   */
   plugins: ['~/plugins/global.js'],
 
-  buildModules: [
-    [
-      '@nuxtjs/axios',
-      '@nuxtjs/google-analytics',
-      {
-        id: 'UA-60185757-1'
-      }
-    ]
-  ],
+  // not currently in use
+  // buildModules: [['@nuxtjs/axios']],
 
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/pwa', 'nuxt-sanity', '@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/pwa',
+    'nuxt-sanity',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-analytics'
+  ],
 
   sanity: {
     projectId: 'kqscd500', // string, required
     dataset: 'production', // string, required
     token: '', // string, optional
     useCdn: true // boolean, optional, default is false
+  },
+
+  googleAnalytics: {
+    id: 'UA-60185757-1',
+    autoTracking: {
+      screenview: true
+    }
+    // debug: {
+    //   enabled: true,
+    //   sendHitTask: true
+    // }
   },
 
   // ref fix: https://github.com/nuxt-community/tailwindcss-module/issues/52
