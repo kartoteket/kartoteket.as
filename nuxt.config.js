@@ -81,18 +81,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: ['~/plugins/global.js'],
-
-  buildModules: [['@nuxtjs/axios']],
-  googleAnalytics: {
-    id: 'UA-60185757-1',
-    autoTracking: {
-      screenview: true
-    }
-    // debug: {
-    //   enabled: true,
-    //   sendHitTask: true
-    // }
-  },
+rently in use
+  // buildModules: [['@nuxtjs/axios']],
 
   /*
   ** Nuxt.js modules
