@@ -2,11 +2,11 @@
   <div class="site-container font-light">
     <header class="flex justify-between items-center h-24 lg:mb-8 w-full p-page">
       <h1 class="uppercase text-xl tracking-wide opacity-90 z-20">
-        <nuxt-link to="/" class="text-white-full no-underline" @click="toggleMenu">
+        <nuxt-link to="/" class="text-gray-800 no-underline" @click="toggleMenu">
           Kartoteket
         </nuxt-link>
       </h1>
-      <siteNav :open="isMenuOpen" @click="toggleMenu" />
+      <siteNav :open="isMenuOpen" theme="light" @click="toggleMenu" />
     </header>
     <nuxt class="p-page flex-1" />
     <footer class="site-footer p-page py-8 flex sm:justify-end">
@@ -30,7 +30,7 @@ export default {
   },
   head: {
     bodyAttrs: {
-      class: 'theme-dark'
+      class: 'theme-light'
     }
   },
   mounted() {

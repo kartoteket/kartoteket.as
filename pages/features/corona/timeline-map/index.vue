@@ -9,11 +9,11 @@
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div class="flex flex-wrap">
-      <article id="container" class="h-50 w-full">
-        <svg :id="id" class="map" />
+      <article id="container" class="h-50 bg-white-800 w-full mx-auto lg:w-5/6 xxl:w-4/6">
+        <svg :id="id" class="map " />
       </article>
     </div>
-    <div class="rtf">
+    <div class="rtf mx-auto mt-8">
       <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>)</p>
     </div>
   </article>
@@ -23,7 +23,15 @@
 import head from '~/mixins/head.js';
 import Covid19Map from '@/viz/Covid19Map';
 
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
+
 export default {
+  layout: 'light',
   mixins: [head],
   data() {
     return {
@@ -36,6 +44,24 @@ export default {
         url: `https://kartoteket.as/features/corona/timeline-map`
       }
     };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: this.page.url,
+            name: this.page.title,
+            description: this.page.description,
+            main: this.page.url
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
   },
   async mounted() {
     const parent = document.getElementById('container');
