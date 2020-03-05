@@ -4,25 +4,56 @@
       <h1 class="main-header">
         {{ page.title }}
       </h1>
-      <div class="rtf md:text-lg leading-relaxed">
+      <div class="rtf md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
       </div>
-      <div class="rtf">
+      <div v-if="!isLoading" class="rtf rtf--tight">
         <p>You can see the details of a specific country by selecting it in the first chart country selector.</p>
-        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>)</p>
+        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.</p>
       </div>
     </header>
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
-    <div class="flex flex-wrap">
+    <div v-if="!isLoading" class="lg:flex flex-wrap">
       <article class="lg:w-1/2 mb-12">
-        <v-select v-model="selection" class="dropdown mx-8" :options="countriesList" value="{default:'Norway'}" />
-        <multi-line-chart id="custom" :series="selectSeries" />
+        <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
+        <div class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Total confirmed cases
+          </h2>
+          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
+        </div>
+        <div class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Daily new confirmed cases
+          </h2>
+          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
+        </div>
       </article>
-      <article v-for="(set, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
-        <h1>{{ set.title }}</h1>
-        <multi-line-chart :id="i+1" :series="set.data" />
+
+      <article class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+          {{ worldSeries.title }}
+        </h1>
+        <div v-for="(chart, j) in worldSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+        </div>
+      </article>
+
+      <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+          {{ block.title }}
+        </h1>
+        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+        </div>
       </article>
     </div>
   </article>
@@ -59,10 +90,10 @@ export default {
   mixins: [head],
   data() {
     return {
+      isLoading: true,
       maps: {},
       selection: 'Norway',
       view: 'map',
-      world: {},
       input: [],
       margin: {
         right: 130,
@@ -71,49 +102,59 @@ export default {
         bottom: 10
       },
       page: {
-        title: 'Corona - Daily COVID-19 registrations',
+        title: 'Corona - Confirmed cases of COVID-19 ',
         slug: 'features/corona/daily',
         description:
-          'Charts showing the timeline trend of new daily registered confirmed cases of COVID-19 in different countries.',
-        url: `https://kartoteket.as/features/corona/daily`
+          'Charts showing the timeline trend of total confirmed cases and new daily registered confirmed cases of COVID-19 in affected countries.',
+        url: 'https://kartoteket.as/features/corona/daily',
+        image: 'https://kartoteket.as/preview-corona-charts.png'
       }
     };
   },
   computed: {
+    colorScale() {
+      return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
+    },
     selectSeries() {
-      return this.getSeries(this.getCountries(this.selection));
+      return this.getNewCases(this.selection);
+    },
+    selectTotals() {
+      return this.getTotals(this.selection);
+    },
+    worldSeries() {
+      return {
+        title: 'World',
+        charts: [
+          {
+            title: 'World Total',
+            data: [this.getWorldTotals()]
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: [this.getWorldNew()]
+          }
+        ]
+      };
     },
     chartSeries() {
-      const scandinavia = {
-        title: 'Nordic Countries',
-        data: this.getSeries(
-          this.getCountries(['Norway', 'Sweden', 'Denmark', 'Finland'])
-        )
-      };
-      const keyCountries = {
-        title: 'Key Contries',
-        data: this.getSeries(
-          this.getCountries([
-            'Mainland China',
-            'Iran',
-            'South Korea',
-            'Italy',
-            'Japan'
-          ])
-        )
-      };
-      const US = {
-        title: 'US',
-        data: this.getSeries(this.getCountries('US'))
-      };
-
-      return [scandinavia, keyCountries, US];
-    },
-    width() {
-      return d3.min([300, 1600]); // @todo: get clientWidth
-    },
-    height() {
-      return d3.min([this.width * 0.5, 800]);
+      return [
+        this.createChartSeries({
+          title: 'Nordic Countries',
+          countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
+        }),
+        this.createChartSeries({
+          title: 'Most effected (Excluding China)',
+          countries: ['Iran', 'South Korea', 'Italy']
+        }),
+        this.createChartSeries({
+          title: 'China',
+          countries: ['Mainland China']
+        }),
+        this.createChartSeries({
+          title: 'US',
+          countries: ['US']
+        })
+      ];
     },
     // parsedData() {
     //   // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
@@ -142,6 +183,9 @@ export default {
         .map(d => moment(d, 'M/D/YY'))
         .sort(d3.ascending);
     },
+    lastUpdate() {
+      return moment(this.dates[this.dates.length - 1]).format('ll');
+    },
     // daysCount() {
     //   // @todo: re-facotr so that we can delete this.parsedData !
     //   return this.parsedData.count;
@@ -168,56 +212,90 @@ export default {
       };
     }
   },
-  async asyncData({ $axios }) {
-    let input = [];
-    const result = [];
-    const segments = ['confirmed', 'deaths', 'recovered'];
-    const files = [
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-    ];
-
-    // load all data (3 different raw csv files)
-    const response = await Promise.all(files.map(url => $axios.get(url)));
-    if (response) {
-      const result = response.map(resp => d3.csvParse(resp.data, d3.autoType));
-    }
-    // load data segments matching the 3 files
-
-    // her we loop through all the raw input data and map the `segments`from the 3 input fields
-    // we save lat/lng as pos array
-    // output is nested array
-    if (result) {
-      input = result
-        .map((array, i) => {
-          return array.map((obj, j) => {
-            const names = {
-              country: obj['Country/Region'],
-              state: obj['Province/State']
-            };
-            delete obj['Province/State'];
-            delete obj['Country/Region'];
-            const { Lat, Long, ...rest } = obj;
-
-            return Object.entries(rest).map(([key, value]) => {
-              obj = {
-                ...names,
-                pos: [Long, Lat],
-                date: key
-              };
-              obj[segments[i]] = value;
-              return obj;
-            });
-          });
-        })
-        .flat(2);
-    }
-    return { input };
+  async mounted() {
+    this.input = await this.fetchData();
+    this.isLoading = false;
   },
+  // async asyncData({ $axios }) {
+  //   const files = [
+  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
+  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
+  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+  //   ];
+
+  //   // load all data (3 different raw csv files)
+  //   let input = [];
+  //   let response = [];
+  //   let result = [];
+
+  //   try {
+  //     response = await Promise.all(
+  //       files.map(url =>
+  //         $axios.get(url, {
+  //           data: {},
+  //           headers: { 'Content-Type': 'text/plain' }
+  //         })
+  //       )
+  //     );
+  //   } catch (err) {
+  //     console.error(err); // TypeError: failed to fetch
+  //   }
+
+  //   if (response.length > 0) {
+  //     result = response.map(resp => {
+  //       if (resp.status === 200 && resp.data) {
+  //         return d3.csvParse(resp.data, d3.autoType);
+  //       }
+  //     });
+  //   }
+  //   // console.log(result.length);
+  //   // load data segments matching the 3 files
+  //   const segments = ['confirmed', 'deaths', 'recovered'];
+
+  //   // her we loop through all the raw input data and map the `segments`from the 3 input fields
+  //   // we save lat/lng as pos array
+  //   // output is nested array
+  //   if (result.length > 0) {
+  //     input = result
+  //       .map((array, i) => {
+  //         return array.map((obj, j) => {
+  //           const names = {
+  //             country: obj['Country/Region'],
+  //             state: obj['Province/State']
+  //           };
+  //           delete obj['Province/State'];
+  //           delete obj['Country/Region'];
+  //           const { Lat, Long, ...rest } = obj;
+
+  //           return Object.entries(rest).map(([key, value]) => {
+  //             obj = {
+  //               ...names,
+  //               pos: [Long, Lat],
+  //               date: key
+  //             };
+  //             obj[segments[i]] = value;
+  //             return obj;
+  //           });
+  //         });
+  //       })
+  //       .flat(2);
+  //   }
+  //   return { input };
+  // },
   methods: {
-    getSeries(input, limit) {
-      let data = d3.groups(input, d => d.name);
+    getTotals(input) {
+      const countries = Array.isArray(input) ? input : [input];
+      return countries.map(country => {
+        return {
+          name: country,
+          values: this.getCountries(country).map(d => {
+            return { date: d.date, value: d.confirmed };
+          })
+        };
+      });
+    },
+    getNewCases(input, limit) {
+      let data = d3.groups(this.getCountries(input), d => d.name);
       if (limit > 0) {
         data = data.slice(0, limit);
       }
@@ -227,7 +305,7 @@ export default {
           values: d[1].map(d => {
             return {
               date: d.date,
-              value: d.change.confirmed > 10000 ? 1000 : d.change.confirmed
+              value: d.change.confirmed // d.change.confirmed > 10000 ? 1000 : d.change.confirmed
             };
           })
         };
@@ -238,10 +316,10 @@ export default {
         .filter(d => moment(d.date).isSame(this.dates[this.dates.length - 1]))
         .sort((a, b) => d3.ascending(a.length, b.length));
     },
-    getCountries(input) {
+    getCountries(filter) {
       let selection = [];
-      if (input) {
-        const countries = Array.isArray(input) ? input : [input];
+      if (filter) {
+        const countries = Array.isArray(filter) ? filter : [filter];
         selection = this.filterByCountry(countries, this.input);
       } else {
         selection = this.input;
@@ -255,6 +333,53 @@ export default {
         return data.filter(d => !countries.includes(d.country));
       }
       return data.filter(d => countries.includes(d.country));
+    },
+    // @todo: might want to have this as computed ?
+    world() {
+      // Note, than when rolling up to country level, we loose data on state and lat/lng position
+      const totals = d3
+        .nest()
+        .key(d => d.date)
+        .rollup(v => {
+          return {
+            confirmed: d3.sum(v, d => d.confirmed),
+            deaths: d3.sum(v, d => d.deaths),
+            recovered: d3.sum(v, d => d.recovered)
+          };
+        })
+        .entries(this.input);
+
+      totals.forEach(({ value }, i) => {
+        const change = {
+          confirmed: value.confirmed,
+          deaths: value.deaths,
+          recovered: value.recovered
+        };
+        if (i > 0) {
+          change.confirmed = value.confirmed - totals[i - 1].value.confirmed;
+          change.deaths = value.deaths - totals[i - 1].value.deaths;
+          change.recovered = value.recovered - totals[i - 1].value.recovered;
+        }
+        totals[i].change = change;
+      });
+
+      return totals;
+    },
+    getWorldTotals() {
+      return {
+        name: 'World',
+        values: this.world().map(d => {
+          return { date: d.key, value: d.value.confirmed };
+        })
+      };
+    },
+    getWorldNew() {
+      return {
+        name: 'World',
+        values: this.world().map(d => {
+          return { date: d.key, value: d.change.confirmed };
+        })
+      };
     },
     groupByCountry(input) {
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
@@ -279,7 +404,7 @@ export default {
             name: country.key,
             date: date.key,
             pos: date.value.pos,
-            confirmed: date.value.confirmed ? date.value.confirmed : null,
+            confirmed: date.value.confirmed ? date.value.confirmed : 0,
             deaths: date.value.deaths,
             recovered: date.value.recovered
           };
@@ -321,12 +446,70 @@ export default {
         });
       }
       return Array.from(grouped, ([key, value]) => value).flat();
+    },
+    createChartSeries({ title, countries }) {
+      return {
+        title,
+        charts: [
+          {
+            title: 'Total confirmed cases',
+            data: this.getTotals(countries)
+          },
+          {
+            title: 'Daily New cases',
+            data: this.getNewCases(countries)
+          }
+        ]
+      };
+    },
+    async fetchData() {
+      const files = [
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+      ];
+
+      // load all data (3 different raw csv files)
+      const result = await Promise.all(
+        files.map(url => d3.csv(url, d3.autoType))
+      );
+      // load data segments matching the 3 files
+      const segments = ['confirmed', 'deaths', 'recovered'];
+
+      // her we loop through all the raw input data and map the `segments`from the 3 input fields
+      // we save lat/lng as pos array
+      // output is nested array
+      const input = result
+        .map((array, i) => {
+          return array.map((obj, j) => {
+            const names = {
+              country: obj['Country/Region'],
+              state: obj['Province/State']
+            };
+            delete obj['Province/State'];
+            delete obj['Country/Region'];
+            const { Lat, Long, ...rest } = obj;
+
+            return Object.entries(rest).map(([key, value]) => {
+              obj = {
+                ...names,
+                pos: [Long, Lat],
+                date: key
+              };
+              obj[segments[i]] = value;
+              return obj;
+            });
+          });
+        })
+        .flat(2);
+      return input;
     }
   }
 };
 </script>
 <style>
 .dropdown .vs__selected {
+  background-color: transparent;
   color: #fff;
 }
 .dropdown .vs__clear,

@@ -19,6 +19,10 @@ export default {
     id: {
       type: [String, Number],
       default: '1'
+    },
+    config: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -26,18 +30,25 @@ export default {
       chart: null,
       margin: {
         right: 30,
-        left: 60,
+        left: 80,
         top: 20,
-        bottom: 10
+        bottom: 20
+      },
+      defaultConfig: {
+        aspectRatio: 0.5,
+        colorScale: d3.scaleOrdinal(d3.schemeSet2)
       }
     };
   },
   computed: {
+    options() {
+      return { ...this.defaultConfig, ...this.config };
+    },
     width() {
       return d3.min([500, 1600]); // @todo: get clientWidth
     },
     height() {
-      return d3.min([this.width * 0.5, 800]);
+      return d3.min([this.width * this.options.aspectRatio, 800]);
     },
     yScale() {
       return d3
@@ -62,8 +73,9 @@ export default {
           .range([this.margin.left, this.width - this.margin.right])
       );
     },
-    seriesColor() {
-      return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
+    color() {
+      return this.options.colorScale;
+      // return d3.scaleOrdinal(d3.schemeSet2);
     },
     changeLine() {
       return d3
@@ -81,6 +93,7 @@ export default {
   },
 
   mounted() {
+    // console.log(this.series);
     this.drawChart(`#chart-${this.id}`, this.series);
   },
   methods: {
@@ -97,7 +110,7 @@ export default {
           .attr('style', 'width:100%');
         el.g = svg.append('g');
         el.lines = el.g.append('g').classed('lines', true);
-        el.xAxis = el.g.append('g').classed('axis axis-x', true);
+        el.xAxis = el.g.append('g').classed('axis  axis-x', true);
         el.yAxis = el.g.append('g').classed('axis axis-y', true);
         el.legend = el.g.append('g').classed('legend', true);
         el.tooltip = el.g.append('g').classed('tooltip', true);
@@ -112,15 +125,15 @@ export default {
       const legends = el.legend
         .attr(
           'transform',
-          `translate(${this.margin.left + 10}, ${this.margin.top + 120})`
+          `translate(${this.margin.left + 10}, ${this.margin.top + 20})`
         )
         .selectAll('g')
-        .data(series)
+        .data(series.sort((a, b) => d3.ascending(a.name, b.name)))
         .join('g');
 
       legends
         .append('rect')
-        .attr('fill', (_, i) => this.seriesColor(i))
+        .attr('fill', (d, i) => this.color(d.name))
         .attr('width', 20)
         .attr('height', 2)
         .attr('rx', 2)
@@ -146,13 +159,9 @@ export default {
         .selectAll('path')
         .data(series)
         .join('path')
-        .attr('stroke', (_, i) => {
-          return this.seriesColor(i);
-        })
+        .attr('stroke', d => this.color(d.name))
         .transition(t)
-        .attr('d', d => {
-          return this.changeLine(d.values);
-        });
+        .attr('d', d => this.changeLine(d.values));
 
       // style axis and tick lines
       el.yAxis
@@ -194,7 +203,10 @@ export default {
     // AXIS
     xAxis(svg, x) {
       return svg
-        .attr('transform', `translate(0,${this.height - this.margin.bottom})`)
+        .attr(
+          'transform',
+          `translate(0,${this.height - this.margin.bottom + 5})`
+        )
         .call(
           d3
             .axisBottom(x)
@@ -212,6 +224,8 @@ export default {
         .call(
           d3
             .axisLeft(y)
+            // .tickFormat(d3.format('d'))
+            .ticks(5)
             .tickSizeOuter(0)
             .tickSizeInner(
               (this.width - this.margin.right - this.margin.left) * -1
@@ -294,3 +308,17 @@ export default {
   }
 };
 </script>
+<style>
+.tooltip text,
+.legend text,
+.axis {
+  font-size: 1rem !important;
+}
+@screen sm {
+  .tooltip text,
+  .legend text,
+  .axis {
+    font-size: 0.75rem !important;
+  }
+}
+</style>

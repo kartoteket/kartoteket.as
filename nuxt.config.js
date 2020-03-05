@@ -110,11 +110,12 @@ module.exports = {
   },
 
   purgeCSS: {
-    whitelist: ['v-select'],
+    whitelist: ['v-select', 'tooltip', 'legend', 'axis'],
     whitelistPatterns: [
       /-(leave|enter|appear)(|-(to|from|active))$/,
       /^nuxt-link(|-exact)-active$/,
-      /^vs__/
+      /vs__/,
+      /vs--/
     ]
   },
 
@@ -152,6 +153,7 @@ module.exports = {
   },
   generate: {
     // interval: 100,
+    fallback: true,
     routes: routes
   }
 };
