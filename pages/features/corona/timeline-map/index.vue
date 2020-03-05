@@ -24,6 +24,7 @@ import head from '~/mixins/head.js';
 import Covid19Map from '@/viz/Covid19Map';
 
 export default {
+  layout: 'light',
   mixins: [head],
   data() {
     return {
