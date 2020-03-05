@@ -8,8 +8,29 @@ const d3 = Object.assign({}, d3Lib, d3Array);
 // eslint-disable-next-line prettier/prettier
 const baseUrl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/';
 
+const texts = {
+  no: {
+    _new: 'Nye:',
+    _total: 'Totalt:',
+    _deaths: 'Døde:',
+    _confirmed: 'Bekreftet:',
+    _recovered: 'Friskmeldte: ',
+    _numConfirmed: 'Antall daglig bekreftede tilfeller:',
+    _lastTick: 'tilfeller (Wuhan)'
+  },
+  en: {
+    _new: 'New:',
+    _total: 'Total:',
+    _deaths: 'Deaths:',
+    _confirmed: 'Confirmed:',
+    _recovered: 'Recovered:',
+    _numConfirmed: 'Number of daily confirmed incidents:',
+    _lastTick: 'incidents (Wuhan)'
+  }
+};
+
 export default class Covid19Map {
-  constructor(element, width) {
+  constructor(element, width, language = 'en') {
     this.element = `#${element}`;
     this.height = 600;
     this.width = width < 600 ? width : 900;
@@ -21,6 +42,7 @@ export default class Covid19Map {
     this.animationSpeed = 400;
     this.currentIndex = 0;
     this.paused = false;
+    this.texts = this.getLocalizedTexts(language);
     this.setSizes();
   }
 
@@ -97,8 +119,7 @@ export default class Covid19Map {
   createMap() {
     const svg = d3
       .select(this.element)
-      .attr('viewBox', [0, 0, this.width, this.height])
-      .attr('class', 'bg-white-700');
+      .attr('viewBox', [0, 0, this.width, this.height]);
 
     // ensure all child elements are removed before redrawing
     svg.selectAll('g').remove();
@@ -163,13 +184,13 @@ export default class Covid19Map {
       .append('g')
       .attr('transform', 'translate(170,0)')
       .append('text')
-      .text('Nye:');
+      .text(this.texts._new);
 
     numbers
       .append('g')
       .attr('transform', 'translate(120,0)')
       .append('text')
-      .text('Totalt:');
+      .text(this.texts._total);
 
     numbers
       .append('line')
@@ -186,7 +207,7 @@ export default class Covid19Map {
       .append('g')
       .attr('transform', `translate(10,${this.normalTextSize * 1 + 10})`)
       .append('text')
-      .text('Bekreftet:');
+      .text(this.texts._confirmed);
 
     numbers
       .append('g')
@@ -204,7 +225,7 @@ export default class Covid19Map {
       .append('g')
       .attr('transform', `translate(10,${this.normalTextSize * 2 + 10})`)
       .append('text')
-      .text('Døde:');
+      .text(this.texts._deaths);
 
     numbers
       .append('g')
@@ -223,7 +244,7 @@ export default class Covid19Map {
       .append('g')
       .attr('transform', `translate(10,${this.normalTextSize * 3 + 10})`)
       .append('text')
-      .text('Friskmeldte:');
+      .text(this.texts._recovered);
 
     numbers
       .append('g')
@@ -396,7 +417,7 @@ export default class Covid19Map {
       .append('text')
       .attr('font-size', `${this.normalTextSize}px`)
       .attr('fill', '#333')
-      .text('Antall daglig bekreftede tilfeller:');
+      .text(this.texts._numConfirmed);
 
     rect.on('click', () => {
       const r = rect.node();
@@ -679,10 +700,18 @@ export default class Covid19Map {
     */
   }
 
+  getLocalizedTexts(language) {
+    if (language !== 'no' && language !== 'en') {
+      language = 'en';
+    }
+    console.log(texts[language]);
+    return texts[language];
+  }
+
   createBubbleLegend() {
     const tickFormat = (d, i, e) => {
       return i === e.length - 1
-        ? `${Math.round(d)} tilfeller (Wuhan)`
+        ? `${Math.round(d)} ${this.texts._lastTick}`
         : Math.round(d);
     };
     const tickSize = 5;
@@ -697,7 +726,6 @@ export default class Covid19Map {
     const legend = d3.select('.legends');
     const g = legend.append('g').classed('ledgend-size', true);
     const max = tickValues[tickValues.length - 1];
-
     g.selectAll('circle')
       .data(tickValues.slice().reverse())
       .enter()
