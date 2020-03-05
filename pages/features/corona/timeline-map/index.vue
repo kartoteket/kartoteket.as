@@ -9,11 +9,11 @@
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div class="flex flex-wrap">
-      <article id="container" class="h-50 bg-white-800 w-full lg:w-5/6 xl:w-4/6">
+      <article id="container" class="h-50 bg-white-800 w-full mx-auto lg:w-5/6 xxl:w-4/6">
         <svg :id="id" class="map " />
       </article>
     </div>
-    <div class="rtf">
+    <div class="rtf mx-auto mt-8">
       <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>)</p>
     </div>
   </article>
