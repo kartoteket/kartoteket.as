@@ -10,21 +10,21 @@ const baseUrl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/maste
 
 const texts = {
   no: {
-    _new: 'Nye:',
-    _total: 'Totalt:',
+    _new: 'Nye',
+    _total: 'Totalt',
     _deaths: 'Døde:',
     _confirmed: 'Bekreftet:',
-    _recovered: 'Friskmeldte: ',
-    _numConfirmed: 'Antall daglig bekreftede tilfeller:',
+    _recovered: 'Friskmeldte:',
+    _numConfirmed: 'Antall daglig bekreftede tilfeller',
     _lastTick: 'tilfeller (Wuhan)'
   },
   en: {
-    _new: 'New:',
-    _total: 'Total:',
+    _new: 'New',
+    _total: 'Total',
     _deaths: 'Deaths:',
     _confirmed: 'Confirmed:',
     _recovered: 'Recovered:',
-    _numConfirmed: 'Number of daily confirmed incidents:',
+    _numConfirmed: 'Number of daily confirmed incidents',
     _lastTick: 'incidents (Wuhan)'
   }
 };
