@@ -9,7 +9,7 @@
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div class="flex flex-wrap">
-      <article id="container" class="h-50 bg-white-800 w-full lg:w-5/6">
+      <article id="container" class="h-50 bg-white-800 w-full lg:w-5/6 xl:w-4/6">
         <svg :id="id" class="map " />
       </article>
     </div>
