@@ -35,15 +35,18 @@
         inset-0
         h-screen sm:h-auto
         z-10
-        bg-blue-900 sm:bg-transparent
+        sm:bg-transparent
         text-center
         "
       :hidden="!open"
-      :class="open ? 'menu-fade-out' : 'menu-fade-in'"
+      :class="[
+        (theme === 'light' ? 'bg-white-full' : 'bg-blue-900'),
+        (open ? 'menu-fade-out' : 'menu-fade-in')
+      ]"
       @click="$emit('click')"
     >
       <li v-for="item in navItems" :key="item.path" class="seperate">
-        <nuxt-link :to="item.path" class="text-white-full sm:uppercase px-4 text-4xl sm:text-base leading-loose">
+        <nuxt-link :to="item.path" class="sm:uppercase px-4 text-4xl sm:text-base leading-loose" :class="theme === 'light' ? 'text-gray-800' : 'text-white-full' ">
           {{ item.label }}
         </nuxt-link>
       </li>
@@ -57,6 +60,10 @@ export default {
     open: {
       type: Boolean,
       default: false
+    },
+    theme: {
+      type: String,
+      default: 'dark'
     }
   },
   data() {

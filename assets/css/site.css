@@ -9,7 +9,7 @@ html { font-family: 'Inter', sans-serif; }
 /**
 **  General
 **/
-body {
+.theme-dark {
   background-image: linear-gradient(theme(colors.blue.900), theme(colors.cyan.300))
 }
 
@@ -21,6 +21,11 @@ body {
   @apply min-h-screen flex flex-col justify-between text-white-full mx-auto;
   max-width: 2000px;
 }
+.theme-light .site-container {
+  @apply text-gray-800;
+}
+
+
 /** page padding **/
 .p-page {
   @apply px-4
@@ -84,6 +89,15 @@ body {
   @apply .mb-2
 }
 
+.theme-light .link,
+.theme-light .rtf h2,
+.theme-light .rtf a {
+  color: theme(colors.gray.800);
+  border-bottom: 2px solid theme(colors.gray.600);
+}
+
+
+
 @screen sm {
   .rtf > ul {
     @apply ml-8 pr-12;
@@ -104,6 +118,9 @@ body {
 
 .aside-header {
   @apply text-lg text-white-700 uppercase tracking-wide border-t border-white-500 mb-4 pt-1
+}
+.theme-light .aside-header {
+  @apply text-gray-800;
 }
 
 
