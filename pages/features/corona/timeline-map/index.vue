@@ -23,6 +23,13 @@
 import head from '~/mixins/head.js';
 import Covid19Map from '@/viz/Covid19Map';
 
+import {
+  webSite,
+  organisation,
+  webPage,
+  breadCrumbs
+} from '@/utils/structureddata.js';
+
 export default {
   layout: 'light',
   mixins: [head],
@@ -37,6 +44,24 @@ export default {
         url: `https://kartoteket.as/features/corona/timeline-map`
       }
     };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: this.page.url,
+            name: this.page.title,
+            description: this.page.description,
+            main: this.page.url
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
   },
   async mounted() {
     const parent = document.getElementById('container');
