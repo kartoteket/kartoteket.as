@@ -97,8 +97,7 @@ export default class Covid19Map {
   createMap() {
     const svg = d3
       .select(this.element)
-      .attr('viewBox', [0, 0, this.width, this.height])
-      .attr('class', 'bg-white-700');
+      .attr('viewBox', [0, 0, this.width, this.height]);
 
     // ensure all child elements are removed before redrawing
     svg.selectAll('g').remove();
