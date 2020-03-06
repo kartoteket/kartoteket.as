@@ -11,16 +11,17 @@
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
 
-
-      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'country'}" @click.stop="setView('country')">
-        Select Country
-      </button>
-      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'world'}" @click.stop="setView('world')">
-        World
-      </button>
-      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'groups'}" @click.stop="setView('groups')">
-        Selected Groups
-      </button>
+      <nav class="flex flex-center">
+        <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-white-full' : view === 'country'}" @click.stop="setView('country')">
+          Select Country
+        </button>
+        <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-white-full' : view === 'world'}" @click.stop="setView('world')">
+          World
+        </button>
+        <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-white-full' : view === 'groups'}" @click.stop="setView('groups')">
+          Selected Groups
+        </button>
+      </nav>
     </header>
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
@@ -79,7 +80,7 @@
       </article>
     </div>
     <p v-if="!isLoading">
-      Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.
+      Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Data updated {{ lastUpdate }}.
     </p>
   </article>
 </template>
