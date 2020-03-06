@@ -130,10 +130,10 @@ export default {
       },
       page: {
         title: 'Corona - Confirmed cases of COVID-19 ',
-        slug: 'features/corona/daily',
+        slug: 'features/corona/trend',
         description:
           'Charts showing the timeline trend of total confirmed cases and new daily registered confirmed cases of COVID-19 in affected countries.',
-        url: 'https://kartoteket.as/features/corona/daily',
+        url: 'https://kartoteket.as/features/corona/trend',
         image: 'https://kartoteket.as/preview-corona-charts.png'
       }
     };
