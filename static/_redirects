@@ -10,4 +10,4 @@
 /31dagermeddata/*                             https://old.kartoteket.as/31dagermeddata/:splat
 /31dagermeddata                               https://old.kartoteket.as/31dagermeddata/
 
-features/corona/daily                          features/corona/trend/
+features/corona/daily                          features/corona/trend
