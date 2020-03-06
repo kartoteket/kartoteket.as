@@ -7,9 +7,12 @@
       <div class="rtf md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
       </div>
+      <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
+        <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
+      </div>
+
       <div v-if="!isLoading" class="rtf rtf--tight">
         <p>You can see the details of a specific country by selecting it in the first chart country selector.</p>
-        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.</p>
       </div>
     </header>
     <article>
@@ -55,6 +58,7 @@
           <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
         </div>
       </article>
+      <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.</p>
     </div>
   </article>
 </template>
@@ -68,6 +72,7 @@ import * as moment from 'moment';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
+import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
 import head from '~/mixins/head.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 // import PlotMapChart from '@/components/charts/PlotMapChart';
@@ -84,6 +89,7 @@ const d3 = Object.assign({}, d3Lib, d3Array);
 export default {
   components: {
     MultiLineChart,
+    ScaleLoader,
     // PlotMapChart,
     vSelect
   },
