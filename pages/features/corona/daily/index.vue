@@ -32,13 +32,13 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Total confirmed cases
           </h2>
-          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.5}" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
-          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
+          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.4}" />
         </div>
       </article>
 
@@ -50,7 +50,7 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
         </div>
       </article>
 
@@ -64,7 +64,7 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
         </div>
       </article>
     </div>
