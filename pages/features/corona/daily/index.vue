@@ -185,17 +185,17 @@ export default {
           countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
         }),
         this.createChartSeries({
-          title: 'Most effected (Excluding China)',
+          title: 'Most effected (excluding China)',
           countries: ['Iran', 'South Korea', 'Italy']
-        }),
-        this.createChartSeries({
-          title: 'China',
-          countries: ['Mainland China']
-        }),
-        this.createChartSeries({
-          title: 'US',
-          countries: ['US']
         })
+        // this.createChartSeries({
+        //   title: 'China',
+        //   countries: ['Mainland China']
+        // }),
+        // this.createChartSeries({
+        //   title: 'US',
+        //   countries: ['US']
+        // })
       ];
     },
     // parsedData() {
