@@ -210,7 +210,7 @@ export default {
         .call(
           d3
             .axisBottom(x)
-            .ticks(2) // this.width > 600 ? 10 : 3
+            .ticks(3) // this.width > 600 ? 10 : 3
             .tickFormat(d3.timeFormat('%d.%m'))
             .tickSizeOuter(0)
             .tickSizeInner(
