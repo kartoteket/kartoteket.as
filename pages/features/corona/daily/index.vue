@@ -417,7 +417,7 @@ export default {
     },
     getWorldTotals(includeChina = true) {
       return {
-        name: 'World',
+        name: includeChina ? 'World' : 'World excluding China',
         values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.value.confirmed };
         })
@@ -425,7 +425,7 @@ export default {
     },
     getWorldNew(includeChina = true) {
       return {
-        name: 'World',
+        name: includeChina ? 'World' : 'World excluding China',
         values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.change.confirmed };
         })
