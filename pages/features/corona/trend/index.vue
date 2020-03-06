@@ -7,32 +7,42 @@
       <div class="rtf md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
       </div>
-      <div v-if="!isLoading" class="rtf rtf--tight">
-        <p>You can see the details of a specific country by selecting it in the first chart country selector.</p>
-        <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.</p>
+      <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
+        <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
+
+
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'country'}" @click.stop="setView('country')">
+        Select Country
+      </button>
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'world'}" @click.stop="setView('world')">
+        World
+      </button>
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'groups'}" @click.stop="setView('groups')">
+        Selected Groups
+      </button>
     </header>
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div v-if="!isLoading" class="lg:flex flex-wrap">
-      <article class="lg:w-1/2 mb-12">
+      <article v-show="view === 'country'" class="lg:w-1/2 mb-12">
         <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Total confirmed cases
           </h2>
-          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.5}" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
-          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.3}" />
+          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.4}" />
         </div>
       </article>
 
-      <article class="lg:w-1/2 mb-12">
+      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
@@ -40,11 +50,23 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
         </div>
       </article>
 
-      <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
+      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+          {{ worldOutsideChinaSeries.title }}
+        </h1>
+        <div v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
+        </div>
+      </article>
+
+      <article v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
         </h1>
@@ -52,10 +74,13 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.3 : 0.4}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
         </div>
       </article>
     </div>
+    <p v-if="!isLoading">
+      Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Last data update from {{ lastUpdate }}.
+    </p>
   </article>
 </template>
 <script>
@@ -68,6 +93,7 @@ import * as moment from 'moment';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
+import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
 import head from '~/mixins/head.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 // import PlotMapChart from '@/components/charts/PlotMapChart';
@@ -84,6 +110,7 @@ const d3 = Object.assign({}, d3Lib, d3Array);
 export default {
   components: {
     MultiLineChart,
+    ScaleLoader,
     // PlotMapChart,
     vSelect
   },
@@ -91,9 +118,9 @@ export default {
   data() {
     return {
       isLoading: true,
+      view: 'world',
       maps: {},
       selection: 'Norway',
-      view: 'map',
       input: [],
       margin: {
         right: 130,
@@ -103,10 +130,10 @@ export default {
       },
       page: {
         title: 'Corona - Confirmed cases of COVID-19 ',
-        slug: 'features/corona/daily',
+        slug: 'features/corona/trend',
         description:
           'Charts showing the timeline trend of total confirmed cases and new daily registered confirmed cases of COVID-19 in affected countries.',
-        url: 'https://kartoteket.as/features/corona/daily',
+        url: 'https://kartoteket.as/features/corona/trend',
         image: 'https://kartoteket.as/preview-corona-charts.png'
       }
     };
@@ -126,12 +153,27 @@ export default {
         title: 'World',
         charts: [
           {
-            title: 'World Total',
+            title: 'Total confirmed cases',
             data: [this.getWorldTotals()]
           },
           {
             title: 'Daily new confirmed cases',
             data: [this.getWorldNew()]
+          }
+        ]
+      };
+    },
+    worldOutsideChinaSeries() {
+      return {
+        title: 'World outside China',
+        charts: [
+          {
+            title: 'Total confirmed cases',
+            data: [this.getWorldTotals(false)]
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: [this.getWorldNew(false)]
           }
         ]
       };
@@ -143,17 +185,17 @@ export default {
           countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
         }),
         this.createChartSeries({
-          title: 'Most effected (Excluding China)',
+          title: 'Most effected (excluding China)',
           countries: ['Iran', 'South Korea', 'Italy']
-        }),
-        this.createChartSeries({
-          title: 'China',
-          countries: ['Mainland China']
-        }),
-        this.createChartSeries({
-          title: 'US',
-          countries: ['US']
         })
+        // this.createChartSeries({
+        //   title: 'China',
+        //   countries: ['Mainland China']
+        // }),
+        // this.createChartSeries({
+        //   title: 'US',
+        //   countries: ['US']
+        // })
       ];
     },
     // parsedData() {
@@ -213,6 +255,11 @@ export default {
     }
   },
   async mounted() {
+    const views = ['country', 'world', 'groups'];
+    this.view = views.includes(this.$route.query.view)
+      ? this.$route.query.view
+      : 'world';
+
     this.input = await this.fetchData();
     this.isLoading = false;
   },
@@ -334,8 +381,11 @@ export default {
       }
       return data.filter(d => countries.includes(d.country));
     },
-    // @todo: might want to have this as computed ?
-    world() {
+    world(includeChina = true) {
+      const data = this.input.filter(
+        d => d.country !== 'Mainland China' || includeChina
+      );
+
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
       const totals = d3
         .nest()
@@ -347,7 +397,7 @@ export default {
             recovered: d3.sum(v, d => d.recovered)
           };
         })
-        .entries(this.input);
+        .entries(data);
 
       totals.forEach(({ value }, i) => {
         const change = {
@@ -365,18 +415,18 @@ export default {
 
       return totals;
     },
-    getWorldTotals() {
+    getWorldTotals(includeChina = true) {
       return {
-        name: 'World',
-        values: this.world().map(d => {
+        name: includeChina ? 'World' : 'World excluding China',
+        values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.value.confirmed };
         })
       };
     },
-    getWorldNew() {
+    getWorldNew(includeChina = true) {
       return {
-        name: 'World',
-        values: this.world().map(d => {
+        name: includeChina ? 'World' : 'World excluding China',
+        values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.change.confirmed };
         })
       };
@@ -503,6 +553,15 @@ export default {
         })
         .flat(2);
       return input;
+    },
+    setView(val) {
+      if (val !== this.view) {
+        this.view = val;
+        this.$router.replace({
+          path: this.$route.path,
+          query: { view: val }
+        });
+      }
     }
   }
 };
