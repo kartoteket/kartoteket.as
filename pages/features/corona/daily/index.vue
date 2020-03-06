@@ -11,15 +11,22 @@
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
 
-      <div v-if="!isLoading" class="rtf rtf--tight">
-        <p>You can see the details of a specific country by selecting it in the first chart country selector.</p>
-      </div>
+
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'country'}" @click.stop="setView('country')">
+        Select Country
+      </button>
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'world'}" @click.stop="setView('world')">
+        World
+      </button>
+      <button class="bg-white-700 hover:bg-white-900 text-gray-900 py-1 px-3 rounded mr-4" :class="{'bg-white-full' : view === 'groups'}" @click.stop="setView('groups')">
+        Selected Groups
+      </button>
     </header>
     <article>
       <!-- <plot-map-chart v-if="false" :chart-data="chartData" /> -->
     </article>
     <div v-if="!isLoading" class="lg:flex flex-wrap">
-      <article class="lg:w-1/2 mb-12">
+      <article v-show="view === 'country'" class="lg:w-1/2 mb-12">
         <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
@@ -35,7 +42,7 @@
         </div>
       </article>
 
-      <article class="lg:w-1/2 mb-12">
+      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
@@ -48,6 +55,8 @@
       </article>
 
       <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
+        <h1 class="text-lg mb-6">
+      <article v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
         </h1>
@@ -97,9 +106,9 @@ export default {
   data() {
     return {
       isLoading: true,
+      view: 'world',
       maps: {},
       selection: 'Norway',
-      view: 'map',
       input: [],
       margin: {
         right: 130,
@@ -219,6 +228,11 @@ export default {
     }
   },
   async mounted() {
+    const views = ['country', 'world', 'groups'];
+    this.view = views.includes(this.$route.query.view)
+      ? this.$route.query.view
+      : 'world';
+
     this.input = await this.fetchData();
     this.isLoading = false;
   },
@@ -509,6 +523,15 @@ export default {
         })
         .flat(2);
       return input;
+    },
+    setView(val) {
+      if (val !== this.view) {
+        this.view = val;
+        this.$router.replace({
+          path: this.$route.path,
+          query: { view: val }
+        });
+      }
     }
   }
 };
