@@ -54,8 +54,18 @@
         </div>
       </article>
 
-      <article v-for="(block, i) in chartSeries" :key="i" class="lg:w-1/2 mb-12">
+      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
+          {{ worldOutsideChinaSeries.title }}
+        </h1>
+        <div v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            {{ chart.title }}
+          </h2>
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
+        </div>
+      </article>
+
       <article v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
@@ -143,12 +153,27 @@ export default {
         title: 'World',
         charts: [
           {
-            title: 'World Total',
+            title: 'Total confirmed cases',
             data: [this.getWorldTotals()]
           },
           {
             title: 'Daily new confirmed cases',
             data: [this.getWorldNew()]
+          }
+        ]
+      };
+    },
+    worldOutsideChinaSeries() {
+      return {
+        title: 'World outside China',
+        charts: [
+          {
+            title: 'Total confirmed cases',
+            data: [this.getWorldTotals(false)]
+          },
+          {
+            title: 'Daily new confirmed cases',
+            data: [this.getWorldNew(false)]
           }
         ]
       };
@@ -356,8 +381,11 @@ export default {
       }
       return data.filter(d => countries.includes(d.country));
     },
-    // @todo: might want to have this as computed ?
-    world() {
+    world(includeChina = true) {
+      const data = this.input.filter(
+        d => d.country !== 'Mainland China' || includeChina
+      );
+
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
       const totals = d3
         .nest()
@@ -369,7 +397,7 @@ export default {
             recovered: d3.sum(v, d => d.recovered)
           };
         })
-        .entries(this.input);
+        .entries(data);
 
       totals.forEach(({ value }, i) => {
         const change = {
@@ -387,18 +415,18 @@ export default {
 
       return totals;
     },
-    getWorldTotals() {
+    getWorldTotals(includeChina = true) {
       return {
         name: 'World',
-        values: this.world().map(d => {
+        values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.value.confirmed };
         })
       };
     },
-    getWorldNew() {
+    getWorldNew(includeChina = true) {
       return {
         name: 'World',
-        values: this.world().map(d => {
+        values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.change.confirmed };
         })
       };
