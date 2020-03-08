@@ -353,7 +353,7 @@ export default {
           values: d[1].map(d => {
             return {
               date: d.date,
-              value: d.change.confirmed // d.change.confirmed > 10000 ? 1000 : d.change.confirmed
+              value: d.change.confirmed > 10000 ? 1000 : d.change.confirmed
             };
           })
         };
