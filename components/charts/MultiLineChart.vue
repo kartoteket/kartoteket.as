@@ -255,19 +255,19 @@ export default {
             .selectAll('tspan')
             .data(values)
             .join('tspan')
-            .attr(
-              'text-anchor',
-              d =>
-                moment(d.date, 'M/D/YY').isAfter('2020-01-25T00:00:00Z')
-                  ? 'end'
-                  : 'start'
-            )
+            .attr('text-anchor', d => {
+              return moment(d.date, 'M/D/YY').isAfter(
+                moment().subtract(8, 'days')
+              )
+                ? 'end'
+                : 'start';
+            })
             .attr(
               'x',
               d =>
-                moment(d.date, 'M/D/YY').isAfter('2020-01-25T00:00:00Z')
-                  ? '45'
-                  : '70'
+                moment(d.date, 'M/D/YY').isAfter(moment().subtract(8, 'days'))
+                  ? '20'
+                  : '45'
             )
             .attr('y', (d, i) => `${i * 1.2}em`)
             .style('font-weight', (_, i) => (i ? null : 'bold'))
