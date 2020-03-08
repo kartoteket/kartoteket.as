@@ -372,6 +372,13 @@ export default {
       } else {
         selection = this.input;
       }
+
+      // only get last 3 weeks
+      selection = selection.filter(d => {
+        const start = moment().subtract(3, 'weeks');
+        return moment(d.date).isSameOrAfter(start);
+      });
+
       const grouped = this.groupByCountry(selection);
       const extended = this.addDailyValues(grouped.data);
       return extended;
