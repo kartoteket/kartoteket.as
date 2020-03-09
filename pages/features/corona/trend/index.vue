@@ -109,6 +109,7 @@
 import * as d3Lib from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
 import * as d3Array from 'd3-array';
 import * as moment from 'moment';
+import 'array-flat-polyfill';
 
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
