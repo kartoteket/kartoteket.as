@@ -216,38 +216,8 @@ export default {
           title: 'Most effected (excluding China)',
           countries: ['Iran', 'South Korea', 'Italy']
         })
-        // this.createChartSeries({
-        //   title: 'China',
-        //   countries: ['Mainland China']
-        // }),
-        // this.createChartSeries({
-        //   title: 'US',
-        //   countries: ['US']
-        // })
       ];
     },
-    // parsedData() {
-    //   // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
-    //   const data = this.input.slice();
-
-    //   // filter the data
-    //   // 'World', 'World Excluding China', 'Europe'
-    //   let filtered;
-    //   if (this.selection === 'World Excluding China') {
-    //     filtered = this.filterByCountry(['Mainland China'], data, true);
-    //   } else if (this.selection === 'World') {
-    //     filtered = data;
-    //   } else {
-    //     filtered = this.filterByCountry([this.selection], data);
-    //   }
-
-    //   return this.groupByCountry(filtered);
-    // },
-    // chartData() {
-    //   return this.view === 'map'
-    //     ? this.getLatest(this.getCountries())
-    //     : this.getCountries();
-    // },
     dates() {
       return Array.from(new Set(this.getCountries().map(d => d.date)))
         .map(d => moment(d, 'M/D/YY'))
@@ -297,72 +267,6 @@ export default {
     this.input = await this.fetchData();
     this.isLoading = false;
   },
-  // async asyncData({ $axios }) {
-  //   const files = [
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-  //   ];
-
-  //   // load all data (3 different raw csv files)
-  //   let input = [];
-  //   let response = [];
-  //   let result = [];
-
-  //   try {
-  //     response = await Promise.all(
-  //       files.map(url =>
-  //         $axios.get(url, {
-  //           data: {},
-  //           headers: { 'Content-Type': 'text/plain' }
-  //         })
-  //       )
-  //     );
-  //   } catch (err) {
-  //     console.error(err); // TypeError: failed to fetch
-  //   }
-
-  //   if (response.length > 0) {
-  //     result = response.map(resp => {
-  //       if (resp.status === 200 && resp.data) {
-  //         return d3.csvParse(resp.data, d3.autoType);
-  //       }
-  //     });
-  //   }
-  //   // console.log(result.length);
-  //   // load data segments matching the 3 files
-  //   const segments = ['confirmed', 'deaths', 'recovered'];
-
-  //   // her we loop through all the raw input data and map the `segments`from the 3 input fields
-  //   // we save lat/lng as pos array
-  //   // output is nested array
-  //   if (result.length > 0) {
-  //     input = result
-  //       .map((array, i) => {
-  //         return array.map((obj, j) => {
-  //           const names = {
-  //             country: obj['Country/Region'],
-  //             state: obj['Province/State']
-  //           };
-  //           delete obj['Province/State'];
-  //           delete obj['Country/Region'];
-  //           const { Lat, Long, ...rest } = obj;
-
-  //           return Object.entries(rest).map(([key, value]) => {
-  //             obj = {
-  //               ...names,
-  //               pos: [Long, Lat],
-  //               date: key
-  //             };
-  //             obj[segments[i]] = value;
-  //             return obj;
-  //           });
-  //         });
-  //       })
-  //       .flat(2);
-  //   }
-  //   return { input };
-  // },
   methods: {
     getTotals(input) {
       if (input.length < 1) return [];
