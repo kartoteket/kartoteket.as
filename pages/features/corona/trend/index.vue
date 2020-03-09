@@ -353,7 +353,7 @@ export default {
           values: d[1].map(d => {
             return {
               date: d.date,
-              value: d.change.confirmed // d.change.confirmed > 10000 ? 1000 : d.change.confirmed
+              value: d.change.confirmed > 10000 ? 1000 : d.change.confirmed
             };
           })
         };
@@ -372,6 +372,13 @@ export default {
       } else {
         selection = this.input;
       }
+
+      // only get last 3 weeks
+      selection = selection.filter(d => {
+        const start = moment().subtract(3, 'weeks');
+        return moment(d.date).isSameOrAfter(start);
+      });
+
       const grouped = this.groupByCountry(selection);
       const extended = this.addDailyValues(grouped.data);
       return extended;
