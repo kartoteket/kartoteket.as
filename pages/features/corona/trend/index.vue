@@ -213,7 +213,7 @@ export default {
           countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
         }),
         this.createChartSeries({
-          title: 'Most effected (excluding China)',
+          title: 'Most affected (excluding China)',
           countries: ['Iran', 'South Korea', 'Italy']
         })
       ];
