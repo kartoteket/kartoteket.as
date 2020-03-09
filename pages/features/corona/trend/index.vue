@@ -254,7 +254,7 @@ export default {
         .sort(d3.ascending);
     },
     lastUpdate() {
-      return moment(this.dates[this.dates.length - 1]).format('ll');
+      return moment(this.dates[this.dates.length - 1], 'M/D/YY').format('ll');
     },
     // daysCount() {
     //   // @todo: re-facotr so that we can delete this.parsedData !
@@ -396,7 +396,9 @@ export default {
     },
     getLatest(input) {
       return input
-        .filter(d => moment(d.date).isSame(this.dates[this.dates.length - 1]))
+        .filter(d =>
+          moment(d.date, 'M/D/YY').isSame(this.dates[this.dates.length - 1])
+        )
         .sort((a, b) => d3.ascending(a.length, b.length));
     },
     getCountries(filter) {
@@ -411,7 +413,7 @@ export default {
       // only get last 3 weeks
       selection = selection.filter(d => {
         const start = moment().subtract(3, 'weeks');
-        return moment(d.date).isSameOrAfter(start);
+        return moment(d.date, 'M/D/YY').isSameOrAfter(start);
       });
 
       const grouped = this.groupByCountry(selection);
@@ -538,7 +540,9 @@ export default {
           element[i].change = change;
         });
       }
+      // console.log('x1');
       return Array.from(grouped, ([key, value]) => value).flat();
+      // console.log('x2');
     },
     createChartSeries({ title, countries }) {
       return {
