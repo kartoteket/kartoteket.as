@@ -28,18 +28,37 @@
     </article>
     <div v-if="!isLoading" class="lg:flex flex-wrap">
       <article v-show="view === 'country'" class="lg:w-1/2 mb-12">
-        <v-select v-model="selection" class="dropdown lg:mr-8" :options="countriesList" value="{default:'Norway'}" />
+        <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" @input="setSelection($event)" />
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Total confirmed cases
           </h2>
-          <multi-line-chart v-if="selectTotals.length" id="custom-totals" :series="selectTotals" :config="{colorScale, aspectRatio: 0.5}" />
+          <multi-line-chart v-if="selectTotals[0].length" id="custom-totals" :series="selectTotals[0]" :config="{colorScale, aspectRatio: 0.5}" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
-          <multi-line-chart v-if="selectSeries.length" id="custom-new" :series="selectSeries" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart v-if="selectSeries[0].length" id="custom-new" :series="selectSeries[0]" :config="{colorScale, aspectRatio: 0.4}" />
+        </div>
+      </article>
+
+      <article v-show="view === 'country'" class="lg:w-1/2 mb-12">
+        <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mb-4 md:-mt-10">
+          Compare with
+        </h2>
+        <v-select v-model="selection[1]" class="dropdown lg:mr-8" :options="countriesList" @input="setSelection($event, 2)" />
+        <div v-show="selection[1]" class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Total confirmed cases
+          </h2>
+          <multi-line-chart v-if="selectTotals[1].length" id="custom-totals-2" :series="selectTotals[1]" :config="{colorScale, aspectRatio: 0.5}" />
+        </div>
+        <div v-show="selection[1]" class="mb-4">
+          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
+            Daily new confirmed cases
+          </h2>
+          <multi-line-chart v-if="selectSeries[1].length" id="custom-new-2" :series="selectSeries[1]" :config="{colorScale, aspectRatio: 0.4}" />
         </div>
       </article>
 
@@ -120,8 +139,9 @@ export default {
     return {
       isLoading: true,
       view: 'world',
+      country: 'Norway',
       maps: {},
-      selection: 'Norway',
+      selection: ['Norway', ''],
       input: [],
       margin: {
         right: 130,
@@ -144,10 +164,16 @@ export default {
       return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
     },
     selectSeries() {
-      return this.getNewCases(this.selection);
+      return [
+        this.getNewCases(this.selection[0]),
+        this.getNewCases(this.selection[1])
+      ];
     },
     selectTotals() {
-      return this.getTotals(this.selection);
+      return [
+        this.getTotals(this.selection[0]),
+        this.getTotals(this.selection[1])
+      ];
     },
     worldSeries() {
       return {
@@ -261,6 +287,12 @@ export default {
       ? this.$route.query.view
       : 'world';
 
+    if (this.$route.query.c1) {
+      this.selection[0] = this.$route.query.c1;
+    }
+    if (this.$route.query.c2) {
+      this.selection[1] = this.$route.query.c2;
+    }
     this.input = await this.fetchData();
     this.isLoading = false;
   },
@@ -332,6 +364,7 @@ export default {
   // },
   methods: {
     getTotals(input) {
+      if (input.length < 1) return [];
       const countries = Array.isArray(input) ? input : [input];
       return countries.map(country => {
         return {
@@ -343,6 +376,7 @@ export default {
       });
     },
     getNewCases(input, limit) {
+      if (input.length < 1) return [];
       let data = d3.groups(this.getCountries(input), d => d.name);
       if (limit > 0) {
         data = data.slice(0, limit);
@@ -565,11 +599,26 @@ export default {
     setView(val) {
       if (val !== this.view) {
         this.view = val;
+        const query = { view: val };
+        if (val === 'country') {
+          query.c1 = this.selection[0];
+        }
         this.$router.replace({
           path: this.$route.path,
-          query: { view: val }
+          query
         });
       }
+    },
+    setSelection(val, set = 1) {
+      const query = {
+        view: this.view,
+        c1: set === 1 ? val : this.selection[0],
+        c2: set === 2 ? val : this.selection[1]
+      };
+      this.$router.replace({
+        path: this.$route.path,
+        query
+      });
     }
   }
 };
