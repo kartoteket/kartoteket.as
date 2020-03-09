@@ -215,38 +215,8 @@ export default {
           title: 'Most effected (excluding China)',
           countries: ['Iran', 'South Korea', 'Italy']
         })
-        // this.createChartSeries({
-        //   title: 'China',
-        //   countries: ['Mainland China']
-        // }),
-        // this.createChartSeries({
-        //   title: 'US',
-        //   countries: ['US']
-        // })
       ];
     },
-    // parsedData() {
-    //   // create copy (ref: https://observablehq.com/@tmcw/observable-anti-patterns-and-code-smells#mutation )
-    //   const data = this.input.slice();
-
-    //   // filter the data
-    //   // 'World', 'World Excluding China', 'Europe'
-    //   let filtered;
-    //   if (this.selection === 'World Excluding China') {
-    //     filtered = this.filterByCountry(['Mainland China'], data, true);
-    //   } else if (this.selection === 'World') {
-    //     filtered = data;
-    //   } else {
-    //     filtered = this.filterByCountry([this.selection], data);
-    //   }
-
-    //   return this.groupByCountry(filtered);
-    // },
-    // chartData() {
-    //   return this.view === 'map'
-    //     ? this.getLatest(this.getCountries())
-    //     : this.getCountries();
-    // },
     dates() {
       return Array.from(new Set(this.getCountries().map(d => d.date)))
         .map(d => moment(d, 'M/D/YY'))
@@ -296,72 +266,6 @@ export default {
     this.input = await this.fetchData();
     this.isLoading = false;
   },
-  // async asyncData({ $axios }) {
-  //   const files = [
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
-  //     'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-  //   ];
-
-  //   // load all data (3 different raw csv files)
-  //   let input = [];
-  //   let response = [];
-  //   let result = [];
-
-  //   try {
-  //     response = await Promise.all(
-  //       files.map(url =>
-  //         $axios.get(url, {
-  //           data: {},
-  //           headers: { 'Content-Type': 'text/plain' }
-  //         })
-  //       )
-  //     );
-  //   } catch (err) {
-  //     console.error(err); // TypeError: failed to fetch
-  //   }
-
-  //   if (response.length > 0) {
-  //     result = response.map(resp => {
-  //       if (resp.status === 200 && resp.data) {
-  //         return d3.csvParse(resp.data, d3.autoType);
-  //       }
-  //     });
-  //   }
-  //   // console.log(result.length);
-  //   // load data segments matching the 3 files
-  //   const segments = ['confirmed', 'deaths', 'recovered'];
-
-  //   // her we loop through all the raw input data and map the `segments`from the 3 input fields
-  //   // we save lat/lng as pos array
-  //   // output is nested array
-  //   if (result.length > 0) {
-  //     input = result
-  //       .map((array, i) => {
-  //         return array.map((obj, j) => {
-  //           const names = {
-  //             country: obj['Country/Region'],
-  //             state: obj['Province/State']
-  //           };
-  //           delete obj['Province/State'];
-  //           delete obj['Country/Region'];
-  //           const { Lat, Long, ...rest } = obj;
-
-  //           return Object.entries(rest).map(([key, value]) => {
-  //             obj = {
-  //               ...names,
-  //               pos: [Long, Lat],
-  //               date: key
-  //             };
-  //             obj[segments[i]] = value;
-  //             return obj;
-  //           });
-  //         });
-  //       })
-  //       .flat(2);
-  //   }
-  //   return { input };
-  // },
   methods: {
     getTotals(input) {
       if (input.length < 1) return [];
@@ -436,23 +340,23 @@ export default {
         .key(d => d.date)
         .rollup(v => {
           return {
-            confirmed: d3.sum(v, d => d.confirmed),
-            deaths: d3.sum(v, d => d.deaths),
-            recovered: d3.sum(v, d => d.recovered)
+            confirmed: d3.sum(v, d => d.confirmed)
+            // deaths: d3.sum(v, d => d.deaths),
+            // recovered: d3.sum(v, d => d.recovered)
           };
         })
         .entries(data);
 
       totals.forEach(({ value }, i) => {
         const change = {
-          confirmed: value.confirmed,
-          deaths: value.deaths,
-          recovered: value.recovered
+          confirmed: value.confirmed
+          // deaths: value.deaths,
+          // recovered: value.recovered
         };
         if (i > 0) {
           change.confirmed = value.confirmed - totals[i - 1].value.confirmed;
-          change.deaths = value.deaths - totals[i - 1].value.deaths;
-          change.recovered = value.recovered - totals[i - 1].value.recovered;
+          // change.deaths = value.deaths - totals[i - 1].value.deaths;
+          // change.recovered = value.recovered - totals[i - 1].value.recovered;
         }
         totals[i].change = change;
       });
@@ -484,9 +388,9 @@ export default {
         .rollup(v => {
           return {
             pos: d3.min(v, d => d.pos), // why .min() ??!?
-            confirmed: d3.sum(v, d => d.confirmed),
-            deaths: d3.sum(v, d => d.deaths),
-            recovered: d3.sum(v, d => d.recovered)
+            confirmed: d3.sum(v, d => d.confirmed)
+            // deaths: d3.sum(v, d => d.deaths),
+            // recovered: d3.sum(v, d => d.recovered)
           };
         })
         .entries(input);
@@ -498,9 +402,9 @@ export default {
             name: country.key,
             date: date.key,
             pos: date.value.pos,
-            confirmed: date.value.confirmed ? date.value.confirmed : 0,
-            deaths: date.value.deaths,
-            recovered: date.value.recovered
+            confirmed: date.value.confirmed ? date.value.confirmed : 0
+            // deaths: date.value.deaths,
+            // recovered: date.value.recovered
           };
         })
       );
@@ -527,14 +431,14 @@ export default {
       for (const element of iterator) {
         element.map((d, i) => {
           const change = {
-            confirmed: d.confirmed,
-            deaths: d.deaths,
-            recovered: d.recovered
+            confirmed: d.confirmed
+            // deaths: d.deaths,
+            // recovered: d.recovered
           };
           if (i > 0) {
             change.confirmed = d.confirmed - element[i - 1].confirmed;
-            change.deaths = d.deaths - element[i - 1].deaths;
-            change.recovered = d.recovered - element[i - 1].recovered;
+            // change.deaths = d.deaths - element[i - 1].deaths;
+            // change.recovered = d.recovered - element[i - 1].recovered;
           }
           element[i].change = change;
         });
@@ -558,9 +462,9 @@ export default {
     },
     async fetchData() {
       const files = [
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv',
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
+        // 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
+        // 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
       ];
 
       // load all data (3 different raw csv files)
@@ -568,7 +472,8 @@ export default {
         files.map(url => d3.csv(url, d3.autoType))
       );
       // load data segments matching the 3 files
-      const segments = ['confirmed', 'deaths', 'recovered'];
+      const segments = ['confirmed'];
+      // const segments = ['confirmed', 'deaths', 'recovered'];
 
       // her we loop through all the raw input data and map the `segments`from the 3 input fields
       // we save lat/lng as pos array
