@@ -140,7 +140,6 @@ export default {
     return {
       isLoading: true,
       view: 'world',
-      country: 'Norway',
       maps: {},
       selection: ['Norway', ''],
       input: [],
@@ -540,9 +539,7 @@ export default {
           element[i].change = change;
         });
       }
-      // console.log('x1');
       return Array.from(grouped, ([key, value]) => value).flat();
-      // console.log('x2');
     },
     createChartSeries({ title, countries }) {
       return {
@@ -607,6 +604,7 @@ export default {
         const query = { view: val };
         if (val === 'country') {
           query.c1 = this.selection[0];
+          query.c2 = this.selection[1];
         }
         this.$router.replace({
           path: this.$route.path,
