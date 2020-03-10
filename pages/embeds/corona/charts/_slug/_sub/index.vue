@@ -1,37 +1,28 @@
 <template>
   <article class="flex flex-col">
-    <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
-    <div v-if="!isLoading" class="lg:flex flex-wrap">
-      <article class="lg:w-1/2 mb-12">
-        <div class="mb-4">
+    ´   <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
+      <scale-loader :loading="isLoading" color="#444" class="mx-auto" />
+    </div>
+    <div v-if="!isLoading">
+      <article v-for="(block, i) in chartSeries" :key="i">
+        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
           <h2 class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
-            Totalt bekreftet tilfeller
+            {{ chart.title }}
           </h2>
-          <multi-line-chart v-if="selectTotals[0].length" id="custom-totals" :series="selectTotals[0]" :config="{colorScale, aspectRatio: 0.5}" />
-        </div>
-        <div class="mb-4">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
-            Nye bekreftet tilfeller
-          </h2>
-          <multi-line-chart v-if="selectSeries[0].length" id="custom-new" :series="selectSeries[0]" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.5}" />
         </div>
       </article>
     </div>
-    <p v-if="!isLoading">
-      Kilde: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. Oppdatert {{ lastUpdate }}.
+    <p v-if="!isLoading" class="text-xs text-right">
+      Kilde: <a class="underline " href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. Oppdatert {{ lastUpdate }}.
     </p>
   </article>
 </template>
 <script>
-/* eslint-disable no-unused-vars */
-
 import * as d3Lib from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
 import * as d3Array from 'd3-array';
 import * as moment from 'moment';
 import 'array-flat-polyfill';
-
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
 import MultiLineChart from '@/components/charts/MultiLineChart';
@@ -50,6 +41,7 @@ export default {
       isLoading: true,
       maps: {},
       selection: ['Norway', ''],
+      sub: 'both',
       input: [],
       margin: {
         right: 130,
@@ -63,16 +55,12 @@ export default {
     colorScale() {
       return d3.scaleOrdinal(d3.schemeSet2); // d3.schemeTableau10
     },
-    selectSeries() {
+    chartSeries() {
       return [
-        this.getNewCases(this.selection[0]),
-        this.getNewCases(this.selection[1])
-      ];
-    },
-    selectTotals() {
-      return [
-        this.getTotals(this.selection[0]),
-        this.getTotals(this.selection[1])
+        this.createChartSeries({
+          // title: 'Nordic Countries',
+          countries: this.selection
+        })
       ];
     },
     dates() {
@@ -85,7 +73,19 @@ export default {
     }
   },
   async mounted() {
-    console.log(this.$route.params);
+    if (this.$route.params.slug) {
+      const selection = this.$route.params.slug
+        .split(',')
+        .map(d => d.trim().toLowerCase());
+      // nb: here we can also reate cusmtom selctions like fx 'nordic'
+      if (Array.isArray(selection)) {
+        this.selection = selection;
+      }
+    }
+    if (this.$route.params.sub) {
+      this.sub = this.$route.params.sub;
+    }
+
     this.input = await this.fetchData();
     this.isLoading = false;
   },
@@ -95,7 +95,7 @@ export default {
       const countries = Array.isArray(input) ? input : [input];
       return countries.map(country => {
         return {
-          name: country,
+          name: this.capitalize(country),
           values: this.getCountries(country).map(d => {
             return { date: d.date, value: d.confirmed };
           })
@@ -104,13 +104,13 @@ export default {
     },
     getNewCases(input, limit) {
       if (input.length < 1) return [];
-      let data = d3.groups(this.getCountries(input), d => d.name);
+      let data = d3.groups(this.getCountries(input), d => d.name.toLowerCase());
       if (limit > 0) {
         data = data.slice(0, limit);
       }
       return data.map((d, i) => {
         return {
-          name: d[0],
+          name: this.capitalize(d[0]),
           values: d[1].map(d => {
             return {
               date: d.date,
@@ -120,14 +120,8 @@ export default {
         };
       });
     },
-    getLatest(input) {
-      return input
-        .filter(d =>
-          moment(d.date, 'M/D/YY').isSame(this.dates[this.dates.length - 1])
-        )
-        .sort((a, b) => d3.ascending(a.length, b.length));
-    },
     getCountries(filter) {
+      // if filter we only use  a selection of the data
       let selection = [];
       if (filter) {
         const countries = Array.isArray(filter) ? filter : [filter];
@@ -142,15 +136,16 @@ export default {
         return moment(d.date, 'M/D/YY').isSameOrAfter(start);
       });
 
-      const grouped = this.groupByCountry(selection);
-      const extended = this.addDailyValues(grouped.data);
+      const grouped = this.groupByCountry(selection); // group values on country level
+      const extended = this.addDailyValues(grouped.data); // add changes (daily new numbers)
       return extended;
     },
-    filterByCountry(countries, data, exclude = false) {
+    filterByCountry(_countries, data, exclude = false) {
+      const countries = _countries.map(d => d.toLowerCase());
       if (exclude) {
-        return data.filter(d => !countries.includes(d.country));
+        return data.filter(d => !countries.includes(d.country.toLowerCase()));
       }
-      return data.filter(d => countries.includes(d.country));
+      return data.filter(d => countries.includes(d.country.toLowerCase()));
     },
     groupByCountry(input) {
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
@@ -217,6 +212,34 @@ export default {
         });
       }
       return Array.from(grouped, ([key, value]) => value).flat();
+    },
+    createChartSeries({ title, countries }) {
+      const charts = [];
+      if (this.sub !== 'new') {
+        const total = {
+          title: 'Totalt bekreftet tilfeller',
+          data: this.getTotals(countries)
+        };
+        charts.push(total);
+      }
+      if (this.sub !== 'total') {
+        const daily = {
+          title: 'Nye bekreftet tilfeller',
+          data: this.getNewCases(countries)
+        };
+        charts.push(daily);
+      }
+      return {
+        title,
+        charts
+      };
+    },
+    capitalize(string) {
+      return string
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
     },
     async fetchData() {
       const files = [

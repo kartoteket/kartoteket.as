@@ -9,7 +9,10 @@ export default {
   head: {
     bodyAttrs: {
       class: 'theme-light'
-    }
+    },
+    title: 'Chart by', // craches ie11 if not set
+    meta: '',
+    link: ''
   }
 };
 </script>
