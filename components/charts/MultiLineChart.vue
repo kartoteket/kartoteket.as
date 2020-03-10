@@ -66,7 +66,6 @@ export default {
           .scaleTime()
           .domain(
             d3.extent(this.series[0].values, d => {
-              // console.log(d.date, moment(d.date, 'M/D/YY'));
               return moment(d.date, 'M/D/YY');
             })
           )
@@ -94,7 +93,6 @@ export default {
   },
 
   mounted() {
-    // console.log(this.series);
     this.drawChart(`#chart-${this.id}`, this.series);
   },
   methods: {
