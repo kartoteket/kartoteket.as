@@ -36,7 +36,8 @@ export default {
       },
       defaultConfig: {
         aspectRatio: 0.5,
-        colorScale: d3.scaleOrdinal(d3.schemeSet2)
+        colorScale: d3.scaleOrdinal(d3.schemeSet2),
+        textColor: '#fff'
       }
     };
   },
@@ -143,7 +144,7 @@ export default {
         .append('text')
         .style('font-family', 'Helvetica, Arial, sans serif')
         .style('font-size', '.75rem')
-        .style('fill', '#fff')
+        .style('fill', this.options.textColor)
         .attr('x', 25)
         .attr('dy', 4)
         .attr('y', (_, i) => i * 16)
@@ -210,7 +211,7 @@ export default {
         .call(
           d3
             .axisBottom(x)
-            .ticks(5) // this.width > 600 ? 10 : 3
+            .ticks(4) // this.width > 600 ? 10 : 3
             .tickFormat(d3.timeFormat('%d.%m'))
             .tickSizeOuter(0)
             .tickSizeInner(
@@ -244,7 +245,7 @@ export default {
       g.style('display', null)
         .style('pointer-events', 'none')
         .style('font', '0.75rem Helvetica, arial, sans-serif')
-        .style('fill', '#fff');
+        .style('fill', this.options.textColor);
 
       const text = g
         .selectAll('text')
