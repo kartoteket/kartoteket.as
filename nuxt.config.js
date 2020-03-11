@@ -104,6 +104,7 @@ module.exports = {
 
   googleAnalytics: {
     id: 'UA-60185757-1',
+    set: [{ field: 'anonymizeIp', value: true }],
     linkers: ['kartoteket.as', 'kartoteket.netlify.com'],
     // autoTracking: {
     //   screenview: true
