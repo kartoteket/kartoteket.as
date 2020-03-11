@@ -1,12 +1,12 @@
 <template>
   <article class="flex flex-col">
-    ´   <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
+    <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
       <scale-loader :loading="isLoading" color="#444" class="mx-auto" />
     </div>
     <div v-if="!isLoading">
       <article v-for="(block, i) in chartSeries" :key="i">
         <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
+          <h2 v-if="chart.title" class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
           <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.5}" />
