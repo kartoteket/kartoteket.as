@@ -235,7 +235,6 @@ export default {
       };
     },
     printCountryName(name) {
-      console.log(name);
       if (name === 'norway') return 'Norge';
       return this.capitalize(name);
     },
