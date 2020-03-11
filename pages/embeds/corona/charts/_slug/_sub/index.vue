@@ -95,7 +95,7 @@ export default {
       const countries = Array.isArray(input) ? input : [input];
       return countries.map(country => {
         return {
-          name: this.capitalize(country),
+          name: this.printCountryName(country),
           values: this.getCountries(country).map(d => {
             return { date: d.date, value: d.confirmed };
           })
@@ -110,7 +110,7 @@ export default {
       }
       return data.map((d, i) => {
         return {
-          name: this.capitalize(d[0]),
+          name: this.printCountryName(d[0]),
           values: d[1].map(d => {
             return {
               date: d.date,
@@ -233,6 +233,10 @@ export default {
         title,
         charts
       };
+    },
+    printCountryName(name) {
+      if (name === 'norway') return 'Norge';
+      return this.capitalize(name);
     },
     capitalize(string) {
       return string
