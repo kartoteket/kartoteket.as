@@ -213,7 +213,11 @@ export default {
         }),
         this.createChartSeries({
           title: 'Most affected (excluding China)',
-          countries: ['Iran', 'South Korea', 'Italy']
+          countries: [
+            'Iran (Islamic Republic of)',
+            'Republic of Korea',
+            'Italy'
+          ]
         })
       ];
     },
