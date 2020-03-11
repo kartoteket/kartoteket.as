@@ -14,7 +14,9 @@
       </article>
     </div>
     <p v-if="!isLoading" class="text-xs text-right">
-      Kilde: <a class="underline " href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. Oppdatert {{ lastUpdate }}.
+      Kilde: <a class="underline" target="_parent" href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. 
+      Grafikk: <a class="underline" target="_parent" href="https://kartoteket.as">Kartoteket</a>.
+      Oppdatert {{ lastUpdate }}.
     </p>
   </article>
 </template>
