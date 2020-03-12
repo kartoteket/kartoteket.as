@@ -213,11 +213,7 @@ export default {
         }),
         this.createChartSeries({
           title: 'Most affected (excluding China)',
-          countries: [
-            'Iran (Islamic Republic of)',
-            'Republic of Korea',
-            'Italy'
-          ]
+          countries: ['Iran', 'Korea, South', 'Italy', 'France']
         })
       ];
     },
@@ -335,7 +331,7 @@ export default {
     },
     world(includeChina = true) {
       const data = this.input.filter(
-        d => d.country !== 'Mainland China' || includeChina
+        d => d.country !== 'China' || includeChina
       );
 
       // Note, than when rolling up to country level, we loose data on state and lat/lng position
