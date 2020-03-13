@@ -223,14 +223,14 @@ export default {
       const charts = [];
       if (this.sub !== 'new') {
         const total = {
-          title: 'Totalt bekreftet tilfeller',
+          title: 'Totalt antall bekreftede tilfeller',
           data: this.getTotals(countries)
         };
         charts.push(total);
       }
       if (this.sub !== 'total') {
         const daily = {
-          title: 'Nye bekreftet tilfeller',
+          title: 'Bekreftede nye tilfeller',
           data: this.getNewCases(countries)
         };
         charts.push(daily);
