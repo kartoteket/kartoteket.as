@@ -222,6 +222,35 @@ export default {
     },
     createChartSeries({ title, countries }) {
       const charts = [];
+      // @todo: split this up
+      if (this.sub === 'combined') {
+        const combo = this.getTotals(countries)
+          .map(d => {
+            d.name =
+              countries.length > 1
+                ? `${d.name}, totalt antall`
+                : 'Totalt antall';
+            return d;
+          })
+          .concat(
+            this.getNewCases(countries).map(d => {
+              d.name =
+                countries.length > 1
+                  ? `${d.name}, nye tilfeller`
+                  : 'Nye tilfeller';
+              return d;
+            })
+          );
+        charts.push({
+          title: 'Antall bekreftede tilfeller',
+          data: combo
+        });
+        return {
+          title,
+          charts
+        };
+      }
+
       if (this.sub !== 'new') {
         const total = {
           title: 'Totalt antall bekreftede tilfeller',
@@ -236,6 +265,7 @@ export default {
         };
         charts.push(daily);
       }
+
       return {
         title,
         charts
