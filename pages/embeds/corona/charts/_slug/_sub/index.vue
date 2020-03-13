@@ -27,6 +27,7 @@ import * as moment from 'moment';
 import 'array-flat-polyfill';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
+import lookup from '@/utils/countryNames.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 // import PlotMapChart from '@/components/charts/PlotMapChart';
 
@@ -221,29 +222,57 @@ export default {
     },
     createChartSeries({ title, countries }) {
       const charts = [];
+      // @todo: split this up
+      if (this.sub === 'combined') {
+        const combo = this.getTotals(countries)
+          .map(d => {
+            d.name =
+              countries.length > 1
+                ? `${d.name}, totalt antall`
+                : 'Totalt antall';
+            return d;
+          })
+          .concat(
+            this.getNewCases(countries).map(d => {
+              d.name =
+                countries.length > 1
+                  ? `${d.name}, nye tilfeller`
+                  : 'Nye tilfeller';
+              return d;
+            })
+          );
+        charts.push({
+          title: 'Antall bekreftede tilfeller',
+          data: combo
+        });
+        return {
+          title,
+          charts
+        };
+      }
+
       if (this.sub !== 'new') {
         const total = {
-          title: 'Totalt bekreftet tilfeller',
+          title: 'Totalt antall bekreftede tilfeller',
           data: this.getTotals(countries)
         };
         charts.push(total);
       }
       if (this.sub !== 'total') {
         const daily = {
-          title: 'Nye bekreftet tilfeller',
+          title: 'Bekreftede nye tilfeller',
           data: this.getNewCases(countries)
         };
         charts.push(daily);
       }
+
       return {
         title,
         charts
       };
     },
     printCountryName(name) {
-      if (name === 'norway') return 'Norge';
-      if (name === 'taiwan*') return 'Taiwan';
-      return this.capitalize(name);
+      return this.capitalize(lookup(name));
     },
     capitalize(string) {
       return string

@@ -127,7 +127,14 @@ export default {
           `translate(${this.margin.left + 10}, ${this.margin.top + 20})`
         )
         .selectAll('g')
-        .data(series.sort((a, b) => d3.ascending(a.name, b.name)))
+        .data(
+          series.sort((a, b) =>
+            d3.descending(
+              a.values[a.values.length - 1].value,
+              b.values[b.values.length - 1].value
+            )
+          )
+        )
         .join('g');
 
       legends
