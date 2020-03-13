@@ -27,6 +27,7 @@ import * as moment from 'moment';
 import 'array-flat-polyfill';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
+import lookup from '@/utils/countryNames.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 // import PlotMapChart from '@/components/charts/PlotMapChart';
 
@@ -241,9 +242,7 @@ export default {
       };
     },
     printCountryName(name) {
-      if (name === 'norway') return 'Norge';
-      if (name === 'taiwan*') return 'Taiwan';
-      return this.capitalize(name);
+      return this.capitalize(lookup(name));
     },
     capitalize(string) {
       return string
