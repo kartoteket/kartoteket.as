@@ -125,16 +125,21 @@ export default {
     getCountries(filter) {
       // if filter we only use  a selection of the data
       let selection = [];
+      let countries = [];
       if (filter) {
-        const countries = Array.isArray(filter) ? filter : [filter];
+        countries = Array.isArray(filter) ? filter : [filter];
         selection = this.filterByCountry(countries, this.input);
       } else {
         selection = this.input;
       }
 
-      // only get last 3 weeks
+      // only get last 2 weeks
+      // @todo: ad hoc fix her. Do a search from the left of first value
+      console.log(countries);
+      const cutoff = countries.includes('taiwan*') ? 20 : 2;
+
       selection = selection.filter(d => {
-        const start = moment().subtract(2, 'weeks');
+        const start = moment().subtract(cutoff, 'weeks');
         return moment(d.date, 'M/D/YY').isSameOrAfter(start);
       });
 
@@ -238,6 +243,7 @@ export default {
     },
     printCountryName(name) {
       if (name === 'norway') return 'Norge';
+      if (name === 'taiwan*') return 'Taiwan';
       return this.capitalize(name);
     },
     capitalize(string) {
