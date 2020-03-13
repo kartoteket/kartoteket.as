@@ -6,6 +6,9 @@
       </h1>
       <div class="rtf md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
+        <p class="text-xs">
+          <strong>13. March:</strong> Data on some contries, notably some European countries like Italy and France, is currently not updated since March 11th
+        </p>
       </div>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
