@@ -135,7 +135,6 @@ export default {
 
       // only get last 2 weeks
       // @todo: ad hoc fix her. Do a search from the left of first value
-      console.log(countries);
       const cutoff = countries.includes('taiwan*') ? 20 : 2;
 
       selection = selection.filter(d => {
