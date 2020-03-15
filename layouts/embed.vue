@@ -1,6 +1,6 @@
 <template>
   <div class="site-container font-light">
-    <nuxt class="p-page flex-1" />
+    <nuxt class="flex-1" />
   </div>
 </template>
 
