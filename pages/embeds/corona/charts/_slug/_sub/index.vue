@@ -5,15 +5,15 @@
     </div>
     <div v-if="!isLoading">
       <article v-for="(block, i) in chartSeries" :key="i">
-        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 v-if="chart.title" class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
+        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4">
+          <h2 v-if="chart.title" class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.5}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.52, margin}" />
         </div>
       </article>
     </div>
-    <p v-if="!isLoading" class="text-xs text-right">
+    <p v-if="!isLoading" class="text-xs text-right pr-4">
       Kilde: <a class="underline" target="_parent" href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. 
       Grafikk: <a class="underline" target="_parent" href="https://kartoteket.as">Kartoteket</a>.
       Oppdatert {{ lastUpdate }}.
@@ -47,10 +47,10 @@ export default {
       sub: 'both',
       input: [],
       margin: {
-        right: 130,
-        left: 120,
+        right: 20,
+        left: 50,
         top: 20,
-        bottom: 10
+        bottom: 20
       }
     };
   },
