@@ -1,13 +1,13 @@
 <template>
   <article class="flex flex-col">
     <header class="main-col mb-8">
-      <h1 class="main-header">
+      <h1 class="main-header mb-4">
         {{ page.title }}
       </h1>
-      <div class="rtf md:text-lg leading-relaxed mb-4">
+      <div class="rtf rtf--tight md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
         <p class="text-xs">
-          <strong>13. March:</strong> Data on some contries, notably some European countries like Italy and France, is currently not updated since March 11th
+          <strong>Note:</strong> Johns Hopkins CSSE data on many countries, including Italy, is erroneous for March 12th, <a href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
         </p>
       </div>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
@@ -101,8 +101,8 @@
         </div>
       </article>
     </div>
-    <p v-if="!isLoading">
-      Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Data updated {{ lastUpdate }}.
+    <p v-if="!isLoading" class="rtf">
+      Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
     </p>
   </article>
 </template>
@@ -153,7 +153,7 @@ export default {
         bottom: 10
       },
       page: {
-        title: 'Corona - Confirmed cases of COVID-19 ',
+        title: 'Corona Timelines',
         slug: 'features/corona/trend',
         description:
           'Charts showing the timeline trend of total confirmed cases and new daily registered confirmed cases of COVID-19 in affected countries.',
@@ -216,7 +216,14 @@ export default {
         }),
         this.createChartSeries({
           title: 'Most affected (excluding China)',
-          countries: ['Iran', 'Korea, South', 'Italy', 'France']
+          countries: [
+            'Iran',
+            'Korea, South',
+            'Italy',
+            'Spain',
+            'Germany',
+            'France'
+          ]
         })
       ];
     },

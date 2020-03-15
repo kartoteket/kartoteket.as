@@ -136,7 +136,7 @@ export default {
 
       // only get last 2 weeks
       // @todo: ad hoc fix her. Do a search from the left of first value
-      const cutoff = countries.includes('taiwan*') ? 20 : 2;
+      const cutoff = countries.includes('taiwan*') ? 20 : 3;
 
       selection = selection.filter(d => {
         const start = moment().subtract(cutoff, 'weeks');
