@@ -6,7 +6,7 @@ import moment from 'moment';
 const d3 = Object.assign({}, d3Lib, d3Array);
 // const baseUrl = 'http://localhost:3000/files/';
 // eslint-disable-next-line prettier/prettier
-const baseUrl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/';
+const baseUrl = 'https://storage.googleapis.com/allermedia/covid/';
 
 const texts = {
   no: {
@@ -30,7 +30,7 @@ const texts = {
 };
 
 export default class Covid19Map {
-  constructor(element, width, language = 'en') {
+  constructor(element, width, language = 'no') {
     this.element = `#${element}`;
     this.height = 600;
     this.width = width < 600 ? width : 900;
@@ -39,6 +39,8 @@ export default class Covid19Map {
     this.countries = null;
     this.topo = null;
     this.textColor = '#333';
+    this.bubbleColor = '#2B3F4E'; // '#F1CA3F'; // '#2B3F4E'
+    this.chartColor = '#2B3F4E'; // D60000, '#4e79a7'
     this.animationSpeed = 400;
     this.currentIndex = 0;
     this.paused = false;
@@ -54,7 +56,7 @@ export default class Covid19Map {
     this.pos = {
       numbers: {
         x: 10,
-        y: 300
+        y: this.width > 600 ? 300 : 250
       },
       legend: {
         x: 10,
@@ -277,7 +279,7 @@ export default class Covid19Map {
       .attr('r', d => this.size(d.confirmed))
       .attr('linewidth', 0.5)
       .attr('stroke', '#333')
-      .style('fill', '#2B3F4E')
+      .style('fill', this.bubbleColor)
       .style('opacity', d => this.opacity(d.confirmed))
       .attr('transform', d => `translate(${this.projection(d.pos)})`);
   }
@@ -290,8 +292,8 @@ export default class Covid19Map {
       .selectAll('circle')
       .data(data)
       .transition(t)
-      .attr('r', d => this.size(d.confirmed))
-      .style('opacity', d => this.opacity(d.confirmed))
+      .attr('r', d => this.size(d.infected))
+      .style('opacity', d => this.opacity(d.infected))
       .attr('transform', d => `translate(${this.projection(d.pos)})`);
   }
 
@@ -365,7 +367,7 @@ export default class Covid19Map {
       .selectAll('path')
       .data(this.dataSeries)
       .join('path')
-      .attr('stroke', '#4e79a7')
+      .attr('stroke', this.chartColor)
       .attr('d', d => this.line(d.values));
 
     // style axis and tick lines
@@ -402,7 +404,7 @@ export default class Covid19Map {
     // legend
     legend
       .append('line')
-      .attr('stroke', '#4e79a7')
+      .attr('stroke', this.chartColor)
       .style('stroke-opacity', 1)
       .attr('stroke-width', 2)
       .attr('x1', 0)
@@ -492,9 +494,9 @@ export default class Covid19Map {
 
   async getData() {
     const files = [
-      `${baseUrl}/time_series_19-covid-Confirmed.csv`,
-      `${baseUrl}/time_series_19-covid-Deaths.csv`,
-      `${baseUrl}/time_series_19-covid-Recovered.csv`
+      `${baseUrl}confirmed.csv`,
+      `${baseUrl}deaths.csv`,
+      `${baseUrl}recovered.csv`
     ];
 
     // load all data (3 different raw csv files)
@@ -521,6 +523,7 @@ export default class Covid19Map {
           const index = outputData.findIndex(
             d => d.date === key && d.state === state
           );
+          const currentSegment = segments[i];
           // if it is the first segment, create the original object
           if (index < 0) {
             const o = {
@@ -529,10 +532,17 @@ export default class Covid19Map {
               country,
               date: key
             };
-            o[segments[i]] = value;
+            o[currentSegment] = value;
             outputData.push(o);
           } else {
-            outputData[index][segments[i]] = value;
+            outputData[index][currentSegment] = value;
+          }
+
+          if (currentSegment === 'recovered') {
+            outputData[index].infected = Math.max(
+              outputData[index].confirmed - value,
+              0
+            );
           }
         });
       });
@@ -569,15 +579,15 @@ export default class Covid19Map {
   createSizeScale() {
     return d3
       .scaleSqrt()
-      .domain(d3.extent(this.inputData, d => d.confirmed))
+      .domain(d3.extent(this.inputData, d => d.infected))
       .range([1, this.width / 10]);
   }
 
   createOpacityScale() {
     return d3
       .scaleLinear()
-      .domain([d3.max(this.inputData, d => d.confirmed), 1])
-      .range([0.1, 0.65]);
+      .domain([d3.max(this.inputData, d => d.infected), 1])
+      .range([0.2, 0.65]);
   }
 
   toggleTimer() {
@@ -704,7 +714,6 @@ export default class Covid19Map {
     if (language !== 'no' && language !== 'en') {
       language = 'en';
     }
-    console.log(texts[language]);
     return texts[language];
   }
 
