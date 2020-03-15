@@ -471,6 +471,16 @@ export default {
       };
     },
     async fetchData() {
+      /*
+      Data sources / APIs
+      https://github.com/CSSEGISandData/COVID-19
+      https://github.com/mathdroid/covid-19-api
+      https://covid19.mathdro.id/api/
+      https://covid-19.dava.engineer/api/graphql
+
+      things to read:
+      https://feld.com/archives/2020/03/exponential-growth-and-covid-19.html
+      */
       // Alterantiv source: Our world in data
       const _input = await d3.csv(
         'https://covid.ourworldindata.org/data/total_cases.csv',
