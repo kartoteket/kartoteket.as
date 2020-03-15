@@ -511,7 +511,6 @@ export default {
           });
         })
         .flat(2);
-      console.log(input);
       return input;
     },
     setView(val) {
