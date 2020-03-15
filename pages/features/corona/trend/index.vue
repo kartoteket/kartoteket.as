@@ -7,7 +7,7 @@
       <div class="rtf rtf--tight md:text-lg leading-relaxed mb-4">
         <p>{{ page.description }}</p>
         <p class="text-xs">
-          <strong>Note:</strong> Johns Hopkins CSSE data on many contries, including Italy, is erroneous for March 12th, <a href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
+          <strong>Note:</strong> Johns Hopkins CSSE data on many countries, including Italy, is erroneous for March 12th, <a href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
         </p>
       </div>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
