@@ -96,14 +96,26 @@ export default {
     getTotals(input) {
       if (input.length < 1) return [];
       const countries = Array.isArray(input) ? input : [input];
-      return countries.map(country => {
+      // @TODO CALL this.getCountries(countries) here !?!?!
+      // eslint-disable-next-line no-unused-vars
+      const data = this.getCountries(countries);
+      // console.log('data', d3.groups(data, d => d.name));
+      return d3.groups(data, d => d.name).map(country => {
         return {
-          name: this.printCountryName(country),
-          values: this.getCountries(country).map(d => {
+          name: this.printCountryName(country[0]),
+          values: country[1].map(d => {
             return { date: d.date, value: d.confirmed };
           })
         };
       });
+      // return countries.map(country => {
+      //   return {
+      //     name: this.printCountryName(country),
+      //     values: this.getCountries(country).map(d => {
+      //       return { date: d.date, value: d.confirmed };
+      //     })
+      //   };
+      // });
     },
     getNewCases(input, limit) {
       if (input.length < 1) return [];
@@ -130,18 +142,15 @@ export default {
       if (filter) {
         countries = Array.isArray(filter) ? filter : [filter];
         selection = this.filterByCountry(countries, this.input);
+
+        // limit selection to periode with confirmed cases
+        const firstCase = selection
+          .sort((a, b) => d3.ascending(moment(a.date), moment(b.date)))
+          .findIndex(d => d.confirmed > 0);
+        selection = selection.slice(firstCase);
       } else {
         selection = this.input;
       }
-
-      // only get last 2 weeks
-      // @todo: ad hoc fix her. Do a search from the left of first value
-      const cutoff = countries.includes('taiwan*') ? 20 : 2;
-
-      selection = selection.filter(d => {
-        const start = moment().subtract(cutoff, 'weeks');
-        return moment(d.date, 'M/D/YY').isSameOrAfter(start);
-      });
 
       const grouped = this.groupByCountry(selection); // group values on country level
       const extended = this.addDailyValues(grouped.data); // add changes (daily new numbers)
@@ -275,6 +284,7 @@ export default {
       return this.capitalize(lookup(name));
     },
     capitalize(string) {
+      console.log(string);
       return string
         .toLowerCase()
         .split(' ')
