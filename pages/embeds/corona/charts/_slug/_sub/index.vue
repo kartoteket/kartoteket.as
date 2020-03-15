@@ -5,15 +5,15 @@
     </div>
     <div v-if="!isLoading">
       <article v-for="(block, i) in chartSeries" :key="i">
-        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 v-if="chart.title" class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mr-8 mt-4">
+        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4">
+          <h2 v-if="chart.title" class="text-sm uppercase text-sm tracking-wide text-gray-800 border-b-2 border-gray-500 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.5}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, textColor: '#444', aspectRatio: (j%2) ? 0.4 : 0.52, margin}" />
         </div>
       </article>
     </div>
-    <p v-if="!isLoading" class="text-xs text-right">
+    <p v-if="!isLoading" class="text-xs text-right pr-4">
       Kilde: <a class="underline" target="_parent" href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a>. 
       Grafikk: <a class="underline" target="_parent" href="https://kartoteket.as">Kartoteket</a>.
       Oppdatert {{ lastUpdate }}.
@@ -47,10 +47,10 @@ export default {
       sub: 'both',
       input: [],
       margin: {
-        right: 130,
-        left: 120,
+        right: 20,
+        left: 50,
         top: 20,
-        bottom: 10
+        bottom: 20
       }
     };
   },
@@ -96,14 +96,26 @@ export default {
     getTotals(input) {
       if (input.length < 1) return [];
       const countries = Array.isArray(input) ? input : [input];
-      return countries.map(country => {
+      // @TODO CALL this.getCountries(countries) here !?!?!
+      // eslint-disable-next-line no-unused-vars
+      const data = this.getCountries(countries);
+      // console.log('data', d3.groups(data, d => d.name));
+      return d3.groups(data, d => d.name).map(country => {
         return {
-          name: this.printCountryName(country),
-          values: this.getCountries(country).map(d => {
+          name: this.printCountryName(country[0]),
+          values: country[1].map(d => {
             return { date: d.date, value: d.confirmed };
           })
         };
       });
+      // return countries.map(country => {
+      //   return {
+      //     name: this.printCountryName(country),
+      //     values: this.getCountries(country).map(d => {
+      //       return { date: d.date, value: d.confirmed };
+      //     })
+      //   };
+      // });
     },
     getNewCases(input, limit) {
       if (input.length < 1) return [];
@@ -130,18 +142,15 @@ export default {
       if (filter) {
         countries = Array.isArray(filter) ? filter : [filter];
         selection = this.filterByCountry(countries, this.input);
+
+        // limit selection to periode with confirmed cases
+        const firstCase = selection
+          .sort((a, b) => d3.ascending(moment(a.date), moment(b.date)))
+          .findIndex(d => d.confirmed > 0);
+        selection = selection.slice(firstCase);
       } else {
         selection = this.input;
       }
-
-      // only get last 2 weeks
-      // @todo: ad hoc fix her. Do a search from the left of first value
-      const cutoff = countries.includes('taiwan*') ? 20 : 3;
-
-      selection = selection.filter(d => {
-        const start = moment().subtract(cutoff, 'weeks');
-        return moment(d.date, 'M/D/YY').isSameOrAfter(start);
-      });
 
       const grouped = this.groupByCountry(selection); // group values on country level
       const extended = this.addDailyValues(grouped.data); // add changes (daily new numbers)
@@ -275,6 +284,7 @@ export default {
       return this.capitalize(lookup(name));
     },
     capitalize(string) {
+      console.log(string);
       return string
         .toLowerCase()
         .split(' ')
