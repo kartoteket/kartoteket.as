@@ -1,4 +1,5 @@
-export default function lookup(name) {
+export default function lookup(n) {
+  const name = n.toLowerCase();
   return name in namesTable ? namesTable[name] : name;
 }
 const namesTable = {
