@@ -6,7 +6,6 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "serve": "nuxt --hostname 10.0.0.16 --port 3333",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",

@@ -28,15 +28,17 @@ export default {
   data() {
     return {
       chart: null,
-      margin: {
-        right: 30,
-        left: 80,
-        top: 20,
-        bottom: 20
-      },
+
       defaultConfig: {
         aspectRatio: 0.5,
-        colorScale: d3.scaleOrdinal(d3.schemeSet2)
+        colorScale: d3.scaleOrdinal(d3.schemeSet2),
+        textColor: '#fff',
+        margin: {
+          right: 30,
+          left: 50,
+          top: 20,
+          bottom: 20
+        }
       }
     };
   },
@@ -57,7 +59,10 @@ export default {
           d3.min(this.series, s => d3.min(s.values, v => v.value)),
           d3.max(this.series, s => d3.max(s.values, v => v.value))
         ])
-        .range([this.height - this.margin.bottom, this.margin.top]);
+        .range([
+          this.height - this.options.margin.bottom,
+          this.options.margin.top
+        ]);
     },
     xScale() {
       return (
@@ -65,12 +70,14 @@ export default {
           .scaleTime()
           .domain(
             d3.extent(this.series[0].values, d => {
-              // console.log(d.date, moment(d.date, 'M/D/YY'));
               return moment(d.date, 'M/D/YY');
             })
           )
           // @todo should get min/max of all sets of values
-          .range([this.margin.left, this.width - this.margin.right])
+          .range([
+            this.options.margin.left,
+            this.width - this.options.margin.right
+          ])
       );
     },
     color() {
@@ -93,7 +100,6 @@ export default {
   },
 
   mounted() {
-    // console.log(this.series);
     this.drawChart(`#chart-${this.id}`, this.series);
   },
   methods: {
@@ -125,10 +131,18 @@ export default {
       const legends = el.legend
         .attr(
           'transform',
-          `translate(${this.margin.left + 10}, ${this.margin.top + 20})`
+          `translate(${this.options.margin.left + 10}, ${this.options.margin
+            .top + 20})`
         )
         .selectAll('g')
-        .data(series.sort((a, b) => d3.ascending(a.name, b.name)))
+        .data(
+          series.sort((a, b) =>
+            d3.descending(
+              a.values[a.values.length - 1].value,
+              b.values[b.values.length - 1].value
+            )
+          )
+        )
         .join('g');
 
       legends
@@ -143,7 +157,7 @@ export default {
         .append('text')
         .style('font-family', 'Helvetica, Arial, sans serif')
         .style('font-size', '.75rem')
-        .style('fill', '#fff')
+        .style('fill', this.options.textColor)
         .attr('x', 25)
         .attr('dy', 4)
         .attr('y', (_, i) => i * 16)
@@ -175,16 +189,20 @@ export default {
         .selectAll('line')
         .style('opacity', 0.25)
         .attr('stroke', '#ddd');
+      el.xAxis
+        .selectAll('.tick')
+        .selectAll('text')
+        .attr('y', '5');
 
       el.xAxis
         .selectAll('.domain')
         .transition(t)
-        .style('opacity', 0);
+        .style('opacity', 0.25);
 
       el.yAxis
         .selectAll('.domain')
         .transition(t)
-        .style('opacity', 0);
+        .style('opacity', 0.25);
 
       // tooltip
       svg.on('touchmove mousemove', function() {
@@ -205,22 +223,25 @@ export default {
       return svg
         .attr(
           'transform',
-          `translate(0,${this.height - this.margin.bottom + 5})`
+          `translate(0,${this.height - this.options.margin.bottom})`
         )
         .call(
           d3
             .axisBottom(x)
-            .ticks(5) // this.width > 600 ? 10 : 3
+            .ticks(4) // this.width > 600 ? 10 : 3
             .tickFormat(d3.timeFormat('%d.%m'))
             .tickSizeOuter(0)
             .tickSizeInner(
-              (this.height - this.margin.top - this.margin.bottom) * -1
+              (this.height -
+                this.options.margin.top -
+                this.options.margin.bottom) *
+                -1
             )
         );
     },
     yAxis(svg, y) {
       return svg
-        .attr('transform', `translate(${this.margin.left - 20},0)`)
+        .attr('transform', `translate(${this.options.margin.left},0)`)
         .call(
           d3
             .axisLeft(y)
@@ -228,7 +249,10 @@ export default {
             .ticks(5)
             .tickSizeOuter(0)
             .tickSizeInner(
-              (this.width - this.margin.right - this.margin.left) * -1
+              (this.width -
+                this.options.margin.right -
+                this.options.margin.left) *
+                -1
             )
         );
     },
@@ -244,7 +268,7 @@ export default {
       g.style('display', null)
         .style('pointer-events', 'none')
         .style('font', '0.75rem Helvetica, arial, sans-serif')
-        .style('fill', '#fff');
+        .style('fill', this.options.textColor);
 
       const text = g
         .selectAll('text')
@@ -288,7 +312,7 @@ export default {
         .attr('x1', 0)
         .attr('y1', 0)
         .attr('x2', 0)
-        .attr('y2', this.height - this.margin.bottom);
+        .attr('y2', this.height - this.options.margin.bottom);
 
       const { x, y, width: w, height: h } = text.node().getBBox();
       text.attr('transform', `translate(${-w / 2},${15 - y})`);
@@ -312,7 +336,7 @@ export default {
 .tooltip text,
 .legend text,
 .axis {
-  font-size: 1rem !important;
+  font-size: 0.8rem !important;
 }
 @screen sm {
   .tooltip text,
