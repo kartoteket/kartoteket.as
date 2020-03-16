@@ -217,7 +217,10 @@ export default {
       return extended;
     },
     filterByCountry(_countries, data, exclude = false) {
-      const countries = _countries.map(d => d.toLowerCase());
+      const countries = _countries.map(d => {
+        if (d === 'south korea') d = 'korea, south';
+        return d.toLowerCase();
+      });
       if (exclude) {
         return data.filter(d => !countries.includes(d.country.toLowerCase()));
       }
