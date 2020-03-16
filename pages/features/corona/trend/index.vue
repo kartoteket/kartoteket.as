@@ -146,6 +146,7 @@ export default {
       maps: {},
       selection: ['Norway', ''],
       input: [],
+      newInput: [],
       margin: {
         right: 130,
         left: 120,
@@ -274,6 +275,7 @@ export default {
       this.selection[1] = this.$route.query.c2;
     }
     this.input = await this.fetchData();
+    this.newInput = await this.fetchDataOWID();
     this.isLoading = false;
   },
   methods: {
@@ -374,11 +376,15 @@ export default {
       return totals;
     },
     getWorldTotals(includeChina = true) {
+      const values = this.newInput.map(d => {
+        return {
+          date: moment(d.date),
+          value: includeChina ? d.World : d.World - d.China
+        };
+      });
       return {
         name: includeChina ? 'World' : 'World excluding China',
-        values: this.world(includeChina).map(d => {
-          return { date: d.key, value: d.value.confirmed };
-        })
+        values
       };
     },
     getWorldNew(includeChina = true) {
@@ -470,6 +476,15 @@ export default {
         ]
       };
     },
+    async fetchDataOWID() {
+      const _input = await d3.csv(
+        'https://covid.ourworldindata.org/data/total_cases.csv',
+        d3.autoType
+      );
+      console.log(_input);
+
+      return _input;
+    },
     async fetchData() {
       /*
       Data sources / APIs
@@ -482,11 +497,6 @@ export default {
       https://feld.com/archives/2020/03/exponential-growth-and-covid-19.html
       */
       // Alterantiv source: Our world in data
-      const _input = await d3.csv(
-        'https://covid.ourworldindata.org/data/total_cases.csv',
-        d3.autoType
-      );
-      console.log(_input);
 
       const files = [
         'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
