@@ -348,12 +348,17 @@ export default {
       return this.capitalize(lookup(name));
     },
     capitalize(string) {
-      console.log(string);
+      if (string.length < 4) {
+        return string.toUpperCase();
+      }
       return string
         .toLowerCase()
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+        .join(' ')
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('-');
     },
     async fetchData() {
       const files = [
