@@ -95,9 +95,17 @@ export default {
   methods: {
     getTotals(input) {
       if (input.length < 1) return [];
+
+      if (input.includes('outsidechina')) {
+        const worldTotals = this.getWorldTotals(false);
+        return [worldTotals];
+      }
+      if (input.includes('world')) {
+        const worldTotals = this.getWorldTotals();
+        return [worldTotals];
+      }
+
       const countries = Array.isArray(input) ? input : [input];
-      // @TODO CALL this.getCountries(countries) here !?!?!
-      // eslint-disable-next-line no-unused-vars
       const data = this.getCountries(countries);
       // console.log('data', d3.groups(data, d => d.name));
       return d3.groups(data, d => d.name).map(country => {
@@ -108,16 +116,17 @@ export default {
           })
         };
       });
-      // return countries.map(country => {
-      //   return {
-      //     name: this.printCountryName(country),
-      //     values: this.getCountries(country).map(d => {
-      //       return { date: d.date, value: d.confirmed };
-      //     })
-      //   };
-      // });
     },
     getNewCases(input, limit) {
+      if (input.includes('outsidechina')) {
+        const worldTotals = this.getWorldNew(false);
+        return [worldTotals];
+      }
+      if (input.includes('world')) {
+        const worldTotals = this.getWorldNew();
+        return [worldTotals];
+      }
+
       if (input.length < 1) return [];
       let data = d3.groups(this.getCountries(input), d => d.name.toLowerCase());
       if (limit > 0) {
@@ -135,10 +144,61 @@ export default {
         };
       });
     },
+    getWorldTotals(includeChina = true) {
+      return {
+        name: includeChina ? 'verden' : 'utenfor Kina',
+        values: this.world(includeChina).map(d => {
+          return { date: d.key, value: d.value.confirmed };
+        })
+      };
+    },
+    getWorldNew(includeChina = true) {
+      return {
+        name: includeChina ? 'verden' : 'utenfor China',
+        values: this.world(includeChina).map(d => {
+          return { date: d.key, value: d.change.confirmed };
+        })
+      };
+    },
+    world(includeChina = true) {
+      const data = this.input.filter(
+        d => d.country !== 'China' || includeChina
+      );
+
+      // Note, than when rolling up to country level, we loose data on state and lat/lng position
+      const totals = d3
+        .nest()
+        .key(d => d.date)
+        .rollup(v => {
+          return {
+            confirmed: d3.sum(v, d => d.confirmed)
+            // deaths: d3.sum(v, d => d.deaths),
+            // recovered: d3.sum(v, d => d.recovered)
+          };
+        })
+        .entries(data);
+
+      totals.forEach(({ value }, i) => {
+        const change = {
+          confirmed: value.confirmed
+          // deaths: value.deaths,
+          // recovered: value.recovered
+        };
+        if (i > 0) {
+          change.confirmed = value.confirmed - totals[i - 1].value.confirmed;
+          // change.deaths = value.deaths - totals[i - 1].value.deaths;
+          // change.recovered = value.recovered - totals[i - 1].value.recovered;
+        }
+        totals[i].change = change;
+      });
+
+      return totals;
+    },
     getCountries(filter) {
-      // if filter we only use  a selection of the data
       let selection = [];
       let countries = [];
+
+      // if filter we only use a selection of the data
       if (filter) {
         countries = Array.isArray(filter) ? filter : [filter];
         selection = this.filterByCountry(countries, this.input);
@@ -232,13 +292,14 @@ export default {
     createChartSeries({ title, countries }) {
       const charts = [];
       // @todo: split this up
+
       if (this.sub === 'combined') {
         const combo = this.getTotals(countries)
           .map(d => {
             d.name =
               countries.length > 1
                 ? `${d.name}, totalt antall`
-                : 'Totalt antall';
+                : `Totalt antall, ${d.name}`;
             return d;
           })
           .concat(
@@ -246,7 +307,7 @@ export default {
               d.name =
                 countries.length > 1
                   ? `${d.name}, nye tilfeller`
-                  : 'Nye tilfeller';
+                  : `Nye tilfeller, ${d.name}`;
               return d;
             })
           );
