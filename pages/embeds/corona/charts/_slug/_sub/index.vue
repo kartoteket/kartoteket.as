@@ -154,7 +154,7 @@ export default {
     },
     getWorldNew(includeChina = true) {
       return {
-        name: includeChina ? 'verden' : 'utenfor China',
+        name: includeChina ? 'verden' : 'utenfor Kina',
         values: this.world(includeChina).map(d => {
           return { date: d.key, value: d.change.confirmed };
         })
