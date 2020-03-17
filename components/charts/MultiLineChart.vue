@@ -8,6 +8,11 @@ import * as d3 from 'd3'; // @todo cherrypick like this: var d3 = Object.assign(
 import * as moment from 'moment';
 import * as topojson from 'topojson-client';
 
+const locale = d3.formatLocale({
+  decimal: ',',
+  thousands: ' ',
+  grouping: [3]
+});
 // const d3 = Object.assign({}, d3Lib, d3Array);
 
 export default {
@@ -297,7 +302,7 @@ export default {
             .style('font-weight', (_, i) => (i ? null : 'bold'))
             .text(function(d, i) {
               if (i < 1) return `${moment(d.date, 'M/D/YY').format('ll')}`; // print date on first line
-              return `${names[i]} ${d.value}`;
+              return `${names[i]} ${locale.format(',')(d.value)}`;
             })
         );
 
