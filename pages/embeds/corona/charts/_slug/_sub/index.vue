@@ -171,10 +171,6 @@ export default {
       }
 
       if (this.sub !== 'new') {
-        console.log(
-          'this.getConfirmedCases(countries)',
-          this.getConfirmedCases(countries)
-        );
         const total = {
           title: 'Totalt antall bekreftede tilfeller',
           data: this.getConfirmedCases(countries)
