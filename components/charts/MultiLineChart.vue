@@ -212,9 +212,11 @@ export default {
       // tooltip
       svg.on('touchmove mousemove', function() {
         const values = that.bisect(d3.mouse(this)[0]);
-        el.tooltip
-          .attr('transform', `translate(${that.xScale(values[0].date)},25)`) // ${yTemp(values[0].value) - 125
-          .call(that.callout, values);
+        if (values[0]) {
+          el.tooltip
+            .attr('transform', `translate(${that.xScale(values[0].date)},25)`) // ${yTemp(values[0].value) - 125
+            .call(that.callout, values);
+        }
       });
       svg.on('touchend mouseleave', () => el.tooltip.call(that.callout, null));
 
@@ -332,8 +334,7 @@ export default {
         const a = line.values[index - 1];
         const b = line.values[index];
         if (b) return date - a.date > b.date - date ? b : a;
-        // if (b) return date - a.date < b.date - date ? b : a;
-        // return false;
+        return null;
       });
     }
   }
