@@ -75,7 +75,7 @@ export default {
           .scaleTime()
           .domain(
             d3.extent(this.series[0].values, d => {
-              return moment(d.date, 'M/D/YY');
+              return d.date;
             })
           )
           // @todo should get min/max of all sets of values
@@ -93,7 +93,7 @@ export default {
       return d3
         .line()
         .defined(d => !isNaN(d.value))
-        .x(d => this.xScale(moment(d.date, 'M/D/YY')))
+        .x(d => this.xScale(d.date))
         .y(d => this.yScale(d.value))
         .curve(d3.curveCatmullRom);
     }
@@ -213,10 +213,7 @@ export default {
       svg.on('touchmove mousemove', function() {
         const values = that.bisect(d3.mouse(this)[0]);
         el.tooltip
-          .attr(
-            'transform',
-            `translate(${that.xScale(moment(values[0].date), 'M/D/YY')},25)`
-          ) // ${yTemp(values[2]) - 125
+          .attr('transform', `translate(${that.xScale(values[0].date)},25)`) // ${yTemp(values[0].value) - 125
           .call(that.callout, values);
       });
       svg.on('touchend mouseleave', () => el.tooltip.call(that.callout, null));
@@ -264,18 +261,24 @@ export default {
     callout(g, values) {
       if (!values) return g.style('display', 'none');
 
+      // get a date x days back in tome
+      const flipDate = new Date().setTime(
+        new Date().getTime() - 24 * 60 * 60 * 1000 * 10
+      ); // 10 days
+
       // get the country names
       const names = this.series.map(d => d.name);
       // trick to print date on first line
       names.unshift('Date');
       values.unshift(values[0]);
 
-      g.style('display', null)
+      const callout = g
+        .style('display', null)
         .style('pointer-events', 'none')
         .style('font', '0.75rem Helvetica, arial, sans-serif')
         .style('fill', this.options.textColor);
 
-      const text = g
+      const text = callout
         .selectAll('text')
         .data([null])
         .join('text')
@@ -285,28 +288,23 @@ export default {
             .data(values)
             .join('tspan')
             .attr('text-anchor', d => {
-              return moment(d.date, 'M/D/YY').isAfter(
-                moment().subtract(8, 'days')
-              )
-                ? 'end'
-                : 'start';
+              return d.date.getTime() < flipDate ? 'start' : 'end';
             })
-            .attr(
-              'x',
-              d =>
-                moment(d.date, 'M/D/YY').isAfter(moment().subtract(8, 'days'))
-                  ? '20'
-                  : '45'
-            )
+            // eslint-disable-next-line no-constant-condition
+            .attr('x', d => {
+              return d.date.getTime() < flipDate ? '30' : '30';
+            })
             .attr('y', (d, i) => `${i * 1.2}em`)
             .style('font-weight', (_, i) => (i ? null : 'bold'))
             .text(function(d, i) {
+              if (i < 1) return `${d3.timeFormat('%d. %b')(d.date)}`; // print date on first line
               if (i < 1) return `${moment(d.date, 'M/D/YY').format('ll')}`; // print date on first line
               return `${names[i]} ${locale.format(',')(d.value)}`;
             })
         );
 
-      g.selectAll('line')
+      callout
+        .selectAll('line')
         .data([null])
         .join('line')
         .attr('stroke', this.options.textColor)
@@ -327,14 +325,15 @@ export default {
       //  path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
     },
     bisect(mx) {
-      const bisect = d3.bisector(d => moment(d.date, 'M/D/YY')).left;
+      const bisect = d3.bisector(d => d.date).right;
       const date = this.xScale.invert(mx);
       return this.series.map(function(line) {
-        const index = bisect(line.values, moment(date, 'M/D/YY'), 1);
+        const index = bisect(line.values, date, 1);
         const a = line.values[index - 1];
         const b = line.values[index];
-        if (b) return date - a.date < b.date - date ? b : a;
-        return a;
+        if (b) return date - a.date > b.date - date ? b : a;
+        // if (b) return date - a.date < b.date - date ? b : a;
+        // return false;
       });
     }
   }
