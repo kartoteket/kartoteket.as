@@ -39,6 +39,7 @@ export default {
       isLoading: true,
       selection: ['Norway', ''],
       sub: 'both',
+      input: {},
       inputTotalConfirmed: [],
       inputNewConfirmed: [],
       inputTotalDeaths: [],
@@ -69,6 +70,7 @@ export default {
     }
   },
   async mounted() {
+    // slug is used as selections of countries
     if (this.$route.params.slug) {
       const selection = this.$route.params.slug
         .split(',')
@@ -82,8 +84,15 @@ export default {
       this.sub = this.$route.params.sub;
     }
 
-    this.inputTotalConfirmed = await this.fetchTotalConfirmed();
-    this.inputNewConfirmed = await this.fetchNewConfirmed();
+    // Fetc data based on sub criteria
+    if (this.sub !== 'new' || this.sub === 'combined') {
+      this.inputTotalConfirmed = await this.fetchData('totalCases');
+    }
+    if (this.sub !== 'total' || this.sub === 'combined') {
+      this.inputNewConfirmed = await this.fetchData('newCases');
+    }
+
+    // done laoding
     this.isLoading = false;
   },
   methods: {
@@ -143,6 +152,7 @@ export default {
       const input = newCases
         ? this.inputNewConfirmed
         : this.inputTotalConfirmed;
+
       const values = input.map(d => {
         return {
           date: d.date,
@@ -233,35 +243,43 @@ export default {
       }
       return newObj;
     },
-    async fetchTotalConfirmed() {
-      const input = await d3.csv(
-        'https://covid.ourworldindata.org/data/total_cases.csv',
-        d3.autoType
-      );
-      const lowerCasedKeys = input.map(d => this.lowerCaseKeys(d));
-      return lowerCasedKeys;
-    },
-    async fetchNewConfirmed() {
-      const input = await d3.csv(
-        'https://covid.ourworldindata.org/data/new_cases.csv',
-        d3.autoType
-      );
-      const lowerCasedKeys = input.map(d => this.lowerCaseKeys(d));
-      return lowerCasedKeys;
-    },
-    async fetchTotalDeaths() {
-      const input = await d3.csv(
-        'https://covid.ourworldindata.org/data/total_deaths.csv',
-        d3.autoType
-      );
-      return input;
-    },
-    async fetchNewDeaths() {
-      const input = await d3.csv(
-        'https://covid.ourworldindata.org/data/new_deaths.csv',
-        d3.autoType
-      );
-      return input;
+    async fetchData(dataset, source = 'owid') {
+      // list of possible datasets. Used for mappping
+      const datasets = ['totalCases', 'newCases', 'totalDeaths', 'newDeaths'];
+
+      // store loaded dataets on instance. Only fetch first time
+      if (!this.input[dataset]) {
+        const promises = [];
+        let files = [];
+        if (source === 'owid') {
+          files = [
+            'https://covid.ourworldindata.org/data/total_cases.csv',
+            'https://covid.ourworldindata.org/data/new_cases.csv'
+            // 'https://covid.ourworldindata.org/data/total_deaths.csv',
+            // 'https://covid.ourworldindata.org/data/new_deaths.csv',
+          ];
+        }
+
+        // fetch all or specific dataset
+        if (dataset === 'all') {
+          files.forEach(function(url) {
+            promises.push(d3.csv(url, d3.autoType));
+          });
+        } else {
+          promises.push(d3.csv(files[datasets.indexOf(dataset)], d3.autoType));
+        }
+
+        // make request
+        const result = await Promise.all(promises);
+
+        // handle request result: use datsets map to store result and force lowercase on keys
+        result.forEach((set, i) => {
+          const key = dataset === 'all' ? datasets[i] : dataset;
+          return (this.input[key] = set.map(d => this.lowerCaseKeys(d)));
+        });
+      }
+
+      return dataset === 'all' ? this.input : this.input[dataset];
     }
   }
 };
