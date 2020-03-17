@@ -88,12 +88,13 @@ export default {
   },
   methods: {
     getConfirmedCases(selection, { newCases = false } = {}) {
-      if (selection.length < 1) return []; // if no selection, abort
-      selection = Array.isArray(selection) ? selection : [selection]; // cast to array
-      const input = newCases
-        ? this.inputNewConfirmed
-        : this.inputTotalConfirmed;
+      // if no selection, abort
+      if (selection.length < 1) return [];
 
+      // cast to array
+      selection = Array.isArray(selection) ? selection : [selection];
+
+      // get world totals if special selection
       if (selection.includes('outsidechina')) {
         const worldTotals = this.getWorldConfirmed({
           includeChina: false,
@@ -106,21 +107,36 @@ export default {
         return [worldTotals];
       }
 
-      const output = selection.map(country => {
-        const values = input.map(d => {
+      // select totals or new cases
+      const input = newCases
+        ? this.inputNewConfirmed
+        : this.inputTotalConfirmed;
+
+      // filter data by selection and find first date with cases
+      const firstCase = [];
+      const values = [];
+      selection.map((country, i) => {
+        values[i] = input.map(d => {
           // ad hoc lookups
           if (country === 'us') country = 'united states';
-
+          // store date of first case
+          if (!firstCase[i] && d[country] > 0) firstCase[i] = d.date;
           return {
             date: d.date,
             value: d[country]
           };
         });
+      });
+
+      // truncated output to range with values
+      const cuttoff = d3.min(firstCase);
+      const output = selection.map((country, i) => {
         return {
           name: this.printCountryName(country),
-          values
+          values: values[i].filter(d => d.date > cuttoff)
         };
       });
+
       return output;
     },
     getWorldConfirmed({ includeChina = true, newCases = false } = {}) {
