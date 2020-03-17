@@ -21,17 +21,12 @@
   </article>
 </template>
 <script>
-import * as d3Lib from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
-import * as d3Array from 'd3-array';
-import * as moment from 'moment';
+import * as d3 from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
 import 'array-flat-polyfill';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
 import lookup from '@/utils/countryNames.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
-// import PlotMapChart from '@/components/charts/PlotMapChart';
-
-const d3 = Object.assign({}, d3Lib, d3Array);
 
 export default {
   layout: 'embed',
@@ -42,10 +37,12 @@ export default {
   data() {
     return {
       isLoading: true,
-      maps: {},
       selection: ['Norway', ''],
       sub: 'both',
-      input: [],
+      inputTotalConfirmed: [],
+      inputNewConfirmed: [],
+      inputTotalDeaths: [],
+      inputNewDeaths: [],
       margin: {
         right: 20,
         left: 50,
@@ -66,13 +63,9 @@ export default {
         })
       ];
     },
-    dates() {
-      return Array.from(new Set(this.getCountries().map(d => d.date)))
-        .map(d => moment(d, 'M/D/YY'))
-        .sort(d3.ascending);
-    },
     lastUpdate() {
-      return moment(this.dates[this.dates.length - 1], 'M/D/YY').format('ll');
+      const dates = this.inputTotalConfirmed.map(d => d.date);
+      return d3.timeFormat('%d. %b')(dates[dates.length - 1]);
     }
   },
   async mounted() {
@@ -89,215 +82,68 @@ export default {
       this.sub = this.$route.params.sub;
     }
 
-    this.input = await this.fetchData();
+    this.inputTotalConfirmed = await this.fetchTotalConfirmed();
+    this.inputNewConfirmed = await this.fetchNewConfirmed();
     this.isLoading = false;
   },
   methods: {
-    getTotals(input) {
-      if (input.length < 1) return [];
+    getConfirmedCases(selection, { newCases = false } = {}) {
+      if (selection.length < 1) return []; // if no selection, abort
+      selection = Array.isArray(selection) ? selection : [selection]; // cast to array
+      const input = newCases
+        ? this.inputNewConfirmed
+        : this.inputTotalConfirmed;
 
-      if (input.includes('outsidechina')) {
-        const worldTotals = this.getWorldTotals(false);
-        return [worldTotals];
-      }
-      if (input.includes('world')) {
-        const worldTotals = this.getWorldTotals();
-        return [worldTotals];
-      }
-
-      const countries = Array.isArray(input) ? input : [input];
-      const data = this.getCountries(countries);
-      // console.log('data', d3.groups(data, d => d.name));
-      return d3.groups(data, d => d.name).map(country => {
-        return {
-          name: this.printCountryName(country[0]),
-          values: country[1].map(d => {
-            return { date: d.date, value: d.confirmed };
-          })
-        };
-      });
-    },
-    getNewCases(input, limit) {
-      if (input.includes('outsidechina')) {
-        const worldTotals = this.getWorldNew(false);
-        return [worldTotals];
-      }
-      if (input.includes('world')) {
-        const worldTotals = this.getWorldNew();
-        return [worldTotals];
-      }
-
-      if (input.length < 1) return [];
-      let data = d3.groups(this.getCountries(input), d => d.name.toLowerCase());
-      if (limit > 0) {
-        data = data.slice(0, limit);
-      }
-      return data.map((d, i) => {
-        return {
-          name: this.printCountryName(d[0]),
-          values: d[1].map(d => {
-            return {
-              date: d.date,
-              value: d.change.confirmed > 10000 ? 1000 : d.change.confirmed
-            };
-          })
-        };
-      });
-    },
-    getWorldTotals(includeChina = true) {
-      return {
-        name: includeChina ? 'verden' : 'utenfor Kina',
-        values: this.world(includeChina).map(d => {
-          return { date: d.key, value: d.value.confirmed };
-        })
-      };
-    },
-    getWorldNew(includeChina = true) {
-      return {
-        name: includeChina ? 'verden' : 'utenfor Kina',
-        values: this.world(includeChina).map(d => {
-          return { date: d.key, value: d.change.confirmed };
-        })
-      };
-    },
-    world(includeChina = true) {
-      const data = this.input.filter(
-        d => d.country !== 'China' || includeChina
-      );
-
-      // Note, than when rolling up to country level, we loose data on state and lat/lng position
-      const totals = d3
-        .nest()
-        .key(d => d.date)
-        .rollup(v => {
-          return {
-            confirmed: d3.sum(v, d => d.confirmed)
-            // deaths: d3.sum(v, d => d.deaths),
-            // recovered: d3.sum(v, d => d.recovered)
-          };
-        })
-        .entries(data);
-
-      totals.forEach(({ value }, i) => {
-        const change = {
-          confirmed: value.confirmed
-          // deaths: value.deaths,
-          // recovered: value.recovered
-        };
-        if (i > 0) {
-          change.confirmed = value.confirmed - totals[i - 1].value.confirmed;
-          // change.deaths = value.deaths - totals[i - 1].value.deaths;
-          // change.recovered = value.recovered - totals[i - 1].value.recovered;
-        }
-        totals[i].change = change;
-      });
-
-      return totals;
-    },
-    getCountries(filter) {
-      let selection = [];
-      let countries = [];
-
-      // if filter we only use a selection of the data
-      if (filter) {
-        countries = Array.isArray(filter) ? filter : [filter];
-        selection = this.filterByCountry(countries, this.input);
-
-        // limit selection to periode with confirmed cases
-        const firstCase = selection
-          .sort((a, b) => d3.ascending(moment(a.date), moment(b.date)))
-          .findIndex(d => d.confirmed > 0);
-        selection = selection.slice(firstCase);
-      } else {
-        selection = this.input;
-      }
-
-      const grouped = this.groupByCountry(selection); // group values on country level
-      const extended = this.addDailyValues(grouped.data); // add changes (daily new numbers)
-      return extended;
-    },
-    filterByCountry(_countries, data, exclude = false) {
-      const countries = _countries.map(d => {
-        if (d === 'south korea') d = 'korea, south';
-        return d.toLowerCase();
-      });
-      if (exclude) {
-        return data.filter(d => !countries.includes(d.country.toLowerCase()));
-      }
-      return data.filter(d => countries.includes(d.country.toLowerCase()));
-    },
-    groupByCountry(input) {
-      // Note, than when rolling up to country level, we loose data on state and lat/lng position
-      const nested = d3
-        .nest()
-        .key(d => d.country)
-        .key(d => d.date)
-        .rollup(v => {
-          return {
-            pos: d3.min(v, d => d.pos), // why .min() ??!?
-            confirmed: d3.sum(v, d => d.confirmed)
-            // deaths: d3.sum(v, d => d.deaths),
-            // recovered: d3.sum(v, d => d.recovered)
-          };
-        })
-        .entries(input);
-
-      // here we un-nest the data by mapping all the values to key/value pair
-      const mapped = nested.map((country, index) =>
-        country.values.map(date => {
-          return {
-            name: country.key,
-            date: date.key,
-            pos: date.value.pos,
-            confirmed: date.value.confirmed ? date.value.confirmed : 0
-            // deaths: date.value.deaths,
-            // recovered: date.value.recovered
-          };
-        })
-      );
-
-      // count number of days there are registered confirmed cases in each country
-      const count = mapped.map(country => {
-        const count = d3.count(country, d => d.confirmed);
-        const name = country[0].name;
-        return { name, count };
-      });
-
-      // return a flattened array of the data, just china, no china
-      // and a count of days with registrations used to sort
-      return {
-        data: mapped.flat(),
-        count: count
-      };
-    },
-    addDailyValues(input) {
-      // group by country and calculate the relative change  between each days.
-      // We could/should probably do this in the initial parsing, befor we flatten that array
-      const grouped = d3.group(input, d => d.name);
-      const iterator = grouped.values();
-      for (const element of iterator) {
-        element.map((d, i) => {
-          const change = {
-            confirmed: d.confirmed
-            // deaths: d.deaths,
-            // recovered: d.recovered
-          };
-          if (i > 0) {
-            change.confirmed = d.confirmed - element[i - 1].confirmed;
-            // change.deaths = d.deaths - element[i - 1].deaths;
-            // change.recovered = d.recovered - element[i - 1].recovered;
-          }
-          element[i].change = change;
+      if (selection.includes('outsidechina')) {
+        const worldTotals = this.getWorldConfirmed({
+          includeChina: false,
+          newCases
         });
+        return [worldTotals];
       }
-      return Array.from(grouped, ([key, value]) => value).flat();
+      if (selection.includes('world')) {
+        const worldTotals = this.getWorldConfirmed({ newCases });
+        return [worldTotals];
+      }
+
+      const output = selection.map(country => {
+        const values = input.map(d => {
+          // ad hoc lookups
+          if (country === 'us') country = 'united states';
+
+          return {
+            date: d.date,
+            value: d[country]
+          };
+        });
+        return {
+          name: this.printCountryName(country),
+          values
+        };
+      });
+      return output;
+    },
+    getWorldConfirmed({ includeChina = true, newCases = false } = {}) {
+      const input = newCases
+        ? this.inputNewConfirmed
+        : this.inputTotalConfirmed;
+      const values = input.map(d => {
+        return {
+          date: d.date,
+          value: includeChina ? d.world : d.world - d.china
+        };
+      });
+      return {
+        name: includeChina ? 'verden' : 'utenfor Kina',
+        values
+      };
     },
     createChartSeries({ title, countries }) {
       const charts = [];
       // @todo: split this up
 
       if (this.sub === 'combined') {
-        const combo = this.getTotals(countries)
+        const combo = this.getConfirmedCases(countries)
           .map(d => {
             d.name =
               countries.length > 1
@@ -306,7 +152,7 @@ export default {
             return d;
           })
           .concat(
-            this.getNewCases(countries).map(d => {
+            this.getConfirmedCases(countries, { newCases: true }).map(d => {
               d.name =
                 countries.length > 1
                   ? `${d.name}, nye tilfeller`
@@ -325,16 +171,20 @@ export default {
       }
 
       if (this.sub !== 'new') {
+        console.log(
+          'this.getConfirmedCases(countries)',
+          this.getConfirmedCases(countries)
+        );
         const total = {
           title: 'Totalt antall bekreftede tilfeller',
-          data: this.getTotals(countries)
+          data: this.getConfirmedCases(countries)
         };
         charts.push(total);
       }
       if (this.sub !== 'total') {
         const daily = {
           title: 'Bekreftede nye tilfeller',
-          data: this.getNewCases(countries)
+          data: this.getConfirmedCases(countries, { newCases: true })
         };
         charts.push(daily);
       }
@@ -360,47 +210,45 @@ export default {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join('-');
     },
-    async fetchData() {
-      const files = [
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
-        // 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv',
-        // 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-      ];
-
-      // load all data (3 different raw csv files)
-      const result = await Promise.all(
-        files.map(url => d3.csv(url, d3.autoType))
+    lowerCaseKeys(obj) {
+      let key;
+      const keys = Object.keys(obj);
+      let n = keys.length;
+      const newObj = {};
+      while (n--) {
+        key = keys[n];
+        newObj[key.toLowerCase()] = obj[key];
+      }
+      return newObj;
+    },
+    async fetchTotalConfirmed() {
+      const input = await d3.csv(
+        'https://covid.ourworldindata.org/data/total_cases.csv',
+        d3.autoType
       );
-      // load data segments matching the 3 files
-      const segments = ['confirmed'];
-      // const segments = ['confirmed', 'deaths', 'recovered'];
-
-      // her we loop through all the raw input data and map the `segments`from the 3 input fields
-      // we save lat/lng as pos array
-      // output is nested array
-      const input = result
-        .map((array, i) => {
-          return array.map((obj, j) => {
-            const names = {
-              country: obj['Country/Region'],
-              state: obj['Province/State']
-            };
-            delete obj['Province/State'];
-            delete obj['Country/Region'];
-            const { Lat, Long, ...rest } = obj;
-
-            return Object.entries(rest).map(([key, value]) => {
-              obj = {
-                ...names,
-                pos: [Long, Lat],
-                date: key
-              };
-              obj[segments[i]] = value;
-              return obj;
-            });
-          });
-        })
-        .flat(2);
+      const lowerCasedKeys = input.map(d => this.lowerCaseKeys(d));
+      return lowerCasedKeys;
+    },
+    async fetchNewConfirmed() {
+      const input = await d3.csv(
+        'https://covid.ourworldindata.org/data/new_cases.csv',
+        d3.autoType
+      );
+      const lowerCasedKeys = input.map(d => this.lowerCaseKeys(d));
+      return lowerCasedKeys;
+    },
+    async fetchTotalDeaths() {
+      const input = await d3.csv(
+        'https://covid.ourworldindata.org/data/total_deaths.csv',
+        d3.autoType
+      );
+      return input;
+    },
+    async fetchNewDeaths() {
+      const input = await d3.csv(
+        'https://covid.ourworldindata.org/data/new_deaths.csv',
+        d3.autoType
+      );
       return input;
     }
   }
