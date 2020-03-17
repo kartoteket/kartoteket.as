@@ -309,7 +309,7 @@ export default {
       g.selectAll('line')
         .data([null])
         .join('line')
-        .attr('stroke', '#eee')
+        .attr('stroke', this.options.textColor)
         .style('stroke-opacity', 1)
         .attr('stroke-width', 1)
         .style('stroke-dasharray', '3, 3')
