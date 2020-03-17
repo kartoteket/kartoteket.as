@@ -192,6 +192,7 @@ const namesTable = {
   'united kingdom': 'storbritannia',
   'united states of america': 'united states of america',
   us: 'USA',
+  'united states': 'USA',
   uruguay: 'uruguay',
   uzbekistan: 'usbekistan',
   vanuatu: 'vanuatu',
