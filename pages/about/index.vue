@@ -14,7 +14,6 @@
   </article>
 </template>
 <script>
-import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
@@ -22,6 +21,7 @@ import {
   breadCrumbs
 } from '@/utils/structureddata.js';
 import asideItem from '@/components/asideItem';
+import head from '~/mixins/head.js';
 
 export default {
   components: {

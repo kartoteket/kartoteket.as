@@ -118,7 +118,6 @@ import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
-import head from '~/mixins/head.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 // import PlotMapChart from '@/components/charts/PlotMapChart';
 
@@ -128,6 +127,7 @@ import {
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
+import head from '~/mixins/head.js';
 
 const d3 = Object.assign({}, d3Lib, d3Array);
 

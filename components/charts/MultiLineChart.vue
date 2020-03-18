@@ -8,6 +8,11 @@ import * as d3 from 'd3'; // @todo cherrypick like this: var d3 = Object.assign(
 import * as moment from 'moment';
 import * as topojson from 'topojson-client';
 
+const locale = d3.formatLocale({
+  decimal: ',',
+  thousands: ' ',
+  grouping: [3]
+});
 // const d3 = Object.assign({}, d3Lib, d3Array);
 
 export default {
@@ -297,22 +302,25 @@ export default {
             .style('font-weight', (_, i) => (i ? null : 'bold'))
             .text(function(d, i) {
               if (i < 1) return `${moment(d.date, 'M/D/YY').format('ll')}`; // print date on first line
-              return `${names[i]} ${d.value}`;
+              return `${names[i]} ${locale.format(',')(d.value)}`;
             })
         );
 
       g.selectAll('line')
         .data([null])
         .join('line')
-        .attr('stroke', '#eee')
-        .style('stroke-opacity', 1)
+        .attr('stroke', this.options.textColor)
+        .style('stroke-opacity', 0.5)
         .attr('stroke-width', 1)
         .style('stroke-dasharray', '3, 3')
         .attr('class', 'guide')
         .attr('x1', 0)
         .attr('y1', 0)
         .attr('x2', 0)
-        .attr('y2', this.height - this.options.margin.bottom);
+        .attr(
+          'y2',
+          this.height - this.options.margin.bottom - this.options.margin.top - 4
+        );
 
       const { x, y, width: w, height: h } = text.node().getBBox();
       text.attr('transform', `translate(${-w / 2},${15 - y})`);

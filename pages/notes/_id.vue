@@ -13,7 +13,6 @@
   </article>
 </template>
 <script>
-import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
@@ -22,6 +21,7 @@ import {
 } from '@/utils/structureddata.js';
 import blockToText from '@/utils/text.js';
 import asideItem from '@/components/asideItem';
+import head from '~/mixins/head.js';
 export default {
   components: {
     asideItem
