@@ -25,7 +25,6 @@
   </section>
 </template>
 <script>
-import head from '~/mixins/head.js';
 import asideItem from '@/components/asideItem';
 import linkWrapper from '@/components/linkWrapper';
 import {
@@ -34,6 +33,7 @@ import {
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
+import head from '~/mixins/head.js';
 
 export default {
   components: {

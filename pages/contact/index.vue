@@ -83,13 +83,13 @@
   </main>
 </template>
 <script>
-import head from '~/mixins/head.js';
 import {
   webSite,
   organisation,
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
+import head from '~/mixins/head.js';
 
 export default {
   mixins: [head],
