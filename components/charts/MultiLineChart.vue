@@ -310,14 +310,17 @@ export default {
         .data([null])
         .join('line')
         .attr('stroke', this.options.textColor)
-        .style('stroke-opacity', 1)
+        .style('stroke-opacity', 0.5)
         .attr('stroke-width', 1)
         .style('stroke-dasharray', '3, 3')
         .attr('class', 'guide')
         .attr('x1', 0)
         .attr('y1', 0)
         .attr('x2', 0)
-        .attr('y2', this.height - this.options.margin.bottom);
+        .attr(
+          'y2',
+          this.height - this.options.margin.bottom - this.options.margin.top - 4
+        );
 
       const { x, y, width: w, height: h } = text.node().getBBox();
       text.attr('transform', `translate(${-w / 2},${15 - y})`);
