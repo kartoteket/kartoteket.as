@@ -373,4 +373,11 @@ export default {
     font-size: 0.75rem !important;
   }
 }
+@screen lg {
+  .tooltip text,
+  .legend text,
+  .axis {
+    font-size: 0.66rem !important;
+  }
+}
 </style>
