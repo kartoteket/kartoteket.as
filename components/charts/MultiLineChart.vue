@@ -137,13 +137,14 @@ export default {
       const legends = el.legend
         .attr(
           'transform',
-          `translate(${this.options.margin.left + 10}, ${this.options.margin
-            .top + 20})`
+          `translate(${this.options.margin.left + 10}, ${this.height -
+            this.options.margin.bottom -
+            20})`
         )
         .selectAll('g')
         .data(
           series.sort((a, b) =>
-            d3.descending(
+            d3.ascending(
               a.values[a.values.length - 1].value,
               b.values[b.values.length - 1].value
             )
@@ -157,7 +158,7 @@ export default {
         .attr('width', 20)
         .attr('height', 2)
         .attr('rx', 2)
-        .attr('y', (_, i) => i * 16);
+        .attr('y', (_, i) => i * -16);
 
       legends
         .append('text')
@@ -166,7 +167,7 @@ export default {
         .style('fill', this.options.textColor)
         .attr('x', 25)
         .attr('dy', 4)
-        .attr('y', (_, i) => i * 16)
+        .attr('y', (_, i) => i * -16)
         .text(d => d.name);
 
       // el.lines.selectAll('path').remove();
@@ -273,6 +274,11 @@ export default {
 
       // get the country names
       const names = this.series.map(d => d.name);
+
+      // flip as series are sorted ascending
+      names.reverse();
+      values.reverse();
+
       // trick to print date on first line
       names.unshift('Date');
       values.unshift(values[0]);
