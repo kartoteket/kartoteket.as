@@ -2,17 +2,12 @@
   <svg :id="`chart-${id}`" class="chart" />
 </template>
 <script>
-/* eslint-disable no-unused-vars */
 import * as d3 from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
-// import * as d3Array from 'd3-array';
-import * as moment from 'moment';
-import * as topojson from 'topojson-client';
 const locale = d3.formatLocale({
   decimal: ',',
   thousands: ' ',
   grouping: [3]
 });
-// const d3 = Object.assign({}, d3Lib, d3Array);
 
 export default {
   props: {
