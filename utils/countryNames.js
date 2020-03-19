@@ -190,7 +190,7 @@ const namesTable = {
   ukraine: 'ukraina',
   'united arab emirates': 'de forente arabiske emirater',
   'united kingdom': 'storbritannia',
-  'united states of america': 'united states of america',
+  'united states of america': 'USA',
   us: 'USA',
   'united states': 'USA',
   uruguay: 'uruguay',

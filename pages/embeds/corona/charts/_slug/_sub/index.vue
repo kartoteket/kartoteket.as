@@ -89,9 +89,13 @@ export default {
   async mounted() {
     // slug is used as selections of countries
     if (this.$route.params.slug) {
-      const selection = this.$route.params.slug
-        .split(',')
-        .map(d => d.trim().toLowerCase());
+      const selection = this.$route.params.slug.split(',').map(d => {
+        let output = d.trim().toLowerCase();
+        if (output === 'us') output = 'united states of america';
+        if (output === 'taiwan*') output = 'taiwan';
+        return output;
+      });
+
       // nb: here we can also reate cusmtom selctions like fx 'nordic'
       if (Array.isArray(selection)) {
         this.selection = selection;
