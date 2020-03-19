@@ -38,6 +38,7 @@ export default {
         aspectRatio: 0.5,
         colorScale: d3.scaleOrdinal(d3.schemeSet2),
         textColor: '#fff',
+        yAxis: 'left',
         margin: {
           right: 30,
           left: 50,
@@ -244,21 +245,23 @@ export default {
         );
     },
     yAxis(svg, y) {
-      return svg
-        .attr('transform', `translate(${this.options.margin.left},0)`)
-        .call(
-          d3
-            .axisLeft(y)
-            // .tickFormat(d3.format('d'))
-            .ticks(5)
-            .tickSizeOuter(0)
-            .tickSizeInner(
-              (this.width -
-                this.options.margin.right -
-                this.options.margin.left) *
-                -1
-            )
-        );
+      let generator = d3.axisLeft(y);
+      let position = this.options.margin.left;
+      const tickWidth =
+        (this.width - this.options.margin.right - this.options.margin.left) *
+        -1;
+
+      if (this.options.yAxis === 'right') {
+        generator = d3.axisRight(y);
+        position = this.width - this.options.margin.right;
+      }
+      return svg.attr('transform', `translate(${position},0)`).call(
+        generator
+          // .tickFormat(d3.format('d'))
+          .ticks(5)
+          .tickSizeOuter(0)
+          .tickSizeInner(tickWidth)
+      );
     },
     callout(g, values) {
       if (!values) return g.style('display', 'none');
