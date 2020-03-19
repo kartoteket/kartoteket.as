@@ -49,6 +49,23 @@ export default {
         left: 50,
         top: 20,
         bottom: 20
+      },
+      source: 'johnshopkins', // 'johnshopkins',
+      files: {
+        owid: [
+          'https://covid.ourworldindata.org/data/total_cases.csv',
+          'https://covid.ourworldindata.org/data/new_cases.csv'
+          // 'https://covid.ourworldindata.org/data/total_deaths.csv',
+          // 'https://covid.ourworldindata.org/data/new_deaths.csv',
+        ],
+        johnshopkins: [
+          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_cases_by_country.csv',
+          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_cases_by_country.csv'
+          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_deaths_by_country.csv',
+          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_deaths_by_country.csv',
+          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_recovered_by_country.csv',
+          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_recovered_by_country.csv'
+        ]
       }
     };
   },
@@ -243,22 +260,15 @@ export default {
       }
       return newObj;
     },
-    async fetchData(dataset, source = 'owid') {
+    async fetchData(dataset) {
       // list of possible datasets. Used for mappping
       const datasets = ['totalCases', 'newCases', 'totalDeaths', 'newDeaths'];
+      const source = this.source;
 
       // store loaded dataets on instance. Only fetch first time
-      if (!this.input[dataset]) {
+      if (!this.input[`${source}-${dataset}`]) {
         const promises = [];
-        let files = [];
-        if (source === 'owid') {
-          files = [
-            'https://covid.ourworldindata.org/data/total_cases.csv',
-            'https://covid.ourworldindata.org/data/new_cases.csv'
-            // 'https://covid.ourworldindata.org/data/total_deaths.csv',
-            // 'https://covid.ourworldindata.org/data/new_deaths.csv',
-          ];
-        }
+        const files = this.files[source];
 
         // fetch all or specific dataset
         if (dataset === 'all') {
@@ -275,11 +285,13 @@ export default {
         // handle request result: use datsets map to store result and force lowercase on keys
         result.forEach((set, i) => {
           const key = dataset === 'all' ? datasets[i] : dataset;
-          return (this.input[key] = set.map(d => this.lowerCaseKeys(d)));
+          this.input[`${source}-${key}`] = set.map(d => this.lowerCaseKeys(d));
         });
       }
 
-      return dataset === 'all' ? this.input : this.input[dataset];
+      return dataset === 'all'
+        ? this.input[this.source]
+        : this.input[`${source}-${dataset}`];
     }
   }
 };
