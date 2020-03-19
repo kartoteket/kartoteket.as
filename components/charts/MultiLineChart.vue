@@ -277,37 +277,36 @@ export default {
       names.unshift('Date');
       values.unshift(values[0]);
 
+      // genearet text
+      const echoTooltip = text =>
+        text
+          .selectAll('tspan')
+          .data(values)
+          .join('tspan')
+          .attr(
+            'text-anchor',
+            d => (d.date.getTime() > flipDate ? 'end' : 'start')
+          )
+          .attr('x', d => (d.date.getTime() < flipDate ? '10' : '-10'))
+          .attr('y', (d, i) => `${i * 1.2}em`)
+          .style('font-weight', (_, i) => (i ? null : 'bold'))
+          .text(function(d, i) {
+            if (i < 1) return `${d3.timeFormat('%d. %b')(d.date)}`; // print date on first line
+            return `${names[i]} ${locale.format(',')(d.value)}`;
+          });
+
+      // tooltip container
       const callout = g
         .style('display', null)
         .style('pointer-events', 'none')
         .style('font', '0.75rem Helvetica, arial, sans-serif')
         .style('fill', this.options.textColor);
 
-      const text = callout
-        .selectAll('text')
-        .data([null])
-        .join('text')
-        .call(text =>
-          text
-            .selectAll('tspan')
-            .data(values)
-            .join('tspan')
-            .attr('text-anchor', d => {
-              return d.date.getTime() < flipDate ? 'start' : 'end';
-            })
-            // eslint-disable-next-line no-constant-condition
-            .attr('x', d => {
-              return d.date.getTime() < flipDate ? '30' : '30';
-            })
-            .attr('y', (d, i) => `${i * 1.2}em`)
-            .style('font-weight', (_, i) => (i ? null : 'bold'))
-            .text(function(d, i) {
-              if (i < 1) return `${d3.timeFormat('%d. %b')(d.date)}`; // print date on first line
-              if (i < 1) return `${moment(d.date, 'M/D/YY').format('ll')}`; // print date on first line
-              return `${names[i]} ${locale.format(',')(d.value)}`;
-            })
-        );
+      // generate text to get dimensions
+      const text = callout.append('text').call(text => echoTooltip(text));
+      const { x, y, width: w, height: h } = text.node().getBBox();
 
+      // tooltip guide-line
       callout
         .selectAll('line')
         .data([null])
@@ -325,9 +324,27 @@ export default {
           this.height - this.options.margin.bottom - this.options.margin.top - 4
         );
 
-      const { x, y, width: w, height: h } = text.node().getBBox();
-      text.attr('transform', `translate(${-w / 2},${15 - y})`);
-      //  path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+      // tooltip bg box
+      callout
+        .selectAll('rect')
+        .data([null])
+        .join('rect')
+        .attr('fill', 'black')
+        .attr('fill-opacity', 0.25)
+        .attr('stroke', this.options.textColor)
+        .attr('stroke-opacity', 0.25)
+        .attr('rx', 5)
+        .attr('width', w + 20)
+        .attr('x', x - 10)
+        .attr('y', -15)
+        .attr('height', h + 10);
+
+      // re-append text on top og bg box
+      callout.selectAll('text').remove();
+      callout.append('text').call(text => echoTooltip(text));
+
+      // position
+      text.attr('transform', `translate(0,${-10 - y})`);
     },
     bisect(mx) {
       const bisect = d3.bisector(d => d.date).right;
