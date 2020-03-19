@@ -7,7 +7,6 @@ import * as d3 from 'd3'; // @todo cherrypick like this: var d3 = Object.assign(
 // import * as d3Array from 'd3-array';
 import * as moment from 'moment';
 import * as topojson from 'topojson-client';
-
 const locale = d3.formatLocale({
   decimal: ',',
   thousands: ' ',
@@ -294,7 +293,7 @@ export default {
             d => (d.date.getTime() > flipDate ? 'end' : 'start')
           )
           .attr('x', d => (d.date.getTime() < flipDate ? '10' : '-10'))
-          .attr('y', (d, i) => `${i * 1.2}em`)
+          .attr('y', (d, i) => `${i * 1.25}em`)
           .style('font-weight', (_, i) => (i ? null : 'bold'))
           .text(function(d, i) {
             if (i < 1) return `${d3.timeFormat('%d. %b')(d.date)}`; // print date on first line
@@ -323,7 +322,7 @@ export default {
         .style('stroke-dasharray', '3, 3')
         .attr('class', 'guide')
         .attr('x1', 0)
-        .attr('y1', 0)
+        .attr('y1', h - 5)
         .attr('x2', 0)
         .attr(
           'y2',
@@ -335,11 +334,11 @@ export default {
         .selectAll('rect')
         .data([null])
         .join('rect')
-        .attr('fill', '#2a3b4b')
+        .attr('fill', this.options.textColor === '#fff' ? '#2a3b4b' : 'white') // @todo: ad hoc ternary fix
         .attr('fill-opacity', 0.75)
         .attr('stroke', this.options.textColor)
         .attr('stroke-opacity', 0.25)
-        .attr('rx', 5)
+        .attr('rx', 2)
         .attr('width', w + 20)
         .attr('x', x - 10)
         .attr('y', -15)
