@@ -188,13 +188,13 @@ export default {
         .selectAll('.tick')
         .selectAll('line')
         .style('opacity', 0.25)
-        .attr('stroke', '#ddd');
+        .attr('stroke', this.options.textColor);
 
       el.xAxis
         .selectAll('.tick')
         .selectAll('line')
         .style('opacity', 0.25)
-        .attr('stroke', '#ddd');
+        .attr('stroke', this.options.textColor);
       el.xAxis
         .selectAll('.tick')
         .selectAll('text')
