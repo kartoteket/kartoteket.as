@@ -49,19 +49,19 @@
       </div>
     </header>
     <div v-if="!isLoading" class="lg:flex flex-wrap justify-center">
-      <article v-show="view === 'country'" class="lg:w-1/2 mb-12">
-        <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" multiple="true" @input="setSelection($event)" />
+      <article v-show="view === 'country'" class="lg:w-3/5 mb-12">
+        <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Total confirmed cases
           </h2>
-          <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :config="{colorScale, aspectRatio: 0.5}" />
+          <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
-          <multi-line-chart v-if="selectedNewCases[0].length" id="custom-new" :series="selectedNewCases[0]" :config="{colorScale, aspectRatio: 0.4}" />
+          <multi-line-chart v-if="selectedNewCases[0].length" id="custom-new" :series="selectedNewCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
         </div>
       </article>
 
@@ -90,7 +90,7 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
         </div>
       </article>
 
@@ -102,7 +102,7 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
         </div>
       </article>
 
@@ -114,7 +114,7 @@
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             {{ chart.title }}
           </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="{colorScale, aspectRatio: (j%2) ? 0.4 : 0.5}" />
+          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
         </div>
       </article>
     </div>
@@ -170,10 +170,10 @@ export default {
       inputTotalDeaths: [],
       inputNewDeaths: [],
       margin: {
-        right: 130,
-        left: 120,
+        right: 80,
+        left: 10,
         top: 20,
-        bottom: 10
+        bottom: 20
       },
       source: 'johnshopkins', // 'owid',
       files: {
@@ -203,6 +203,14 @@ export default {
     };
   },
   computed: {
+    chartConfig() {
+      return {
+        colorScale: this.colorScale,
+        yAxis: 'right',
+        margin: this.margin
+      };
+    },
+
     colorScale() {
       return d3.scaleOrdinal(d3.schemeOranges[9].reverse()); // d3.schemeTableau10
     },
