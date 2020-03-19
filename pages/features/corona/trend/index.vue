@@ -402,7 +402,22 @@ export default {
         // handle request result: use datsets map to store result
         result.forEach((set, i) => {
           const key = dataset === 'all' ? datasets[i] : dataset;
-          this.input[`${source}-${key}`] = set;
+          this.input[`${source}-${key}`] = set.map(d => {
+            // Add hoc tmp fix
+            if (
+              !Object.prototype.hasOwnProperty.call(
+                d,
+                'United States of America'
+              ) &&
+              Object.prototype.hasOwnProperty.call(d, 'United States')
+            ) {
+              d['United States of America'] = d['United States'];
+              delete d['United States'];
+            }
+            // console.log(d);
+            return d;
+          });
+          // this.input[`${source}-${key}`] = set;
         });
       }
 
