@@ -1,7 +1,7 @@
 <template>
   <article class="flex flex-col">
-    <header class="XXmain-col text-center mb-8">
-      <h1 class="main-header mb-1">
+    <header class="text-center mb-8">
+      <h1 class="main-header mb-1 text-xl md:text-4xl">
         {{ page.title }}
       </h1>
       <p class="text-xs mb-6">
@@ -17,31 +17,31 @@
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
       <div class="flex flex-wrap justify-center md:justify-between">
-        <div>
+        <div class="w-full md:w-auto">
           <h2 class="text-sm uppercase text-sm text-white-800 text-left tracking-wide border-b-2 border-white-500 mr-8 mb-4">
             View Charts
           </h2>
           <nav class="flex flex-center">
             <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'country'}" @click.stop="setView('country')">
-              Select Country
+              Select
             </button>
             <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'world'}" @click.stop="setView('world')">
               World
             </button>
             <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'groups'}" @click.stop="setView('groups')">
-              Selected Groups
+              Collections
             </button>
           </nav>
         </div>
-        <div>
+        <div class="w-full md:w-auto">
           <h2 class="text-sm uppercase text-sm text-white-800 text-left tracking-wide border-b-2 border-white-500 mr-8 mb-4">
             Data Source
           </h2>
           <nav class="flex flex-center">
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'owid'}" @click.stop="source = 'owid'">
+            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'owid'}" @click.stop="source = 'owid'">
               WHO / Our World in Data
             </button>
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'johnshopkins'}" @click.stop="source = 'johnshopkins'">
+            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'johnshopkins'}" @click.stop="source = 'johnshopkins'">
               Johns Hopkins
             </button>
           </nav>
