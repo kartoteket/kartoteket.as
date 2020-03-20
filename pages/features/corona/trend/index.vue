@@ -52,10 +52,24 @@
       <article v-show="view === 'country'" class="lg:w-3/5 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
         <div class="mb-4">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            Total confirmed cases
-          </h2>
-          <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
+          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
+            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
+              Total confirmed cases
+            </h2>
+            <nav>
+              <label v-for="scale in ['linear','log']" :key="scale" :for="scale" class="capitalize">
+                <input
+                  id="scale"
+                  name="custom-totals"
+                  :checked="yScaleTypes['custom-totals'] === scale || scale === 'linear'"
+                  type="radio"
+                  :value="scale"
+                  @change="$set(yScaleTypes,'custom-totals',scale)"
+                > {{ scale }}
+              </label>
+            </nav>
+          </header>
+          <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :y-scale-type="yScaleTypes['custom-totals']" :config="Object.assign({aspectRatio: 0.5, yScaleType: 'log'}, chartConfig)" />
         </div>
         <div class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
@@ -86,11 +100,25 @@
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
-        <div v-for="(chart, j) in worldSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            {{ chart.title }}
-          </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
+        <div v-for="(chart, j) in worldSeries.charts" :key="`world-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
+          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
+            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
+              {{ chart.title }}
+            </h2>
+            <nav v-if="chart.scales">
+              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
+                <input
+                  id="scale"
+                  :name="`world-${j}`"
+                  :checked="yScaleTypes[`world-${j}`] === scale || scale === 'linear'"
+                  type="radio"
+                  :value="scale"
+                  @change="$set(yScaleTypes,`world-${j}`,scale)"
+                > {{ scale }}
+              </label>
+            </nav>
+          </header>
+          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`world-${j}`]" :config="chart.config" />
         </div>
       </article>
 
@@ -98,11 +126,25 @@
         <h1 class="text-lg mb-6">
           {{ worldOutsideChinaSeries.title }}
         </h1>
-        <div v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            {{ chart.title }}
-          </h2>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
+        <div v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="`outsidechina-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
+          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
+            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
+              {{ chart.title }}
+            </h2>
+            <nav v-if="chart.scales">
+              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
+                <input
+                  id="scale"
+                  :name="`outsidechina-${j}`"
+                  :checked="yScaleTypes[`outsidechina-${j}`] === scale || scale === 'linear'"
+                  type="radio"
+                  :value="scale"
+                  @change="$set(yScaleTypes,`outsidechina-${j}`,scale)"
+                > {{ scale }}
+              </label>
+            </nav>
+          </header>
+          <multi-line-chart :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`outsidechina-${j}`]" :config="chart.config" />
         </div>
       </article>
 
@@ -111,10 +153,24 @@
           {{ block.title }}
         </h1>
         <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            {{ chart.title }}
-          </h2>
-          <multi-line-chart :id="`${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)" />
+          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
+            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
+              {{ chart.title }}
+            </h2>
+            <nav v-if="chart.scales">
+              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
+                <input
+                  id="scale"
+                  :name="`chart-${i}-${j}`"
+                  :checked="yScaleTypes[`chart-${i}-${j}`] === scale || scale === 'linear'"
+                  type="radio"
+                  :value="scale"
+                  @change="$set(yScaleTypes,`chart-${i}-${j}`,scale)"
+                > {{ scale }}
+              </label>
+            </nav>
+          </header>
+          <multi-line-chart :id="`chart-${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`chart-${i}-${j}`]" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5, yScaleType: (j%2) ? 'linear' : 'log'}, chartConfig)" />
         </div>
       </article>
     </div>
@@ -169,6 +225,7 @@ export default {
       inputNewConfirmed: [],
       inputTotalDeaths: [],
       inputNewDeaths: [],
+      yScaleTypes: [],
       margin: {
         right: 80,
         left: 10,
@@ -232,11 +289,14 @@ export default {
         charts: [
           {
             title: 'Total confirmed cases',
-            data: [this.getWorldConfirmed()]
+            data: [this.getWorldConfirmed()],
+            scales: ['linear', 'log'],
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           },
           {
             title: 'Daily new confirmed cases',
-            data: [this.getWorldConfirmed({ newCases: true })]
+            data: [this.getWorldConfirmed({ newCases: true })],
+            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
           }
         ]
       };
@@ -247,13 +307,16 @@ export default {
         charts: [
           {
             title: 'Total confirmed cases',
-            data: [this.getWorldConfirmed({ includeChina: false })]
+            data: [this.getWorldConfirmed({ includeChina: false })],
+            scales: ['linear', 'log'],
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           },
           {
             title: 'Daily new confirmed cases',
             data: [
               this.getWorldConfirmed({ includeChina: false, newCases: true })
-            ]
+            ],
+            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
           }
         ]
       };
@@ -369,7 +432,8 @@ export default {
         charts: [
           {
             title: 'Total confirmed cases',
-            data: this.getConfirmedCases(countries)
+            data: this.getConfirmedCases(countries),
+            scales: ['linear', 'log']
           },
           {
             title: 'Daily New cases',
