@@ -6,7 +6,7 @@ import moment from 'moment';
 const d3 = Object.assign({}, d3Lib, d3Array);
 // const baseUrl = 'http://localhost:3000/files/';
 // eslint-disable-next-line prettier/prettier
-const baseUrl = 'https://storage.googleapis.com/allermedia/covid/';
+const baseUrl = 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/';
 
 const texts = {
   no: {
@@ -30,7 +30,8 @@ const texts = {
 };
 
 export default class Covid19Map {
-  constructor(element, width, language = 'no') {
+  constructor(element, width, language = 'en') {
+    this.version = '1.1.0';
     this.element = `#${element}`;
     this.height = 600;
     this.width = width < 600 ? width : 900;
@@ -39,8 +40,8 @@ export default class Covid19Map {
     this.countries = null;
     this.topo = null;
     this.textColor = '#333';
-    this.bubbleColor = '#2B3F4E'; // '#F1CA3F'; // '#2B3F4E'
-    this.chartColor = '#2B3F4E'; // D60000, '#4e79a7'
+    this.bubbleColor = '#641B18'; // '#2B3F4E'; // '#F1CA3F'; // '#2B3F4E'
+    this.chartColor = '#641B18'; // '#2B3F4E'; // D60000, '#4e79a7'
     this.animationSpeed = 400;
     this.currentIndex = 0;
     this.paused = false;
@@ -56,11 +57,15 @@ export default class Covid19Map {
     this.pos = {
       numbers: {
         x: 10,
-        y: this.width > 600 ? 300 : 250
+        y: this.width > 600 ? 20 : 250
       },
       legend: {
         x: 10,
         y: 400
+      },
+      bLegend: {
+        x: this.width > 600 ? 200 : 10,
+        y: 20
       },
       chart: {
         x: this.width > 600 ? this.width - 100 - chartWidth : 0,
@@ -97,6 +102,7 @@ export default class Covid19Map {
     this.dataSeries = this.getDataSerie();
     this.timeline = this.getTimelineData(20);
     this.draw();
+    return true;
   }
 
   draw(redraw) {
@@ -319,7 +325,8 @@ export default class Covid19Map {
       .classed('legend', true)
       .attr(
         'transform',
-        `translate(${this.pos.chart.x + 200}, ${this.pos.chart.height + 20})`
+        `translate(${this.pos.chart.x + this.pos.bLegend.x}, ${this.pos.chart
+          .height + this.pos.bLegend.y})`
       );
 
     const tooltip = chart.append('g').classed('tooltip', true);
@@ -408,14 +415,14 @@ export default class Covid19Map {
       .style('stroke-opacity', 1)
       .attr('stroke-width', 2)
       .attr('x1', 0)
-      .attr('x2', 100)
+      .attr('x2', 90)
       .attr('class', 'legend-line')
       .attr('y1', 17)
       .attr('y2', 17);
 
     legend
       .append('g')
-      .attr('transform', 'translate(110,20)')
+      .attr('transform', `translate(${100},${this.pos.bLegend.y})`)
       .append('text')
       .attr('font-size', `${this.normalTextSize}px`)
       .attr('fill', '#333')
@@ -494,9 +501,9 @@ export default class Covid19Map {
 
   async getData() {
     const files = [
-      `${baseUrl}confirmed.csv`,
-      `${baseUrl}deaths.csv`,
-      `${baseUrl}recovered.csv`
+      `${baseUrl}raw_confirmed.csv`,
+      `${baseUrl}raw_deaths.csv`,
+      `${baseUrl}raw_recovered.csv`
     ];
 
     // load all data (3 different raw csv files)
