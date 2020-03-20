@@ -509,49 +509,55 @@ export default class Covid19Map {
     // load all data (3 different raw csv files)
     const input = await Promise.all(files.map(url => d3.csv(url, d3.autoType)));
     const outputData = [];
+    const indexer = {};
     // load data segments matching the 3 files
     const segments = ['confirmed', 'deaths', 'recovered'];
-
-    // iterate all files
+    const dateCols = input[0].columns.slice(4);
+    //
+    // iterate each of the files confirmed, deaths, revovered
+    //
     input.forEach((array, i) => {
-      // iterate each row in each imput file
-      array.forEach((obj, j) => {
-        const state = obj['Province/State'] || obj['Country/Region'];
-        const pos = [obj.Long, obj.Lat];
-        const country = obj['Country/Region'];
+      const currentSegment = segments[i];
+      //
+      // iterate each row in each input file
+      //
+      array.forEach((row, j) => {
+        const state = row['Province/State'] || row['Country/Region'];
+        const pos = [row.Long, row.Lat];
+        const country = row['Country/Region'];
 
-        // delete unused keys
-        delete obj['Province/State'];
-        delete obj['Country/Region'];
-        delete obj.Lat;
-        delete obj.Long;
-        // iterate and merge all the dates in each row
-        Object.entries(obj).forEach(([key, value]) => {
-          const index = outputData.findIndex(
-            d => d.date === key && d.state === state
-          );
-          const currentSegment = segments[i];
-          // if it is the first segment, create the original object
-          if (index < 0) {
+        if (i === 0) {
+          // confirmed (index 1)
+          indexer[state] = {};
+          // iterate and merge all the dates in each row
+          dateCols.forEach(date => {
             const o = {
               state,
               pos,
               country,
-              date: key
+              date: date
             };
-            o[currentSegment] = value;
-            outputData.push(o);
-          } else {
-            outputData[index][currentSegment] = value;
-          }
-
-          if (currentSegment === 'recovered') {
-            outputData[index].infected = Math.max(
-              outputData[index].confirmed - value,
-              0
-            );
-          }
-        });
+            o[currentSegment] = row[date];
+            const len = outputData.push(o);
+            indexer[state][date] = len - 1;
+          });
+        } else if (i === 1) {
+          // deaths (index 1)
+          // iterate and merge all the dates in each row
+          dateCols.forEach(date => {
+            const index = indexer[state][date];
+            outputData[index][currentSegment] = row[date];
+          });
+        } else if (i === 2) {
+          // recovered (index 2)
+          // iterate and merge all the dates in each row
+          dateCols.forEach(date => {
+            const index = indexer[state][date];
+            outputData[index][currentSegment] = row[date];
+            outputData[index].infected =
+              outputData[index].confirmed - row[date];
+          });
+        }
       });
     });
     return outputData;
