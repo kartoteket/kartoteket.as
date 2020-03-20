@@ -27,8 +27,8 @@ import {
   webPage,
   breadCrumbs
 } from '@/utils/structureddata.js';
-import head from '~/mixins/head.js';
 import Covid19Map from '@/viz/Covid19Map';
+import head from '~/mixins/head.js';
 
 export default {
   layout: 'light',

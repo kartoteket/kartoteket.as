@@ -11,6 +11,10 @@ const locale = d3.formatLocale({
 
 export default {
   props: {
+    yScaleType: {
+      type: String,
+      default: 'linear'
+    },
     series: {
       type: Array,
       required: true
@@ -53,10 +57,26 @@ export default {
       return d3.min([this.width * this.options.aspectRatio, 800]);
     },
     yScale() {
+      return this.yScaleType === 'log' ? this.yScaleLog : this.yScaleLinear;
+    },
+    yScaleLinear() {
       return d3
         .scaleLinear()
         .domain([
           d3.min(this.series, s => d3.min(s.values, v => v.value)),
+          d3.max(this.series, s => d3.max(s.values, v => v.value))
+        ])
+        .range([
+          this.height - this.options.margin.bottom,
+          this.options.margin.top
+        ]);
+    },
+    yScaleLog() {
+      return d3
+        .scaleLog()
+        .base(10)
+        .domain([
+          d3.max([1, d3.min(this.series, s => d3.min(s.values, v => v.value))]),
           d3.max(this.series, s => d3.max(s.values, v => v.value))
         ])
         .range([
@@ -87,7 +107,9 @@ export default {
     changeLine() {
       return d3
         .line()
-        .defined(d => !isNaN(d.value))
+        .defined(
+          d => (this.yScaleType === 'log' ? d.value > 0 : !isNaN(d.value))
+        )
         .x(d => this.xScale(d.date))
         .y(d => this.yScale(d.value))
         .curve(d3.curveCatmullRom);
@@ -96,6 +118,9 @@ export default {
   watch: {
     series(val) {
       this.drawChart(`#chart-${this.id}`, val);
+    },
+    yScaleType() {
+      this.drawChart(`#chart-${this.id}`, this.series);
     }
   },
 
@@ -182,7 +207,7 @@ export default {
       el.yAxis
         .selectAll('.tick')
         .selectAll('line')
-        .style('opacity', 0.2)
+        .style('opacity', this.yScaleType === 'log' ? 0.1 : 0.2)
         .attr('stroke', this.options.textColor);
 
       el.xAxis
@@ -245,6 +270,13 @@ export default {
       const tickWidth =
         (this.width - this.options.margin.right - this.options.margin.left) *
         -1;
+      const tickFormat =
+        this.yScaleType === 'log'
+          ? (d, i) => {
+              // console.log(i % 10);
+              return this.yScaleLog.tickFormat(5, d3.format(',d'))(d);
+            }
+          : d => this.yScaleLinear.tickFormat(5, locale.format(',d'))(d);
 
       if (this.options.yAxis === 'right') {
         generator = d3.axisRight(y);
@@ -252,8 +284,8 @@ export default {
       }
       return svg.attr('transform', `translate(${position},0)`).call(
         generator
-          // .tickFormat(d3.format('d'))
           .ticks(5)
+          .tickFormat(tickFormat)
           .tickSizeOuter(0)
           .tickSizeInner(tickWidth)
       );
