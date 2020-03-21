@@ -8,9 +8,6 @@
         <span v-show="source === 'johnshopkins'">
           <strong>Note:</strong> Johns Hopkins CSSE data for new cases on many countries, including Italy, is missing for March 12th, <a class="link" href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
         </span>
-        <span v-show="source === 'owid'">
-          <strong>Note:</strong> WHO data for new cases on some countries, including Norway, is missing for March 13th.
-        </span>
         &nbsp;
       </p>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
@@ -39,7 +36,7 @@
           </h2>
           <nav class="flex flex-center">
             <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'owid'}" @click.stop="source = 'owid'">
-              WHO / Our World in Data
+              ECDC / Our World in Data
             </button>
             <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'johnshopkins'}" @click.stop="source = 'johnshopkins'">
               Johns Hopkins
@@ -116,7 +113,7 @@
         Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
       </p>
       <p v-if="!isLoading && source === 'owid'" class="rtf">
-        Data Source: <a href="https://ourworldindata.org/coronavirus-source-data">Our World in Data</a>. Updated {{ lastUpdate }}.
+        Data Source: <a href="https://ourworldindata.org/coronavirus-source-data">European Centre for Disease Prevention and Control via Our World in Data</a>. Updated {{ lastUpdate }}.
       </p>
     </footer>
   </section>
@@ -170,10 +167,10 @@ export default {
       source: 'johnshopkins', // 'owid',
       files: {
         owid: [
-          'https://covid.ourworldindata.org/data/total_cases.csv',
-          'https://covid.ourworldindata.org/data/new_cases.csv'
-          // 'https://covid.ourworldindata.org/data/total_deaths.csv',
-          // 'https://covid.ourworldindata.org/data/new_deaths.csv',
+          'https://covid.ourworldindata.org/data/ecdc/total_cases.csv',
+          'https://covid.ourworldindata.org/data/ecdc/new_cases.csv'
+          // 'https://covid.ourworldindata.org/data/ecdc/total_deaths.csv'
+          // 'https://covid.ourworldindata.org/data/ecdc/new_deaths.csv'
         ],
         johnshopkins: [
           'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_cases_by_country.csv',
