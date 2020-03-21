@@ -1,5 +1,5 @@
 <template>
-  <article class="flex flex-col">
+  <section class="flex flex-col">
     <header class="text-center mb-8">
       <h1 class="main-header mb-1 text-xl md:text-4xl">
         {{ page.title }}
@@ -48,10 +48,10 @@
         </div>
       </div>
     </header>
-    <div v-if="!isLoading" class="lg:flex flex-wrap justify-center">
-      <article v-show="view === 'country'" class="lg:w-3/5 mb-12">
+    <main v-if="!isLoading" class="lg:flex flex-wrap justify-center">
+      <section v-show="view === 'country'" class="lg:w-3/5 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
-        <div class="mb-4">
+        <article class="mb-4">
           <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
             <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
               Total confirmed cases
@@ -70,19 +70,19 @@
             </nav>
           </header>
           <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :y-scale-type="yScaleTypes['custom-totals']" :config="Object.assign({aspectRatio: 0.5, yScaleType: 'log'}, chartConfig)" />
-        </div>
-        <div class="mb-4">
+        </article>
+        <article class="mb-4">
           <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
             Daily new confirmed cases
           </h2>
           <multi-line-chart v-if="selectedNewCases[0].length" id="custom-new" :series="selectedNewCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
-        </div>
-      </article>
-      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
+        </article>
+      </section>
+      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
-        <div v-for="(chart, j) in worldSeries.charts" :key="`world-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
+        <article v-for="(chart, j) in worldSeries.charts" :key="`world-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
           <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
             <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
               {{ chart.title }}
@@ -101,14 +101,14 @@
             </nav>
           </header>
           <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`world-${j}`]" :config="chart.config" />
-        </div>
-      </article>
+        </article>
+      </section>
 
-      <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
+      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldOutsideChinaSeries.title }}
         </h1>
-        <div v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="`outsidechina-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
+        <article v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="`outsidechina-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
           <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
             <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
               {{ chart.title }}
@@ -127,14 +127,14 @@
             </nav>
           </header>
           <multi-line-chart :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`outsidechina-${j}`]" :config="chart.config" />
-        </div>
-      </article>
+        </article>
+      </section>
 
-      <article v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
+      <section v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
         </h1>
-        <div v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
+        <article v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
           <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
             <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
               {{ chart.title }}
@@ -153,10 +153,10 @@
             </nav>
           </header>
           <multi-line-chart :id="`chart-${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`chart-${i}-${j}`]" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5, yScaleType: (j%2) ? 'linear' : 'log'}, chartConfig)" />
-        </div>
-      </article>
-    </div>
-    <div class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
+        </article>
+      </section>
+    </main>
+    <aside class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
       <p>{{ page.description }}</p>
       <p v-if="!isLoading && source === 'johnshopkins'" class="rtf">
         Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
@@ -164,8 +164,8 @@
       <p v-if="!isLoading && source === 'owid'" class="rtf">
         Data Source: <a href="https://ourworldindata.org/coronavirus-source-data">Our World in Data</a>. Updated {{ lastUpdate }}.
       </p>
-    </div>
-  </article>
+    </aside>
+  </section>
 </template>
 <script>
 import * as d3Lib from 'd3'; // @todo cherrypick like this: var d3 = Object.assign({}, require("d3-format"), require("d3-geo"), require("d3-geo-projection"));
