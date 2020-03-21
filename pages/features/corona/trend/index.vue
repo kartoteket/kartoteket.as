@@ -110,7 +110,7 @@
         />
       </section>
     </main>
-    <footer class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
+    <footer v-if="!isLoading" class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
       <p>{{ page.description }}</p>
       <p v-if="!isLoading && source === 'johnshopkins'" class="rtf">
         Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
