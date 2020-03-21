@@ -78,24 +78,6 @@
           <multi-line-chart v-if="selectedNewCases[0].length" id="custom-new" :series="selectedNewCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
         </div>
       </article>
-
-      <!--
-      <article v-if="false" v-show="view === 'country'" class="lg:w-1/2 mb-12">
-        <v-select v-model="selection[1]" class="dropdown lg:mr-8" :options="countriesList" @input="setSelection($event, 2)" />
-        <div v-show="selection[1]" class="mb-4">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            Total confirmed cases
-          </h2>
-          <multi-line-chart v-if="selectedTotalCases[1].length" id="custom-totals-2" :series="selectedTotalCases[1]" :config="{colorScale, aspectRatio: 0.5}" />
-        </div>
-        <div v-show="selection[1]" class="mb-4">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            Daily new confirmed cases
-          </h2>
-          <multi-line-chart v-if="selectedNewCases[1].length" id="custom-new-2" :series="selectedNewCases[1]" :config="{colorScale, aspectRatio: 0.4}" />
-        </div>
-      </article>
-      -->
       <article v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
@@ -272,16 +254,10 @@ export default {
       return d3.scaleOrdinal(d3.schemeOranges[9].reverse()); // d3.schemeTableau10
     },
     selectedNewCases() {
-      return [
-        this.getConfirmedCases(this.selection[0], { newCases: true })
-        // this.getConfirmedCases(this.selection[1], { newCases: true })
-      ];
+      return [this.getConfirmedCases(this.selection[0], { newCases: true })];
     },
     selectedTotalCases() {
-      return [
-        this.getConfirmedCases(this.selection[0])
-        // this.getConfirmedCases(this.selection[1])
-      ];
+      return [this.getConfirmedCases(this.selection[0])];
     },
     worldSeries() {
       return {
@@ -381,9 +357,6 @@ export default {
     if (this.$route.query.c1) {
       this.selection[0] = this.$route.query.c1;
     }
-    // if (this.$route.query.c2) {
-    //   this.selection[1] = this.$route.query.c2;
-    // }
     this.inputTotalConfirmed = await this.fetchData('totalCases');
     this.inputNewConfirmed = await this.fetchData('newCases');
     // this.inputTotalDeaths = await this.fetchTotalDeaths();
@@ -495,7 +468,6 @@ export default {
         const query = { view: val };
         if (val === 'country') {
           query.c1 = this.selection[0];
-          // query.c2 = this.selection[1];
         }
         this.$router.replace({
           path: this.$route.path,
@@ -507,7 +479,6 @@ export default {
       const query = {
         view: this.view,
         c1: set === 1 ? val : this.selection[0]
-        // c2: set === 2 ? val : this.selection[1]
       };
       this.$router.replace({
         path: this.$route.path,
