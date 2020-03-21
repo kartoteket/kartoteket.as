@@ -256,12 +256,11 @@ export default {
         this.createChartSeries({
           title: 'Most affected (excluding China)',
           countries: [
-            'Iran',
-            'South Korea',
             'Italy',
             'Spain',
             'Germany',
-            'France'
+            'Iran',
+            'United States of America'
           ]
         })
       ];
