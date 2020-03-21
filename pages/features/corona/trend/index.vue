@@ -1,57 +1,65 @@
 <template>
-  <section class="flex flex-col">
-    <header class="text-center mb-8">
-      <h1 class="main-header mb-1 text-xl md:text-4xl">
+  <section class="flex flex-col md:-mt-10">
+    <header class="mb-8">
+      <h1 class="main-header mb-4 text-xl md:text-4xl">
         {{ page.title }}
       </h1>
-      <p class="text-xs mb-6">
-        <span v-show="source === 'johnshopkins'">
-          <strong>Note:</strong> Johns Hopkins CSSE data for new cases on many countries, including Italy, is missing for March 12th, <a class="link" href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
-        </span>
-        &nbsp;
-      </p>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
-      <div v-if="!isLoading" class="flex flex-wrap justify-center md:justify-between">
-        <div class="w-full md:w-auto">
-          <h2 class="text-sm uppercase text-sm text-white-800 text-left tracking-wide border-b-2 border-white-500 mr-8 mb-4">
-            View Charts
-          </h2>
-          <nav class="flex flex-center">
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'country'}" @click.stop="setView('country')">
-              Select
-            </button>
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'world'}" @click.stop="setView('world')">
-              World
-            </button>
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'groups'}" @click.stop="setView('groups')">
-              Collections
-            </button>
-          </nav>
-        </div>
-        <div class="w-full md:w-auto">
-          <h2 class="text-sm uppercase text-sm text-white-800 text-left tracking-wide border-b-2 border-white-500 mr-8 mb-4">
-            Data Source
-          </h2>
-          <nav class="flex flex-center">
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'owid'}" @click.stop="source = 'owid'">
-              ECDC / Our World in Data
-            </button>
-            <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 text-sm md:text-base py-1 px-2 md:px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : source === 'johnshopkins'}" @click.stop="source = 'johnshopkins'">
-              Johns Hopkins
-            </button>
-          </nav>
+      <div v-if="!isLoading" class="flex flex-wrap">
+        <nav class="flex flex-center">
+          <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'country'}" @click.stop="setView('country')">
+            Contry Selector
+          </button>
+          <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'world'}" @click.stop="setView('world')">
+            World
+          </button>
+          <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'groups'}" @click.stop="setView('groups')">
+            Collections
+          </button>
+        </nav>
+        <div class="md:ml-8 md:flex md:-mt-2">
+          <div class="mr-8">
+            <h2 class="w-16 hidden md:block text-sm uppercase text-sm text-white-800 text-left tracking-wide">
+              Show
+            </h2>
+            <ul class="flex">
+              <li class="mr-3">
+                <input id="cases" v-model="dimension" type="radio" value="cases" class="mr-1">
+                <label for="cases">Confirmed cases</label>
+              </li>
+              <li>
+                <input id="deaths" v-model="dimension" type="radio" value="deaths" class="mr-1">
+                <label for="deaths">Registered deaths</label>
+              </li>
+            </ul>
+          </div>
+          <div class="">
+            <h2 class="w-16 hidden md:block text-sm uppercase text-sm text-white-800 text-left tracking-wide">
+              Source
+            </h2>
+            <ul class="flex">
+              <li class="mr-3">
+                <input id="jh" v-model="source" type="radio" value="johnshopkins" class="mr-1">
+                <label for="jh">Johns Hopkins</label>
+              </li>
+              <li>
+                <input id="owid" v-model="source" type="radio" value="owid" class="mr-1">
+                <label for="owid">ECDC / OWID</label>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </header>
-    <main v-if="!isLoading" class="lg:flex flex-wrap justify-center">
+    <main v-if="!isLoading" class="lg:flex flex-wrap XXXjustify-center">
       <section v-show="view === 'country'" class="lg:w-3/5 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
         <chart-container
           v-if="selectedTotalCases[0].length"
           id="custom-totals"
-          title="Total confirmed cases"
+          :title="`Total confirmed ${dimension}`"
           :scale-options="['linear','log']"
           :series="selectedTotalCases[0]"
           :config="Object.assign({aspectRatio: 0.5}, chartConfig)"
@@ -59,7 +67,7 @@
         <chart-container
           v-if="selectedNewCases[0].length"
           id="custom-new"
-          title="Daily new confirmed cases"
+          :title="`Daily new confirmed ${dimension}`"
           :series="selectedNewCases[0]"
           :config="Object.assign({aspectRatio: 0.4}, chartConfig)"
         />
@@ -115,6 +123,12 @@
       <p v-if="!isLoading && source === 'owid'" class="rtf">
         Data Source: <a href="https://ourworldindata.org/coronavirus-source-data">European Centre for Disease Prevention and Control via Our World in Data</a>. Updated {{ lastUpdate }}.
       </p>
+      <p class="text-xs mb-6">
+        <span v-show="source === 'johnshopkins'">
+          <strong>Note:</strong> Johns Hopkins CSSE data for new cases on many countries, including Italy, is missing for March 12th, <a class="link" href="https://github.com/CSSEGISandData/COVID-19/issues/650">see issues</a>.
+        </span>
+        &nbsp;
+      </p>
     </footer>
   </section>
 </template>
@@ -153,10 +167,8 @@ export default {
       view: 'world',
       selection: ['Norway'],
       input: {},
-      inputTotalConfirmed: [],
-      inputNewConfirmed: [],
-      inputTotalDeaths: [],
-      inputNewDeaths: [],
+      inputTotal: [],
+      inputNew: [],
       yScaleTypes: [],
       margin: {
         right: 80,
@@ -164,19 +176,20 @@ export default {
         top: 20,
         bottom: 20
       },
+      dimension: 'cases',
       source: 'johnshopkins', // 'owid',
       files: {
         owid: [
           'https://covid.ourworldindata.org/data/ecdc/total_cases.csv',
-          'https://covid.ourworldindata.org/data/ecdc/new_cases.csv'
-          // 'https://covid.ourworldindata.org/data/ecdc/total_deaths.csv'
-          // 'https://covid.ourworldindata.org/data/ecdc/new_deaths.csv'
+          'https://covid.ourworldindata.org/data/ecdc/new_cases.csv',
+          'https://covid.ourworldindata.org/data/ecdc/total_deaths.csv',
+          'https://covid.ourworldindata.org/data/ecdc/new_deaths.csv'
         ],
         johnshopkins: [
           'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_cases_by_country.csv',
-          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_cases_by_country.csv'
-          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_deaths_by_country.csv',
-          // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_deaths_by_country.csv',
+          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_cases_by_country.csv',
+          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_deaths_by_country.csv',
+          'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_deaths_by_country.csv'
           // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_recovered_by_country.csv',
           // 'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/new_recovered_by_country.csv'
         ]
@@ -192,6 +205,9 @@ export default {
     };
   },
   computed: {
+    // sourceFiles(){
+    //   const rootUrl ?
+    // },
     chartConfig() {
       return {
         colorScale: this.colorScale,
@@ -199,7 +215,6 @@ export default {
         margin: this.margin
       };
     },
-
     colorScale() {
       return d3.scaleOrdinal(d3.schemeOranges[9].reverse()); // d3.schemeTableau10
     },
@@ -214,13 +229,13 @@ export default {
         title: 'World',
         charts: [
           {
-            title: 'Total confirmed cases',
+            title: `Total confirmed ${this.dimension}`,
             data: [this.getWorldConfirmed()],
             scales: ['linear', 'log'],
             config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           },
           {
-            title: 'Daily new confirmed cases',
+            title: `Daily new confirmed ${this.dimension}`,
             data: [this.getWorldConfirmed({ newCases: true })],
             config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
           }
@@ -232,13 +247,13 @@ export default {
         title: 'World outside China',
         charts: [
           {
-            title: 'Total confirmed cases',
+            title: `Total confirmed ${this.dimension}`,
             data: [this.getWorldConfirmed({ includeChina: false })],
             scales: ['linear', 'log'],
             config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           },
           {
-            title: 'Daily new confirmed cases',
+            title: `Daily new confirmed ${this.dimension}`,
             data: [
               this.getWorldConfirmed({ includeChina: false, newCases: true })
             ],
@@ -266,11 +281,11 @@ export default {
       ];
     },
     lastUpdate() {
-      const dates = this.inputTotalConfirmed.map(d => d.date);
+      const dates = this.inputTotal.map(d => d.date);
       return d3.timeFormat('%d. %b')(dates[dates.length - 1]);
     },
     countriesList() {
-      const list = Object.keys(this.inputTotalConfirmed[0]);
+      const list = Object.keys(this.inputTotal[0]);
       list.shift(); // removes "date"
       return list;
     },
@@ -292,9 +307,13 @@ export default {
     }
   },
   watch: {
-    async source(val) {
-      this.inputTotalConfirmed = await this.fetchData('totalCases');
-      this.inputNewConfirmed = await this.fetchData('newCases');
+    async source() {
+      this.inputTotal = await this.fetchData('total');
+      this.inputNew = await this.fetchData('new');
+    },
+    async dimension() {
+      this.inputTotal = await this.fetchData('total');
+      this.inputNew = await this.fetchData('new');
     }
   },
   async mounted() {
@@ -306,19 +325,15 @@ export default {
     if (this.$route.query.c1) {
       this.selection[0] = this.$route.query.c1;
     }
-    this.inputTotalConfirmed = await this.fetchData('totalCases');
-    this.inputNewConfirmed = await this.fetchData('newCases');
-    // this.inputTotalDeaths = await this.fetchTotalDeaths();
-    // this.inputNewDeaths = await this.fetchNewDeaths();
+    this.inputTotal = await this.fetchData('total');
+    this.inputNew = await this.fetchData('new');
     this.isLoading = false;
   },
   methods: {
     getConfirmedCases(selection, { newCases = false } = {}) {
       if (selection.length < 1) return []; // if no selection, abort
       selection = Array.isArray(selection) ? selection : [selection]; // cast to array
-      const input = newCases
-        ? this.inputNewConfirmed
-        : this.inputTotalConfirmed;
+      const input = newCases ? this.inputNew : this.inputTotal;
       const output = selection.map(country => {
         const values = input.map(d => {
           return {
@@ -334,9 +349,7 @@ export default {
       return output;
     },
     getWorldConfirmed({ includeChina = true, newCases = false } = {}) {
-      const input = newCases
-        ? this.inputNewConfirmed
-        : this.inputTotalConfirmed;
+      const input = newCases ? this.inputNew : this.inputTotal;
       const values = input.map(d => {
         return {
           date: d.date,
@@ -353,20 +366,26 @@ export default {
         title,
         charts: [
           {
-            title: 'Total confirmed cases',
+            title: `Total confirmed ${this.dimension}`,
             data: this.getConfirmedCases(countries),
             scales: ['linear', 'log']
           },
           {
-            title: 'Daily New cases',
+            title: `Daily new ${this.dimension}`,
             data: this.getConfirmedCases(countries, { newCases: true })
           }
         ]
       };
     },
-    async fetchData(dataset) {
+    async fetchData(_dataset) {
+      const dataset = `${_dataset}-${this.dimension}`;
       // list of possible datasets. Used for mappping
-      const datasets = ['totalCases', 'newCases', 'totalDeaths', 'newDeaths'];
+      const datasets = [
+        'total-cases',
+        'new-cases',
+        'total-deaths',
+        'new-deaths'
+      ];
       const source = this.source;
       // store loaded source/datasets on instance. Only fetch first time
       if (!this.input[`${source}-${dataset}`]) {
