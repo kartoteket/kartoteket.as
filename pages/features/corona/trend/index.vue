@@ -16,7 +16,7 @@
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
-      <div class="flex flex-wrap justify-center md:justify-between">
+      <div v-if="!isLoading" class="flex flex-wrap justify-center md:justify-between">
         <div class="w-full md:w-auto">
           <h2 class="text-sm uppercase text-sm text-white-800 text-left tracking-wide border-b-2 border-white-500 mr-8 mb-4">
             View Charts
