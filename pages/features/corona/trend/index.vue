@@ -51,109 +51,63 @@
     <main v-if="!isLoading" class="lg:flex flex-wrap justify-center">
       <section v-show="view === 'country'" class="lg:w-3/5 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
-        <article class="mb-4">
-          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
-            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
-              Total confirmed cases
-            </h2>
-            <nav>
-              <label v-for="scale in ['linear','log']" :key="scale" :for="scale" class="capitalize">
-                <input
-                  id="scale"
-                  name="custom-totals"
-                  :checked="yScaleTypes['custom-totals'] === scale || scale === 'linear'"
-                  type="radio"
-                  :value="scale"
-                  @change="$set(yScaleTypes,'custom-totals',scale)"
-                > {{ scale }}
-              </label>
-            </nav>
-          </header>
-          <multi-line-chart v-if="selectedTotalCases[0].length" id="custom-totals" :series="selectedTotalCases[0]" :y-scale-type="yScaleTypes['custom-totals']" :config="Object.assign({aspectRatio: 0.5, yScaleType: 'log'}, chartConfig)" />
-        </article>
-        <article class="mb-4">
-          <h2 class="text-sm uppercase text-sm tracking-wide text-white-700 border-b-2 border-white-500 mr-8 mt-4">
-            Daily new confirmed cases
-          </h2>
-          <multi-line-chart v-if="selectedNewCases[0].length" id="custom-new" :series="selectedNewCases[0]" :config="Object.assign({aspectRatio: 0.5}, chartConfig)" />
-        </article>
+        <chart-container
+          v-if="selectedTotalCases[0].length"
+          id="custom-totals"
+          title="Total confirmed cases"
+          :scale-options="['linear','log']"
+          :series="selectedTotalCases[0]"
+          :config="Object.assign({aspectRatio: 0.5}, chartConfig)"
+        />
+        <chart-container
+          v-if="selectedNewCases[0].length"
+          id="custom-new"
+          title="Daily new confirmed cases"
+          :series="selectedNewCases[0]"
+          :config="Object.assign({aspectRatio: 0.4}, chartConfig)"
+        />
       </section>
       <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
-        <article v-for="(chart, j) in worldSeries.charts" :key="`world-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
-          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
-            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
-              {{ chart.title }}
-            </h2>
-            <nav v-if="chart.scales">
-              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
-                <input
-                  id="scale"
-                  :name="`world-${j}`"
-                  :checked="yScaleTypes[`world-${j}`] === scale || scale === 'linear'"
-                  type="radio"
-                  :value="scale"
-                  @change="$set(yScaleTypes,`world-${j}`,scale)"
-                > {{ scale }}
-              </label>
-            </nav>
-          </header>
-          <multi-line-chart :id="`world-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`world-${j}`]" :config="chart.config" />
-        </article>
+        <chart-container
+          v-for="(chart, j) in worldSeries.charts" 
+          :id="`world-${j}-${Math.floor(Math.random() * 100)}`"
+          :key="`world-${j}`"
+          :title="chart.title"
+          :scale-options="chart.scales ? chart.scales : null"
+          :series="chart.data"
+          :config="chart.config"
+        />
       </section>
-
       <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldOutsideChinaSeries.title }}
         </h1>
-        <article v-for="(chart, j) in worldOutsideChinaSeries.charts" :key="`outsidechina-${j}`" class="mb-4" :class="(j%2) ? '' : ''">
-          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
-            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
-              {{ chart.title }}
-            </h2>
-            <nav v-if="chart.scales">
-              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
-                <input
-                  id="scale"
-                  :name="`outsidechina-${j}`"
-                  :checked="yScaleTypes[`outsidechina-${j}`] === scale || scale === 'linear'"
-                  type="radio"
-                  :value="scale"
-                  @change="$set(yScaleTypes,`outsidechina-${j}`,scale)"
-                > {{ scale }}
-              </label>
-            </nav>
-          </header>
-          <multi-line-chart :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`outsidechina-${j}`]" :config="chart.config" />
-        </article>
+        <chart-container
+          v-for="(chart, j) in worldOutsideChinaSeries.charts"
+          :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`"
+          :key="`outsidechina-${j}`"
+          :title="chart.title"
+          :scale-options="chart.scales ? chart.scales : null"
+          :series="chart.data"
+          :config="chart.config"
+        />
       </section>
-
       <section v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
         </h1>
-        <article v-for="(chart, j) in block.charts" :key="j" class="mb-4" :class="(j%2) ? '' : ''">
-          <header class="flex justify-between border-b-2 border-white-500 mr-8 mt-4">
-            <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
-              {{ chart.title }}
-            </h2>
-            <nav v-if="chart.scales">
-              <label v-for="scale in chart.scales" :key="scale" :for="scale" class="capitalize">
-                <input
-                  id="scale"
-                  :name="`chart-${i}-${j}`"
-                  :checked="yScaleTypes[`chart-${i}-${j}`] === scale || scale === 'linear'"
-                  type="radio"
-                  :value="scale"
-                  @change="$set(yScaleTypes,`chart-${i}-${j}`,scale)"
-                > {{ scale }}
-              </label>
-            </nav>
-          </header>
-          <multi-line-chart :id="`chart-${i}-${j}-${Math.floor(Math.random() * 100)}`" :series="chart.data" :y-scale-type="yScaleTypes[`chart-${i}-${j}`]" :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5, yScaleType: (j%2) ? 'linear' : 'log'}, chartConfig)" />
-        </article>
+        <chart-container
+          v-for="(chart, j) in block.charts"
+          :id="`block-${i}-${j}-${Math.floor(Math.random() * 100)}`"
+          :key="`block-${j}`"
+          :title="chart.title"
+          :scale-options="chart.scales ? chart.scales : null"
+          :series="chart.data"
+          :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)"
+        />
       </section>
     </main>
     <aside class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
@@ -177,7 +131,7 @@ import 'vue-select/dist/vue-select.css';
 
 import ScaleLoader from 'vue-spinner/src/PulseLoader.vue';
 // import isoToName from '@/utils/countryMap.js';
-import MultiLineChart from '@/components/charts/MultiLineChart';
+import ChartContainer from '@/components/charts/ChartContainer';
 
 import {
   webSite,
@@ -191,9 +145,8 @@ const d3 = Object.assign({}, d3Lib, d3Array);
 
 export default {
   components: {
-    MultiLineChart,
+    ChartContainer,
     ScaleLoader,
-    // PlotMapChart,
     vSelect
   },
   mixins: [head],
