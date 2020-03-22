@@ -4,7 +4,7 @@
       <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
         {{ title }}
       </h2>
-      <nav v-if="scaleOptions.length">
+      <nav v-if="scaleOptions && scaleOptions.length">
         <label v-for="scale in scaleOptions" :key="scale" :for="scale" class="capitalize">
           <input
             id="scale"
