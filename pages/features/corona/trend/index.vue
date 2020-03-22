@@ -378,7 +378,9 @@ export default {
       };
     },
     async fetchData(_dataset) {
-      const dataset = `${_dataset}-${this.dimension}`;
+      const startDate = new Date('Wed Jan 21 2020 01:00:00 GMT+0100'); // Fixed date to get data from
+
+      const dataset = `${_dataset}-${this.dimension}`; // (eg "total-deaths")
       // list of possible datasets. Used for mappping
       const datasets = [
         'total-cases',
@@ -407,21 +409,22 @@ export default {
         // handle request result: use datsets map to store result
         result.forEach((set, i) => {
           const key = dataset === 'all' ? datasets[i] : dataset;
-          this.input[`${source}-${key}`] = set.map(d => {
-            // Add hoc tmp fix
-            if (
-              !Object.prototype.hasOwnProperty.call(
-                d,
-                'United States of America'
-              ) &&
-              Object.prototype.hasOwnProperty.call(d, 'United States')
-            ) {
-              d['United States of America'] = d['United States'];
-              delete d['United States'];
-            }
-            // console.log(d);
-            return d;
-          });
+          this.input[`${source}-${key}`] = set
+            .filter(d => d.date > startDate) // since source have different tima ranges, cut off at set startDate
+            .map(d => {
+              // Add hoc tmp fix
+              if (
+                !Object.prototype.hasOwnProperty.call(
+                  d,
+                  'United States of America'
+                ) &&
+                Object.prototype.hasOwnProperty.call(d, 'United States')
+              ) {
+                d['United States of America'] = d['United States'];
+                delete d['United States'];
+              }
+              return d;
+            });
           // this.input[`${source}-${key}`] = set;
         });
       }
