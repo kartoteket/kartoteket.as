@@ -4,23 +4,22 @@
       <h2 class="text-sm uppercase text-sm tracking-wide text-white-700">
         {{ title }}
       </h2>
-      <nav>
+      <nav v-if="scaleOptions && scaleOptions.length">
         <label v-for="scale in scaleOptions" :key="scale" :for="scale" class="capitalize">
           <input
             id="scale"
-            :name="id"
-            :checked="yScaleTypes[id] === scale || scale === 'linear'"
+            v-model="yScaleType"
             type="radio"
             :value="scale"
-            @change="$set(yScaleTypes,id,scale)"
-          > {{ scale }}
+          >
+          {{ scale }}
         </label>
       </nav>
     </header>
     <multi-line-chart
       :id="id"
       :series="series"
-      :y-scale-type="yScaleTypes[id]"
+      :y-scale-type="yScaleType"
       :config="config"
     />
   </article>
@@ -57,7 +56,7 @@ export default {
   },
   data() {
     return {
-      yScaleTypes: []
+      yScaleType: 'linear'
     };
   }
 };
