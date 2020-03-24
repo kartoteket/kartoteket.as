@@ -69,10 +69,10 @@ export default {
       source: 'owid', // 'johnshopkins',
       files: {
         owid: [
-          'https://covid.ourworldindata.org/data/total_cases.csv',
-          'https://covid.ourworldindata.org/data/new_cases.csv'
-          // 'https://covid.ourworldindata.org/data/total_deaths.csv',
-          // 'https://covid.ourworldindata.org/data/new_deaths.csv',
+          'https://covid.ourworldindata.org/data/ecdc/total_cases.csv',
+          'https://covid.ourworldindata.org/data/ecdc/new_cases.csv'
+          // 'https://covid.ourworldindata.org/data/ecdc/total_deaths.csv',
+          // 'https://covid.ourworldindata.org/data/ecdc/new_deaths.csv'
         ],
         johnshopkins: [
           'https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/total_cases_by_country.csv',
