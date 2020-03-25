@@ -35,7 +35,7 @@
               </li>
             </ul>
           </div>
-          <div v-if="false">
+          <div>
             <h2 class="w-16 hidden md:block text-sm uppercase text-sm text-white-800 text-left tracking-wide">
               Source
             </h2>
@@ -176,7 +176,7 @@ export default {
         bottom: 20
       },
       dimension: 'cases',
-      source: 'owid', // 'owid',
+      source: 'johnshopkins', // 'owid',
       files: {
         owid: [
           'https://covid.ourworldindata.org/data/ecdc/total_cases.csv',
