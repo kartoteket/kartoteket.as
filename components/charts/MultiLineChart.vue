@@ -173,7 +173,7 @@ export default {
 
       legends
         .append('rect')
-        .attr('fill', (d, i) => this.color(d.name))
+        .attr('fill', d => this.color(d.name))
         .attr('width', 20)
         .attr('height', 2)
         .attr('rx', 2)
@@ -272,10 +272,7 @@ export default {
         -1;
       const tickFormat =
         this.yScaleType === 'log'
-          ? (d, i) => {
-              // console.log(i % 10);
-              return this.yScaleLog.tickFormat(5, d3.format(',d'))(d);
-            }
+          ? d => this.yScaleLog.tickFormat(5, d3.format(',d'))(d)
           : d => this.yScaleLinear.tickFormat(5, locale.format(',d'))(d);
 
       if (this.options.yAxis === 'right') {
