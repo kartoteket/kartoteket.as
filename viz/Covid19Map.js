@@ -247,25 +247,6 @@ export default class Covid19Map {
       .append('text')
       .attr('class', 'new-deaths');
 
-    // recovered
-    numbers
-      .append('g')
-      .attr('transform', `translate(10,${this.normalTextSize * 3 + 10})`)
-      .append('text')
-      .text(this.texts._recovered);
-
-    numbers
-      .append('g')
-      .attr('transform', `translate(120,${this.normalTextSize * 3 + 10})`)
-      .append('text')
-      .attr('class', 'recovered');
-
-    numbers
-      .append('g')
-      .attr('transform', `translate(170,${this.normalTextSize * 3 + 10})`)
-      .append('text')
-      .attr('class', 'new-recovered');
-
     /*
       Alternate approach is to map data to countries and use path.centroid:
         see: https://observablehq.com/@d3/bubble-map
@@ -298,8 +279,8 @@ export default class Covid19Map {
       .selectAll('circle')
       .data(data)
       .transition(t)
-      .attr('r', d => this.size(d.infected))
-      .style('opacity', d => this.opacity(d.infected))
+      .attr('r', d => this.size(d.confirmed))
+      .style('opacity', d => this.opacity(d.confirmed))
       .attr('transform', d => `translate(${this.projection(d.pos)})`);
   }
 
@@ -477,18 +458,14 @@ export default class Covid19Map {
 
   updateNumbers(data) {
     const dateText = d3.select('.dateText'); // add a footertext
-    const recoveredText = d3.select('.recovered');
     const confirmedText = d3.select('.confirmed');
     const newConfirmedText = d3.select('.new-confirmed');
-    const newRecoveredText = d3.select('.new-recovered');
     const newDeathsText = d3.select('.new-deaths');
     const deathsText = d3.select('.deaths');
 
     dateText.text(data.date);
     confirmedText.text(data.confirmed);
     newConfirmedText.text(data.newConfirmed);
-    recoveredText.text(data.recovered);
-    newRecoveredText.text(data.newRecovered);
     deathsText.text(data.deaths);
     newDeathsText.text(data.newDeaths);
   }
@@ -500,18 +477,14 @@ export default class Covid19Map {
   }
 
   async getData() {
-    const files = [
-      `${baseUrl}raw_confirmed.csv`,
-      `${baseUrl}raw_deaths.csv`,
-      `${baseUrl}raw_recovered.csv`
-    ];
+    const files = [`${baseUrl}raw_confirmed.csv`, `${baseUrl}raw_deaths.csv`];
 
     // load all data (3 different raw csv files)
     const input = await Promise.all(files.map(url => d3.csv(url, d3.autoType)));
     const outputData = [];
     const indexer = {};
     // load data segments matching the 3 files
-    const segments = ['confirmed', 'deaths', 'recovered'];
+    const segments = ['confirmed', 'deaths'];
     const dateCols = input[0].columns.slice(4);
     //
     // iterate each of the files confirmed, deaths, revovered
@@ -548,15 +521,6 @@ export default class Covid19Map {
             const index = indexer[state][date];
             outputData[index][currentSegment] = row[date];
           });
-        } else if (i === 2) {
-          // recovered (index 2)
-          // iterate and merge all the dates in each row
-          dateCols.forEach(date => {
-            const index = indexer[state][date];
-            outputData[index][currentSegment] = row[date];
-            outputData[index].infected =
-              outputData[index].confirmed - row[date];
-          });
         }
       });
     });
@@ -569,19 +533,15 @@ export default class Covid19Map {
     const prevTimeline = this.inputData.filter(d => d.date === prevString);
     const confirmed = d3.sum(timelineData, d => d.confirmed);
     const deaths = d3.sum(timelineData, d => d.deaths);
-    const recovered = d3.sum(timelineData, d => d.recovered);
     const newConfirmed = confirmed - d3.sum(prevTimeline, d => d.confirmed);
     const newDeaths = deaths - d3.sum(prevTimeline, d => d.deaths);
-    const newRecovered = recovered - d3.sum(prevTimeline, d => d.recovered);
 
     return {
       date: this.dates[this.currentIndex].format('DD MMM YYYY'),
       confirmed,
       deaths,
-      recovered,
       newConfirmed,
-      newDeaths,
-      newRecovered
+      newDeaths
     };
   }
 
@@ -592,14 +552,14 @@ export default class Covid19Map {
   createSizeScale() {
     return d3
       .scaleSqrt()
-      .domain(d3.extent(this.inputData, d => d.infected))
+      .domain(d3.extent(this.inputData, d => d.confirmed))
       .range([1, this.width / 10]);
   }
 
   createOpacityScale() {
     return d3
       .scaleLinear()
-      .domain([d3.max(this.inputData, d => d.infected), 1])
+      .domain([d3.max(this.inputData, d => d.confirmed), 1])
       .range([0.2, 0.65]);
   }
 
