@@ -53,8 +53,8 @@
         </div>
       </div>
     </header>
-    <main v-if="!isLoading" class="lg:flex flex-wrap XXXjustify-center">
-      <section v-show="view === 'country'" class="lg:w-3/5 mb-12">
+    <main v-if="!isLoading" class="lg:flex flex-wrap justify-center">
+      <section v-show="view === 'country'" class="lg:w-4/6 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
         <chart-container
           v-if="selectedTotalCases[0].length"
@@ -72,7 +72,7 @@
           :config="Object.assign({aspectRatio: 0.4}, chartConfig)"
         />
       </section>
-      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
+      <section v-show="view === 'world'" class="lg:w-4/6 mb-12">
         <h1 class="text-lg mb-6">
           {{ worldSeries.title }}
         </h1>
