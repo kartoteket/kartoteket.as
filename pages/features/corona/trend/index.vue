@@ -1,9 +1,14 @@
 <template>
-  <section class="flex flex-col md:-mt-10">
+  <section class="flex flex-col mt-5">
     <header class="mb-8">
-      <h1 class="main-header mb-4 text-xl md:text-4xl">
-        {{ page.title }}
-      </h1>
+      <div class="flex justify-between items-center">
+        <h1 class="main-header mb-4 text-xl md:text-4xl">
+          {{ page.title }}
+        </h1>
+        <nuxt-link to="/" class="text-white-full no-underline">
+          <i>by</i> Kartoteket
+        </nuxt-link>
+      </div>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
@@ -73,7 +78,7 @@
         />
       </section>
       <section v-show="view === 'world'" class="lg:w-4/6 mb-12">
-        <h1 class="text-lg mb-6">
+        <h1 class="text-xl mb-6">
           {{ worldSeries.title }}
         </h1>
         <chart-container
@@ -87,7 +92,7 @@
         />
       </section>
       <section v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg mb-6">
+        <h1 class="text-xl mb-6">
           {{ block.title }}
         </h1>
         <chart-container
@@ -101,7 +106,7 @@
         />
       </section>
     </main>
-    <footer v-if="!isLoading" class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
+    <footer v-if="!isLoading" class="main-col mx-auto rtf rtf--tight leading-relaxed mb-4">
       <p>{{ page.description }}</p>
       <p v-if="!isLoading && source === 'johnshopkins'" class="rtf">
         Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
@@ -147,6 +152,7 @@ export default {
     vSelect
   },
   mixins: [head],
+  layout: 'simple',
   data() {
     return {
       isLoading: true,
