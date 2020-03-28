@@ -215,7 +215,7 @@ export default {
       };
     },
     colorScale() {
-      return d3.scaleOrdinal(d3.schemeOranges[9].reverse()); // d3.schemeTableau10
+      return d3.scaleOrdinal(d3.schemeSet3); // d3.schemeOranges[9].reverse()
     },
     selectedNewCases() {
       return [this.getConfirmedCases(this.selection[0], { newCases: true })];
