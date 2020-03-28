@@ -86,20 +86,6 @@
           :config="chart.config"
         />
       </section>
-      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg mb-6">
-          {{ worldOutsideChinaSeries.title }}
-        </h1>
-        <chart-container
-          v-for="(chart, j) in worldOutsideChinaSeries.charts"
-          :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`"
-          :key="`outsidechina-${j}`"
-          :title="chart.title"
-          :scale-options="chart.scales ? chart.scales : null"
-          :series="chart.data"
-          :config="chart.config"
-        />
-      </section>
       <section v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
         <h1 class="text-lg mb-6">
           {{ block.title }}
