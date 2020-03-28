@@ -1,9 +1,14 @@
 <template>
-  <section class="flex flex-col md:-mt-10">
+  <section class="flex flex-col mt-5">
     <header class="mb-8">
-      <h1 class="main-header mb-4 text-xl md:text-4xl">
-        {{ page.title }}
-      </h1>
+      <div class="flex justify-between items-center">
+        <h1 class="main-header mb-4 text-xl md:text-4xl">
+          {{ page.title }}
+        </h1>
+        <nuxt-link to="/" class="text-white-full no-underline">
+          <i>by</i> Kartoteket
+        </nuxt-link>
+      </div>
       <div v-if="isLoading" class="flex justify-center items-center w-full h-screen">
         <scale-loader :loading="isLoading" color="#fff" class="mx-auto" />
       </div>
@@ -53,8 +58,8 @@
         </div>
       </div>
     </header>
-    <main v-if="!isLoading" class="lg:flex flex-wrap XXXjustify-center">
-      <section v-show="view === 'country'" class="lg:w-3/5 mb-12">
+    <main v-if="!isLoading" class="lg:flex flex-wrap justify-center">
+      <section v-show="view === 'country'" class="lg:w-4/6 mb-12">
         <v-select v-model="selection[0]" class="dropdown lg:mr-8" :options="countriesList" :multiple="true" @input="setSelection($event)" />
         <chart-container
           v-if="selectedTotalCases[0].length"
@@ -69,11 +74,11 @@
           id="custom-new"
           :title="`Daily new confirmed ${dimension}`"
           :series="selectedNewCases[0]"
-          :config="Object.assign({aspectRatio: 0.4}, chartConfig)"
+          :config="Object.assign({aspectRatio: 0.5}, chartConfig)"
         />
       </section>
-      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg mb-6">
+      <section v-show="view === 'world'" class="lg:w-4/6 mb-12">
+        <h1 class="text-xl mb-6">
           {{ worldSeries.title }}
         </h1>
         <chart-container
@@ -86,22 +91,8 @@
           :config="chart.config"
         />
       </section>
-      <section v-show="view === 'world'" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg mb-6">
-          {{ worldOutsideChinaSeries.title }}
-        </h1>
-        <chart-container
-          v-for="(chart, j) in worldOutsideChinaSeries.charts"
-          :id="`outsidechina-${j}-${Math.floor(Math.random() * 100)}`"
-          :key="`outsidechina-${j}`"
-          :title="chart.title"
-          :scale-options="chart.scales ? chart.scales : null"
-          :series="chart.data"
-          :config="chart.config"
-        />
-      </section>
       <section v-for="(block, i) in chartSeries" v-show="view === 'groups'" :key="i" class="lg:w-1/2 mb-12">
-        <h1 class="text-lg mb-6">
+        <h1 class="text-xl mb-6">
           {{ block.title }}
         </h1>
         <chart-container
@@ -111,11 +102,11 @@
           :title="chart.title"
           :scale-options="chart.scales ? chart.scales : null"
           :series="chart.data"
-          :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)"
+          :config="Object.assign({aspectRatio: (j%2) ? 0.5 : 0.5}, chartConfig)"
         />
       </section>
     </main>
-    <footer v-if="!isLoading" class="main-col mx-auto rtf rtf--tight XXmd:text-lg leading-relaxed mb-4">
+    <footer v-if="!isLoading" class="main-col mx-auto rtf rtf--tight leading-relaxed mb-4">
       <p>{{ page.description }}</p>
       <p v-if="!isLoading && source === 'johnshopkins'" class="rtf">
         Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>). Updated {{ lastUpdate }}.
@@ -161,6 +152,7 @@ export default {
     vSelect
   },
   mixins: [head],
+  layout: 'simple',
   data() {
     return {
       isLoading: true,
@@ -215,7 +207,7 @@ export default {
       };
     },
     colorScale() {
-      return d3.scaleOrdinal(d3.schemeOranges[9].reverse()); // d3.schemeTableau10
+      return d3.scaleOrdinal(d3.schemeSet3); // d3.schemeOranges[9].reverse()
     },
     selectedNewCases() {
       return [this.getConfirmedCases(this.selection[0], { newCases: true })];
@@ -236,7 +228,7 @@ export default {
           {
             title: `Daily new confirmed ${this.dimension}`,
             data: [this.getWorldConfirmed({ newCases: true })],
-            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           }
         ]
       };
@@ -256,7 +248,7 @@ export default {
             data: [
               this.getWorldConfirmed({ includeChina: false, newCases: true })
             ],
-            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           }
         ]
       };
@@ -268,13 +260,13 @@ export default {
           countries: ['Norway', 'Sweden', 'Denmark', 'Finland']
         }),
         this.createChartSeries({
-          title: 'Most affected (excluding China)',
+          title: 'Most affected',
           countries: [
+            'United States of America',
             'Italy',
+            'China',
             'Spain',
-            'Germany',
-            'Iran',
-            'United States of America'
+            'Germany'
           ]
         })
       ];
