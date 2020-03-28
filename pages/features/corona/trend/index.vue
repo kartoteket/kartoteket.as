@@ -69,7 +69,7 @@
           id="custom-new"
           :title="`Daily new confirmed ${dimension}`"
           :series="selectedNewCases[0]"
-          :config="Object.assign({aspectRatio: 0.4}, chartConfig)"
+          :config="Object.assign({aspectRatio: 0.5}, chartConfig)"
         />
       </section>
       <section v-show="view === 'world'" class="lg:w-4/6 mb-12">
@@ -111,7 +111,7 @@
           :title="chart.title"
           :scale-options="chart.scales ? chart.scales : null"
           :series="chart.data"
-          :config="Object.assign({aspectRatio: (j%2) ? 0.4 : 0.5}, chartConfig)"
+          :config="Object.assign({aspectRatio: (j%2) ? 0.5 : 0.5}, chartConfig)"
         />
       </section>
     </main>
@@ -236,7 +236,7 @@ export default {
           {
             title: `Daily new confirmed ${this.dimension}`,
             data: [this.getWorldConfirmed({ newCases: true })],
-            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           }
         ]
       };
@@ -256,7 +256,7 @@ export default {
             data: [
               this.getWorldConfirmed({ includeChina: false, newCases: true })
             ],
-            config: Object.assign({ aspectRatio: 0.4 }, this.chartConfig)
+            config: Object.assign({ aspectRatio: 0.5 }, this.chartConfig)
           }
         ]
       };
