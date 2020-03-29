@@ -15,7 +15,7 @@
       <div v-if="!isLoading" class="flex flex-wrap">
         <nav class="flex flex-center">
           <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'country'}" @click.stop="setView('country')">
-            Contry Selector
+            Country Selector
           </button>
           <button class="bg-orange-100 hover:bg-orange-800 hover:text-white-full text-gray-900 py-1 px-3 rounded mr-4 mb-2" :class="{'bg-orange-800 text-white-full' : view === 'world'}" @click.stop="setView('world')">
             World
