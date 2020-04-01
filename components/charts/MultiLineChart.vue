@@ -233,10 +233,13 @@ export default {
       // tooltip
       svg.on('touchmove mousemove', function() {
         const values = that.bisect(d3.mouse(this)[0]);
+        const yPos = d3.mouse(this)[1];
         if (values[0]) {
           el.tooltip
-            .attr('transform', `translate(${that.xScale(values[0].date)},25)`) // ${yTemp(values[0].value) - 125
-            .call(that.callout, values);
+            .attr('transform', `translate(${that.xScale(values[0].date)},0)`)
+            // ${that.yScale(values[0].value) - 50}
+            // ${yTemp(values[0].value) - 125
+            .call(that.callout, values, yPos);
         }
       });
       svg.on('touchend mouseleave', () => el.tooltip.call(that.callout, null));
@@ -287,7 +290,7 @@ export default {
           .tickSizeInner(tickWidth)
       );
     },
-    callout(g, values) {
+    callout(g, values, yPos) {
       if (!values) return g.style('display', 'none');
 
       // get a date x days back in tome
@@ -335,6 +338,9 @@ export default {
       const text = callout.append('text').call(text => echoTooltip(text));
       const { x, y, width: w, height: h } = text.node().getBBox();
 
+      // calucuale textpos position
+      const position = yPos > this.height - h ? yPos - h : yPos + 20;
+
       // tooltip guide-line
       callout
         .selectAll('line')
@@ -342,16 +348,13 @@ export default {
         .join('line')
         .attr('stroke', this.options.textColor)
         .style('stroke-opacity', 0.5)
-        .attr('stroke-width', 1)
-        .style('stroke-dasharray', '3, 3')
+        .attr('stroke-width', 0.5)
+        .style('stroke-dasharray', '1, 1')
         .attr('class', 'guide')
         .attr('x1', 0)
-        .attr('y1', h - 5)
+        .attr('y1', this.options.margin.bottom)
         .attr('x2', 0)
-        .attr(
-          'y2',
-          this.height - this.options.margin.bottom - this.options.margin.top - 4
-        );
+        .attr('y2', this.height - this.options.margin.bottom);
 
       // tooltip bg box
       callout
@@ -363,6 +366,7 @@ export default {
         .attr('stroke', this.options.textColor)
         .attr('stroke-opacity', 0.25)
         .attr('rx', 2)
+        .attr('transform', `translate(0,${position})`)
         .attr('width', w + 20)
         .attr('x', x - 10)
         .attr('y', -15)
@@ -370,7 +374,10 @@ export default {
 
       // re-append text on top og bg box
       callout.selectAll('text').remove();
-      callout.append('text').call(text => echoTooltip(text));
+      callout
+        .append('text')
+        .attr('transform', `translate(0,${position})`)
+        .call(text => echoTooltip(text));
 
       // position
       text.attr('transform', `translate(0,${-10 - y})`);
