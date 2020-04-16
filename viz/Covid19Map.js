@@ -16,7 +16,7 @@ const texts = {
     _confirmed: 'Bekreftet:',
     _recovered: 'Friskmeldte:',
     _numConfirmed: 'Antall daglig bekreftede tilfeller',
-    _lastTick: 'tilfeller (Wuhan)'
+    _lastTick: 'tilfeller'
   },
   en: {
     _new: 'New',
@@ -25,13 +25,13 @@ const texts = {
     _confirmed: 'Confirmed:',
     _recovered: 'Recovered:',
     _numConfirmed: 'Number of daily confirmed incidents',
-    _lastTick: 'incidents (Wuhan)'
+    _lastTick: 'incidents'
   }
 };
 
 export default class Covid19Map {
   constructor(element, width, language = 'en') {
-    this.version = '1.1.0';
+    this.version = '1.1.1';
     this.element = `#${element}`;
     this.height = 600;
     this.width = width < 600 ? width : 900;
@@ -98,6 +98,7 @@ export default class Covid19Map {
     this.projection = this.getProjection();
     this.countries = this.getCountries();
     this.inputData = await this.getData();
+    console.log(this.inputData);
     this.dates = this.getDates();
     this.dataSeries = this.getDataSerie();
     this.timeline = this.getTimelineData(20);
@@ -190,13 +191,13 @@ export default class Covid19Map {
 
     numbers
       .append('g')
-      .attr('transform', 'translate(170,0)')
+      .attr('transform', 'translate(190,0)')
       .append('text')
       .text(this.texts._new);
 
     numbers
       .append('g')
-      .attr('transform', 'translate(120,0)')
+      .attr('transform', 'translate(130,0)')
       .append('text')
       .text(this.texts._total);
 
@@ -210,40 +211,22 @@ export default class Covid19Map {
       .attr('y1', 8)
       .attr('y2', 8);
 
-    // confirmed
-    numbers
-      .append('g')
-      .attr('transform', `translate(10,${this.normalTextSize * 1 + 10})`)
-      .append('text')
-      .text(this.texts._confirmed);
-
-    numbers
-      .append('g')
-      .attr('transform', `translate(120,${this.normalTextSize * 1 + 10})`)
-      .append('text')
-      .attr('class', 'confirmed');
-
-    numbers
-      .append('g')
-      .attr('transform', `translate(170,${this.normalTextSize * 1 + 10})`)
-      .append('text')
-      .attr('class', 'new-confirmed');
     // dead
     numbers
       .append('g')
-      .attr('transform', `translate(10,${this.normalTextSize * 2 + 10})`)
+      .attr('transform', `translate(10,${this.normalTextSize * 2})`)
       .append('text')
       .text(this.texts._deaths);
 
     numbers
       .append('g')
-      .attr('transform', `translate(120,${this.normalTextSize * 2 + 10})`)
+      .attr('transform', `translate(130,${this.normalTextSize * 2})`)
       .append('text')
       .attr('class', 'deaths');
 
     numbers
       .append('g')
-      .attr('transform', `translate(170,${this.normalTextSize * 2 + 10})`)
+      .attr('transform', `translate(190,${this.normalTextSize * 2})`)
       .append('text')
       .attr('class', 'new-deaths');
 
@@ -263,11 +246,11 @@ export default class Covid19Map {
       .enter()
       .append('circle')
       .attr('class', d => d.name)
-      .attr('r', d => this.size(d.confirmed))
+      .attr('r', d => this.size(d.deaths))
       .attr('linewidth', 0.5)
       .attr('stroke', '#333')
       .style('fill', this.bubbleColor)
-      .style('opacity', d => this.opacity(d.confirmed))
+      .style('fill-opacity', d => this.opacity(d.deaths))
       .attr('transform', d => `translate(${this.projection(d.pos)})`);
   }
 
@@ -279,8 +262,8 @@ export default class Covid19Map {
       .selectAll('circle')
       .data(data)
       .transition(t)
-      .attr('r', d => this.size(d.confirmed))
-      .style('opacity', d => this.opacity(d.confirmed))
+      .attr('r', d => this.size(d.deaths))
+      .style('opacity', d => this.opacity(d.deaths))
       .attr('transform', d => `translate(${this.projection(d.pos)})`);
   }
 
@@ -458,14 +441,10 @@ export default class Covid19Map {
 
   updateNumbers(data) {
     const dateText = d3.select('.dateText'); // add a footertext
-    const confirmedText = d3.select('.confirmed');
-    const newConfirmedText = d3.select('.new-confirmed');
     const newDeathsText = d3.select('.new-deaths');
     const deathsText = d3.select('.deaths');
 
     dateText.text(data.date);
-    confirmedText.text(data.confirmed);
-    newConfirmedText.text(data.newConfirmed);
     deathsText.text(data.deaths);
     newDeathsText.text(data.newDeaths);
   }
@@ -477,51 +456,35 @@ export default class Covid19Map {
   }
 
   async getData() {
-    const files = [`${baseUrl}raw_confirmed.csv`, `${baseUrl}raw_deaths.csv`];
+    // const files = [`${baseUrl}raw_confirmed.csv`, `${baseUrl}raw_deaths.csv`];
+    const file = `${baseUrl}raw_deaths.csv`;
 
     // load all data (3 different raw csv files)
-    const input = await Promise.all(files.map(url => d3.csv(url, d3.autoType)));
+    const input = await d3.csv(file, d3.autoType);
     const outputData = [];
-    const indexer = {};
+    // const indexer = {};
     // load data segments matching the 3 files
-    const segments = ['confirmed', 'deaths'];
-    const dateCols = input[0].columns.slice(4);
+    // const segments = ['confirmed', 'deaths'];
+    const dateCols = input.columns.slice(4);
     //
-    // iterate each of the files confirmed, deaths, revovered
+    // iterate each row in each input file
     //
-    input.forEach((array, i) => {
-      const currentSegment = segments[i];
-      //
-      // iterate each row in each input file
-      //
-      array.forEach((row, j) => {
-        const state = row['Province/State'] || row['Country/Region'];
-        const pos = [row.Long, row.Lat];
-        const country = row['Country/Region'];
+    input.forEach((row, j) => {
+      const state = row['Province/State'] || row['Country/Region'];
+      const pos = [row.Long, row.Lat];
+      const country = row['Country/Region'];
 
-        if (i === 0) {
-          // confirmed (index 1)
-          indexer[state] = {};
-          // iterate and merge all the dates in each row
-          dateCols.forEach(date => {
-            const o = {
-              state,
-              pos,
-              country,
-              date: date
-            };
-            o[currentSegment] = row[date];
-            const len = outputData.push(o);
-            indexer[state][date] = len - 1;
-          });
-        } else if (i === 1) {
-          // deaths (index 1)
-          // iterate and merge all the dates in each row
-          dateCols.forEach(date => {
-            const index = indexer[state][date];
-            outputData[index][currentSegment] = row[date];
-          });
-        }
+      // confirmed (index 1)
+      // indexer[state] = {};
+      // iterate and merge all the dates in each row
+      dateCols.forEach(date => {
+        outputData.push({
+          state,
+          pos,
+          country,
+          date: date,
+          deaths: row[date]
+        });
       });
     });
     return outputData;
@@ -531,16 +494,12 @@ export default class Covid19Map {
     const prevIndex = Math.max(this.currentIndex - 1, 0);
     const prevString = moment(this.dates[prevIndex]).format('M/D/YY');
     const prevTimeline = this.inputData.filter(d => d.date === prevString);
-    const confirmed = d3.sum(timelineData, d => d.confirmed);
     const deaths = d3.sum(timelineData, d => d.deaths);
-    const newConfirmed = confirmed - d3.sum(prevTimeline, d => d.confirmed);
     const newDeaths = deaths - d3.sum(prevTimeline, d => d.deaths);
 
     return {
       date: this.dates[this.currentIndex].format('DD MMM YYYY'),
-      confirmed,
       deaths,
-      newConfirmed,
       newDeaths
     };
   }
@@ -552,15 +511,15 @@ export default class Covid19Map {
   createSizeScale() {
     return d3
       .scaleSqrt()
-      .domain(d3.extent(this.inputData, d => d.confirmed))
-      .range([1, this.width / 10]);
+      .domain(d3.extent(this.inputData, d => d.deaths))
+      .range([1, this.width / 12]);
   }
 
   createOpacityScale() {
     return d3
       .scaleLinear()
-      .domain([d3.max(this.inputData, d => d.confirmed), 1])
-      .range([0.2, 0.65]);
+      .domain([d3.max(this.inputData, d => d.deaths), 1])
+      .range([0.2, 0.6]);
   }
 
   toggleTimer() {
@@ -647,7 +606,7 @@ export default class Covid19Map {
     const grouped = d3.groups(this.inputData, d => d.date);
     let prev = 0;
     const val = grouped.map(d => {
-      const values = d3.sum(d[1], s => s.confirmed) - prev;
+      const values = d3.sum(d[1], s => s.deaths) - prev;
       prev += values; // just get tha change day by day
       return {
         date: d[0],
