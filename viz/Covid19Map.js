@@ -61,7 +61,7 @@ export default class Covid19Map {
       },
       legend: {
         x: 10,
-        y: 400
+        y: 430
       },
       bLegend: {
         x: this.width > 600 ? 200 : 10,
@@ -98,7 +98,6 @@ export default class Covid19Map {
     this.projection = this.getProjection();
     this.countries = this.getCountries();
     this.inputData = await this.getData();
-    console.log(this.inputData);
     this.dates = this.getDates();
     this.dataSeries = this.getDataSerie();
     this.timeline = this.getTimelineData(20);
