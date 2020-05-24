@@ -8,7 +8,7 @@
     <div class="md:flex flex-1">
       <ul class="md:w-2/3 xl:w-1/2 md:pr-8 md:mr-8">
         <li v-for="(entry, index) in citations" :key="index" class="mb-16 border-t border-white-500">
-          <a v-if="entry.slug && entry.body" :href="`citations/${entry.slug.current}`">{{ entry.title }}</a>
+          <a v-if="entry.slug && entry.body" :href="`/citations/${entry.slug.current}`">{{ entry.title }}</a>
         </li>
       </ul>
     </div>
