@@ -14,7 +14,8 @@
       </article>
     </div>
     <div class="rtf mx-auto mt-8">
-      <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a> (<a href="https://github.com/CSSEGISandData/COVID-19">gitHub files</a>)</p>
+      <p>Data Source: <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Johns Hopkins CSSE</a></p>
+      <p>Curated Data: <a href="https://storage.googleapis.com/kartoteket/covid19/data/johnshopkins/raw_deaths.csv">Kartoteket</a></p>
     </div>
   </article>
 </template>
@@ -41,10 +42,9 @@ export default {
       id: `cowid19map`,
       isLoading: true,
       page: {
-        title: 'Corona - Daily COVID-19 registrations',
+        title: 'Corona - Daily COVID-19 registered deaths',
         slug: 'features/corona/timeline-map',
-        description:
-          'Map showing the distribution and timeline of the COVID-19 outbreak',
+        description: 'Map showing a timeline of the COVID-19 related deaths',
         url: `https://kartoteket.as/features/corona/timeline-map`
       }
     };
