@@ -4,6 +4,11 @@ module.exports = {
   mode: 'universal',
 
   /*
+  * the build directory
+  */
+  buildDir: 'dist',
+
+  /*
   ** Headers of the page
   */
   head: {
