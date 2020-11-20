@@ -32,20 +32,20 @@ import Covid19Map from '@/viz/Covid19Map';
 import head from '~/mixins/head.js';
 
 export default {
-  layout: 'light',
   components: {
     ScaleLoader
   },
   mixins: [head],
+  layout: 'light',
   data() {
     return {
-      id: `cowid19map`,
+      id: 'cowid19map',
       isLoading: true,
       page: {
         title: 'Corona - Daily COVID-19 registered deaths',
         slug: 'features/corona/timeline-map',
         description: 'Map showing a timeline of the COVID-19 related deaths',
-        url: `https://kartoteket.as/features/corona/timeline-map`
+        url: 'https://kartoteket.as/features/corona/timeline-map'
       }
     };
   },

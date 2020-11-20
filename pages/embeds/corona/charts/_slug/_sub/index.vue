@@ -14,7 +14,7 @@
       </article>
     </div>
     <p v-if="!isLoading" class="text-xs text-right pr-4">
-      Kilde: 
+      Kilde:
       <a
         v-if="source === 'johnshopkins'"
         class="underline"
@@ -45,11 +45,11 @@ import lookup from '@/utils/countryNames.js';
 import MultiLineChart from '@/components/charts/MultiLineChart';
 
 export default {
-  layout: 'embed',
   components: {
     MultiLineChart,
     ScaleLoader
   },
+  layout: 'embed',
   data() {
     return {
       isLoading: true,
@@ -107,8 +107,8 @@ export default {
     if (this.$route.params.slug) {
       const selection = this.$route.params.slug.split(',').map(d => {
         let output = d.trim().toLowerCase();
-        if (output === 'us') output = 'united states of america';
-        if (output === 'taiwan*') output = 'taiwan';
+        if (output === 'us') { output = 'united states of america'; }
+        if (output === 'taiwan*') { output = 'taiwan'; }
         return output;
       });
 
@@ -135,7 +135,7 @@ export default {
   methods: {
     getConfirmedCases(selection, { newCases = false } = {}) {
       // if no selection, abort
-      if (selection.length < 1) return [];
+      if (selection.length < 1) { return []; }
 
       // cast to array
       selection = Array.isArray(selection) ? selection : [selection];
@@ -161,12 +161,12 @@ export default {
       // filter data by selection and find first date with cases
       const firstCase = [];
       const values = [];
-      selection.map((country, i) => {
+      selection.forEach((country, i) => {
         values[i] = input.map(d => {
           // ad hoc lookups
-          if (country === 'us') country = 'united states';
+          if (country === 'us') { country = 'united states'; }
           // store date of first case
-          if (!firstCase[i] && d[country] > 0) firstCase[i] = d.date;
+          if (!firstCase[i] && d[country] > 0) { firstCase[i] = d.date; }
           return {
             date: d.date,
             value: d[country]

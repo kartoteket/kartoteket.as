@@ -291,7 +291,7 @@ export default {
       );
     },
     callout(g, values, yPos) {
-      if (!values) return g.style('display', 'none');
+      if (!values) { return g.style('display', 'none'); }
 
       // get a date x days back in tome
       const flipDate = new Date().setTime(
@@ -323,7 +323,7 @@ export default {
           .attr('y', (d, i) => `${i * 1.25}em`)
           .style('font-weight', (_, i) => (i ? null : 'bold'))
           .text(function(d, i) {
-            if (i < 1) return `${d3.timeFormat('%d. %b')(d.date)}`; // print date on first line
+            if (i < 1) { return `${d3.timeFormat('%d. %b')(d.date)}`; } // print date on first line
             return `${names[i]} ${locale.format(',')(d.value)}`;
           });
 
@@ -389,7 +389,7 @@ export default {
         const index = bisect(line.values, date, 1);
         const a = line.values[index - 1];
         const b = line.values[index];
-        if (b) return date - a.date > b.date - date ? b : a;
+        if (b) { return date - a.date > b.date - date ? b : a; }
         return null;
       });
     }

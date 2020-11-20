@@ -82,7 +82,7 @@
           {{ worldSeries.title }}
         </h1>
         <chart-container
-          v-for="(chart, j) in worldSeries.charts" 
+          v-for="(chart, j) in worldSeries.charts"
           :id="`world-${j}-${Math.floor(Math.random() * 100)}`"
           :key="`world-${j}`"
           :title="chart.title"
@@ -322,7 +322,7 @@ export default {
   },
   methods: {
     getConfirmedCases(selection, { newCases = false } = {}) {
-      if (selection.length < 1) return []; // if no selection, abort
+      if (selection.length < 1) { return []; } // if no selection, abort
       selection = Array.isArray(selection) ? selection : [selection]; // cast to array
       const input = newCases ? this.inputNew : this.inputTotal;
       const output = selection.map(country => {

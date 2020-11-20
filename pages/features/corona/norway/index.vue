@@ -103,18 +103,18 @@ import {
 import head from '~/mixins/head.js';
 
 export default {
-  layout: 'light',
   mixins: [head],
+  layout: 'light',
   data() {
     return {
-      id: `cowid19map`,
+      id: 'cowid19map',
       isLoading: true,
       page: {
         title: 'Corona status in Norway',
         slug: 'features/corona/norway',
         description:
           'Charts visualising Corona statistics in Norway, including total registered cases, hospitalized, icu-patients and deaths. Data from the Norwegian Institute of Public Health (FHI).',
-        url: `https://kartoteket.as/features/corona/norway`
+        url: 'https://kartoteket.as/features/corona/norway'
       }
     };
   },

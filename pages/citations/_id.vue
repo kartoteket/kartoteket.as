@@ -31,6 +31,22 @@ export default {
     asideItem
   },
   mixins: [head],
+  async asyncData({ $sanity, params }) {
+    const filters = [
+      '[_type == "citation"]',
+      `[slug.current == "${params.id}"]`,
+      '[0]'
+    ];
+    const projection = ['{title, slug, body,"notes": note[]->}'];
+    const query = `{
+      "entry": ${['*']
+        .concat(filters)
+        .concat([projection])
+        .join('|')}
+      }`;
+    const result = await $sanity.fetch(query);
+    return result;
+  },
   computed: {
     page() {
       const text =
@@ -61,22 +77,6 @@ export default {
         ]
       };
     }
-  },
-  async asyncData({ $sanity, params }) {
-    const filters = [
-      '[_type == "citation"]',
-      `[slug.current == "${params.id}"]`,
-      '[0]'
-    ];
-    const projection = ['{title, slug, body,"notes": note[]->}'];
-    const query = `{
-      "entry": ${['*']
-        .concat(filters)
-        .concat([projection])
-        .join('|')}
-      }`;
-    const result = await $sanity.fetch(query);
-    return result;
   }
 };
 </script>

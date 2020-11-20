@@ -25,13 +25,27 @@ import head from '~/mixins/head.js';
 
 export default {
   mixins: [head],
+  async asyncData({ $sanity }) {
+    const filters = ['[_type == "citation"]'];
+    const sorts = ['order(_createdAt asc)'];
+    const projection = ['{title, slug, body}'];
+    const query = `{
+      "citations": ${['*']
+        .concat(filters)
+        .concat(sorts)
+        .concat([projection])
+        .join('|')}
+    }`;
+    const result = await $sanity.fetch(query);
+    return result;
+  },
   data() {
     return {
       page: {
         title: 'Citations',
         slug: 'citations',
         description: 'Data Sources and Citations.',
-        url: `https://kartoteket.as/citations`
+        url: 'https://kartoteket.as/citations'
       }
     };
   },
@@ -52,20 +66,6 @@ export default {
         ]
       };
     }
-  },
-  async asyncData({ $sanity }) {
-    const filters = ['[_type == "citation"]'];
-    const sorts = ['order(_createdAt asc)'];
-    const projection = ['{title, slug, body}'];
-    const query = `{
-      "citations": ${['*']
-        .concat(filters)
-        .concat(sorts)
-        .concat([projection])
-        .join('|')}
-    }`;
-    const result = await $sanity.fetch(query);
-    return result;
   }
 };
 </script>

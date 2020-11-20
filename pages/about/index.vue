@@ -28,6 +28,14 @@ export default {
     asideItem
   },
   mixins: [head],
+  async asyncData({ $sanity }) {
+    const query = `{
+        "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url},
+        "selectedClients": *[_type == "client" && selected == true] | {name, url}
+      }`;
+    const result = await $sanity.fetch(query);
+    return result;
+  },
   data() {
     return {
       page: {
@@ -62,14 +70,6 @@ export default {
         list: this.selectedClients
       };
     }
-  },
-  async asyncData({ $sanity }) {
-    const query = `{
-        "entry": *[_type == "page" && slug.current == "about"][0] | {title, slug, lead, body, "notes": note[]->, url},
-        "selectedClients": *[_type == "client" && selected == true] | {name, url}
-      }`;
-    const result = await $sanity.fetch(query);
-    return result;
   }
 };
 </script>

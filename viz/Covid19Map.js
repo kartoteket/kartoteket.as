@@ -180,7 +180,7 @@ export default class Covid19Map {
     const date = numbers
       .append('g')
       .attr('class', 'current-date')
-      .attr('transform', `translate(10, 0)`);
+      .attr('transform', 'translate(10, 0)');
 
     date
       .append('g')
@@ -481,7 +481,7 @@ export default class Covid19Map {
           state,
           pos,
           country,
-          date: date,
+          date,
           deaths: row[date]
         });
       });
@@ -620,7 +620,7 @@ export default class Covid19Map {
       }
     ];
     return serie;
-    /*  
+    /*
     // if we want series by country
     const grouped = d3.groups(inputData, d => d.country);
     return grouped.map((d, i) => {

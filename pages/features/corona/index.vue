@@ -41,13 +41,32 @@ export default {
     linkWrapper
   },
   mixins: [head],
+  async asyncData({ $sanity }) {
+    const mainFilters = [
+      '[_type == "note"]',
+      '[isListed == true]',
+      '[isSticky != true]',
+      '[title match "corona"]'
+    ];
+    const sorts = ['order(_createdAt desc)'];
+    const projection = ['{title, slug, lead, body, url}'];
+    const query = `{
+      "main": ${['*']
+        .concat(mainFilters)
+        .concat(sorts)
+        .concat([projection])
+        .join('|')}
+    }`;
+    const result = await $sanity.fetch(query);
+    return { notes: result };
+  },
   data() {
     return {
       page: {
         title: 'Corona pages',
         slug: 'features/corona/',
         description: 'Notes, maps and dataviz on Corona / COVID-19',
-        url: `https://kartoteket.as/features/corona/`
+        url: 'https://kartoteket.as/features/corona/'
       }
     };
   },
@@ -69,29 +88,10 @@ export default {
       };
     }
   },
-  async asyncData({ $sanity }) {
-    const mainFilters = [
-      '[_type == "note"]',
-      '[isListed == true]',
-      '[isSticky != true]',
-      '[title match "corona"]'
-    ];
-    const sorts = ['order(_createdAt desc)'];
-    const projection = ['{title, slug, lead, body, url}'];
-    const query = `{
-      "main": ${['*']
-        .concat(mainFilters)
-        .concat(sorts)
-        .concat([projection])
-        .join('|')}
-    }`;
-    const result = await $sanity.fetch(query);
-    return { notes: result };
-  },
   methods: {
     link(e) {
-      if (e.slug && e.body) return `/features/corona/${e.slug.current}`;
-      if (e.url) return e.url;
+      if (e.slug && e.body) { return `/features/corona/${e.slug.current}`; }
+      if (e.url) { return e.url; }
       return null;
     }
   }

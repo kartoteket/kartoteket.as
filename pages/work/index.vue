@@ -58,18 +58,26 @@ import head from '~/mixins/head.js';
 
 export default {
   filters: {
-    yearFormat: function(string) {
-      if (!string) return '';
+    yearFormat: string => {
+      if (!string) {
+        return ''
+      }
       return string.substr(0, 4);
     }
   },
   mixins: [head],
+  async asyncData({ $sanity }) {
+    const query =
+      '{ "work": *[_type == "work"] | order(year desc) {"categories": category[]->title, title, description, "client": client->name, year, url}}';
+    const { work } = await $sanity.fetch(query);
+    return { work };
+  },
   data() {
     return {
       page: {
         title: 'Selected Work',
         slug: 'work',
-        url: `https://kartoteket.as/work`,
+        url: 'https://kartoteket.as/work',
         description:
           'Selected works by Kartoteket. The project portfolia consists mainly of websites, data visualisations and maps'
       }
@@ -92,12 +100,6 @@ export default {
         ]
       };
     }
-  },
-  async asyncData({ $sanity }) {
-    const query =
-      '{ "work": *[_type == "work"] | order(year desc) {"categories": category[]->title, title, description, "client": client->name, year, url}}';
-    const { work } = await $sanity.fetch(query);
-    return { work };
   }
 };
 </script>

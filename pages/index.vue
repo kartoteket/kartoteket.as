@@ -40,6 +40,16 @@ export default {
       }
     };
   },
+  head() {
+    return {
+      script: [
+        {
+          type: 'application/ld+json',
+          json: this.structuredData
+        }
+      ]
+    };
+  },
   computed: {
     structuredData() {
       return {
@@ -57,16 +67,6 @@ export default {
         ]
       };
     }
-  },
-  head() {
-    return {
-      script: [
-        {
-          type: 'application/ld+json',
-          json: this.structuredData
-        }
-      ]
-    };
   }
 };
 </script>

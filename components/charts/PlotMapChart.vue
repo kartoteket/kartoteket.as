@@ -56,8 +56,7 @@ export default {
       const copy = this.daysCount.slice();
       copy.sort((a, b) => a.length - b.length);
       copy.forEach((e, i) => {
-        if (i % 2) arr.unshift(e);
-        else arr.push(e);
+        if (i % 2) { arr.unshift(e); } else { arr.push(e); }
       });
       return d3
         .scaleBand()
@@ -144,7 +143,7 @@ export default {
         // el.ledgends;
         const cLegend = el.ledgends
           .append('g')
-          .attr('transform', `translate(0,10)`)
+          .attr('transform', 'translate(0,10)')
           .classed('ledgend-color', true)
           .selectAll('circle')
           .data(this.color.domain().reverse())
@@ -185,7 +184,7 @@ export default {
       el.ledgends.select('.ledgend-size').remove();
       el.ledgends
         .append('g')
-        .attr('transform', `translate(100,0)`)
+        .attr('transform', 'translate(100,0)')
         .classed('ledgend-size', true)
         .call(this.legend);
 
@@ -261,7 +260,7 @@ export default {
         el.yAxis.style('opacity', 1);
         el.map.style('opacity', 0.5);
 
-        el.dots.attr('transform', `translate(0,0)`);
+        el.dots.attr('transform', 'translate(0,0)');
 
         // position dots
         el.confirmeddots
@@ -331,8 +330,7 @@ export default {
     // SCALES
     size(selection) {
       const domain = this.input.filter(d => {
-        if (selection === 'World' || selection === 'Mainland China')
-          return true;
+        if (selection === 'World' || selection === 'Mainland China') { return true; }
         return d.country !== 'Mainland China';
       });
 

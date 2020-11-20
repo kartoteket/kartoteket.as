@@ -100,7 +100,7 @@ export default {
         slug: 'contact',
         description:
           'Please contact us for any projects on websites, data visualisations and data driven maps. Or a chat.',
-        url: `https://kartoteket.as/contact`
+        url: 'https://kartoteket.as/contact'
       }
     };
   },

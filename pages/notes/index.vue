@@ -41,35 +41,6 @@ export default {
     linkWrapper
   },
   mixins: [head],
-  data() {
-    return {
-      page: {
-        title: 'Notes',
-        slug: 'notes',
-        description:
-          'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.',
-        url: `https://kartoteket.as/notes`
-      }
-    };
-  },
-  computed: {
-    structuredData() {
-      return {
-        '@context': 'https://schema.org',
-        '@graph': [
-          webSite,
-          organisation,
-          webPage({
-            url: this.page.url,
-            name: this.page.title,
-            description: this.page.description,
-            main: this.page.url
-          }),
-          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
-        ]
-      };
-    }
-  },
   async asyncData({ $sanity }) {
     const mainFilters = [
       '[_type == "note"]',
@@ -98,10 +69,39 @@ export default {
     const result = await $sanity.fetch(query);
     return { notes: result };
   },
+  data() {
+    return {
+      page: {
+        title: 'Notes',
+        slug: 'notes',
+        description:
+          'Notes by Kartoteket. Notes, writings, scribbles. Storytelling.',
+        url: 'https://kartoteket.as/notes'
+      }
+    };
+  },
+  computed: {
+    structuredData() {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          webSite,
+          organisation,
+          webPage({
+            url: this.page.url,
+            name: this.page.title,
+            description: this.page.description,
+            main: this.page.url
+          }),
+          breadCrumbs([['Homepage', ''], [this.page.title, this.page.slug]])
+        ]
+      };
+    }
+  },
   methods: {
     link(e) {
-      if (e.slug && e.body) return `/notes/${e.slug.current}`;
-      if (e.url) return e.url;
+      if (e.slug && e.body) { return `/notes/${e.slug.current}`; }
+      if (e.url) { return e.url; }
       return null;
     }
   }
