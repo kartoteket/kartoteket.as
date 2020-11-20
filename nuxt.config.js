@@ -1,16 +1,16 @@
 import routes from './utils/routes';
 
-module.exports = {
+export default {
   mode: 'universal',
 
   /*
-  * the build directory
-  */
-  buildDir: 'dist',
+   * the build directory
+   */
+  // buildDir: 'dist',
 
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
   head: {
     htmlAttrs: {
       lang: 'en'
@@ -70,29 +70,29 @@ module.exports = {
   },
 
   /*
-  ** Customize the progress-bar color
-  */
+   ** Customize the progress-bar color
+   */
   loading: { color: '#fff' },
 
   /*
-  ** Page Transitions
-  */
+   ** Page Transitions
+   */
   pageTransition: {
     name: 'layout',
     mode: 'out-in'
   },
 
   /*
-  ** Plugins to load before mounting the App
-  */
+   ** Plugins to load before mounting the App
+   */
   plugins: ['~/plugins/global.js'],
 
   // not currently in use
   // buildModules: [['@nuxtjs/axios']],
 
   /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     '@nuxtjs/pwa',
     'nuxt-sanity',
@@ -136,22 +136,22 @@ module.exports = {
   },
 
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
     /*
-    ** You can extend webpack config here
-    */
+     ** You can extend webpack config here
+     */
     extend(config, ctx) {
       // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        });
-      }
+      // if (ctx.isDev && ctx.isClient) {
+      //   config.module.rules.push({
+      //     enforce: 'pre',
+      //     test: /\.(js|vue)$/,
+      //     loader: 'eslint-loader',
+      //     exclude: /(node_modules)/
+      //   });
+      // }
     },
     extractCSS: true,
     postcss: {
@@ -170,6 +170,6 @@ module.exports = {
   generate: {
     // interval: 100,
     fallback: true,
-    routes: routes
+    routes
   }
 };
